@@ -1,0 +1,322 @@
+{% extends 'parent/base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-gradient: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+        }
+
+        body {
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background Lights */
+        .background-lights {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .light {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: floatLight 25s infinite linear;
+        }
+
+        .light1 { width: 600px; height: 600px; background: #6366f1; top: -10%; left: -10%; animation-delay: 0s; }
+        .light2 { width: 800px; height: 800px; background: #a855f7; bottom: -20%; right: -15%; animation-delay: -8s; }
+        .light3 { width: 500px; height: 500px; background: #ec4899; top: 40%; right: 10%; animation-delay: -15s; }
+
+        @keyframes floatLight {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(80px, 60px) rotate(10deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Profile Header */
+        .profile-header {
+            position: relative;
+            border-radius: 32px;
+            overflow: hidden;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+        }
+
+        .profile-cover {
+            height: 280px;
+            background: var(--primary-gradient);
+            position: relative;
+        }
+
+        .profile-cover::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.3), transparent 60%);
+        }
+
+        .profile-avatar {
+            width: 170px;
+            height: 170px;
+            border: 6px solid rgba(255,255,255,0.9);
+            border-radius: 50%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transition: all 0.4s ease;
+            z-index: 2;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.08) rotate(5deg);
+        }
+
+        .profile-info h2 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        /* Stats - New Modern Design */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.8rem 1rem;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-12px);
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        /* Sections */
+        .section-glass {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+        }
+
+        .badge-skill {
+            background: rgba(99, 102, 241, 0.2);
+            color: #c4d0ff;
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            padding: 12px 22px;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .badge-skill:hover {
+            background: rgba(99, 102, 241, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .btn-follow {
+            padding: 14px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            background: var(--primary-gradient);
+            border: none;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+            transition: all 0.4s ease;
+        }
+
+        .btn-follow:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!-- Animated Background -->
+    <div class="background-lights">
+        <div class="light light1"></div>
+        <div class="light light2"></div>
+        <div class="light light3"></div>
+    </div>
+
+    <div class="container py-5">
+        <!-- Profile Header -->
+        <div class="profile-header glass-card mb-5">
+            <div class="profile-cover"></div>
+
+            <div class="card-body position-relative px-5 py-4">
+                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
+                    <div class="d-flex flex-column flex-md-row align-items-center text-center text-md-start">
+                        {% if user.photo %}
+                            <img src="{{ user.photo.url }}" alt="{{ user.username }}" class="profile-avatar me-md-5">
+                        {% else %}
+                            <div class="profile-avatar bg-dark d-flex align-items-center justify-content-center me-md-5">
+                                <i class="bi bi-person-fill text-light" style="font-size: 5rem;"></i>
+                            </div>
+                        {% endif %}
+
+                        <div>
+                            <h2 class="profile-info fw-bold mb-2">{{ user.username }}</h2>
+                            {% if user.main_skill %}
+                                <p class="fs-4 text-indigo-300 mb-2">{{ user.main_skill }}</p>
+                            {% endif %}
+                            <p class="text-slate-400">
+                                <i class="bi bi-geo-alt"></i>
+                                {{ user.city }}{% if user.city and user.get_ostan_display %} • {% endif %}{{ user.get_ostan_display }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {% if request.user != user %}
+                        <button id="follow_button" class="btn btn-primary btn-follow mt-4 mt-md-0">
+                            <i class="bi bi-person-plus me-2"></i>
+                            {% if request.user in user.followers.all %}Unfollow{% else %}Follow{% endif %}
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Modern Stats -->
+        <div class="stats-container mb-5">
+            <div class="stat-item glass-card">
+                <i class="bi bi-journal-text fs-1 text-indigo-400 mb-3 d-block"></i>
+                <div class="stat-number">{{ user.post.count }}</div>
+                <small class="text-slate-400 fw-medium">پست</small>
+            </div>
+
+            <div class="stat-item glass-card">
+                <i class="bi bi-people fs-1 text-purple-400 mb-3 d-block"></i>
+                <div id="follower_count" class="stat-number">{{ user.followers.count }}</div>
+                <small class="text-slate-400 fw-medium">دنبال‌کننده</small>
+            </div>
+
+            <div class="stat-item glass-card">
+                <i class="bi bi-person-check fs-1 text-pink-400 mb-3 d-block"></i>
+                <div id="following_count" class="stat-number">{{ user.followings.count }}</div>
+                <small class="text-slate-400 fw-medium">دنبال‌شونده</small>
+            </div>
+
+            <div class="stat-item glass-card">
+                <i class="bi bi-bookmark-heart fs-1 text-rose-400 mb-3 d-block"></i>
+                <div class="stat-number">{{ user.saved_posts.count }}</div>
+                <small class="text-slate-400 fw-medium">ذخیره شده</small>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- About -->
+            <div class="col-lg-7">
+                <div class="section-glass p-5">
+                    <div class="d-flex align-items-center mb-4">
+                        <i class="bi bi-person-circle fs-3 me-3 text-primary"></i>
+                        <h5 class="fw-bold mb-0">درباره من</h5>
+                    </div>
+                    <p class="lead lh-relaxed text-slate-300">
+                        {{ user.bio|default:"بیوگرافی ثبت نشده است." }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Skills -->
+            <div class="col-lg-5">
+                <div class="section-glass p-5 h-100">
+                    <div class="d-flex align-items-center mb-4">
+                        <i class="bi bi-stars fs-3 me-3 text-primary"></i>
+                        <h5 class="fw-bold mb-0">مهارت‌ها</h5>
+                    </div>
+                    <div class="d-flex flex-wrap gap-3">
+                        {% for skill in user.abilities.all %}
+                            <span class="badge-skill">{{ skill.skill }}</span>
+                        {% empty %}
+                            <p class="text-slate-400">مهارتی ثبت نشده است.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Links -->
+            <div class="col-12">
+                <div class="section-glass p-5">
+                    <div class="d-flex align-items-center mb-4">
+                        <i class="bi bi-link fs-3 me-3 text-primary"></i>
+                        <h5 class="fw-bold mb-0">لینک‌ها</h5>
+                    </div>
+                    <div class="d-flex flex-wrap gap-3">
+                        {% if user.github_id %}
+                            <a href="{{ user.github_id }}" target="_blank" class="btn btn-dark px-5 py-3 rounded-pill">
+                                <i class="bi bi-github me-2"></i> GitHub
+                            </a>
+                        {% endif %}
+                        {% if user.tel_id %}
+                            <a href="https://t.me/{{ user.tel_id|cut:'@' }}" target="_blank" class="btn btn-info px-5 py-3 rounded-pill">
+                                <i class="bi bi-telegram me-2"></i> Telegram
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#follow_button').on('click', function () {
+                const btn = $(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'blog:user_follow' %}',
+                    data: {
+                        'user_id': {{ user.id }},
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    },
+                    success: function (data) {
+                        if (data.followed) {
+                            btn.html('<i class="bi bi-person-dash me-2"></i>Unfollow');
+                        } else {
+                            btn.html('<i class="bi bi-person-plus me-2"></i>Follow');
+                        }
+                        $('#follower_count').text(data.follower_count);
+                        $('#following_count').text(data.following_count);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

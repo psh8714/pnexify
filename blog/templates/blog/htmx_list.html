@@ -1,0 +1,51 @@
+{% for post in posts %}
+    <article class="post-card">
+        <div class="post-media">
+            {% if post.images.exists %}
+                {% with image=post.images.first %}
+                    {% if image.image_file %}
+                        <img src="{{ image.image_file.url }}" alt="{{ post.title }}" loading="lazy">
+                    {% endif %}
+                {% endwith %}
+            {% else %}
+                <div class="post-placeholder">📸 No Image</div>
+            {% endif %}
+        </div>
+
+        <div class="post-body">
+            <h2 class="post-title">{{ post.title }}</h2>
+            <div>{{ post.saver_accounts.count }}  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24"
+                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                             stroke-linejoin="round">
+                                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                        </svg></div>
+            <p class="post-description">{{ post.description|truncatewords:20 }}</p>
+            <div class="post-footer">
+                <a href="{% url 'blog:post_detail' post.slug %}?next={{ request.get_full_path }}" class="read-more">Read
+                    More →</a>
+            </div>
+        </div>
+    </article>
+{% empty %}
+    <div class="empty-state">
+        <p>No posts found.</p>
+    </div>
+{% endfor %}
+
+{% if posts.has_next %}
+    <div id="load-more-trigger"
+         hx-get="?page={{ posts.next_page_number }}{% if category %}&category={{ category }}{% endif %}"
+         hx-trigger="intersect once"
+         hx-target="#load-more-trigger"
+         hx-swap="outerHTML"
+         class="loading-trigger">
+        <div class="spinner"></div>
+        <p class="loading-text">در حال بارگذاری...</p>
+    </div>
+{% else %}
+    <div class="no-more">
+        <div class="no-more-emoji">✨</div>
+        <p>تمام پست‌ها بارگذاری شدند!</p>
+    </div>
+{% endif %}

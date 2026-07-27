@@ -1,0 +1,5 @@
+{% for user in users %}
+    <a href="{{ user.get_absolute_url }}">{{ user.username }}</a>
+    {{ user.bio | truncatewords:40 }}
+    {{ user.photo }}
+{% endfor %}

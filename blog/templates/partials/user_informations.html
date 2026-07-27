@@ -1,0 +1,107 @@
+{% extends 'parent/base.html' %}
+
+{% block title %}user information{% endblock %}
+
+{% block content %}
+    <h1 class="title">{{ user.username }}</h1>
+    <h1 class="h1">comments</h1>
+    <p class="title">{{ user }} wrote {{ user_comments.count }} comment{{ user_comments.count | pluralize }} yet</p>
+    <div class="card">
+        {% for comment in user_comments %}
+            {{ comment }}
+        {% endfor %}
+    </div>
+    <h1 class="h1">posts</h1>
+    <p class="title">{{ user }} has {{ user_posts.count }} post{{ user_posts.count | pluralize }}</p>
+    {% for post in user_posts %}
+        <div class="card">
+            <a href="{{ post.get_absolute_url }}">{{ post }}</a>
+            <br>
+            <span class="node">{{ post.category | truncatewords:40 }}</span>
+            <br>
+        </div>
+        <br>
+    {% endfor %}
+{% endblock %}
+{% block head %}
+    <style>
+
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: auto;
+            font-family: "Vazirmatn", sans-serif;
+            background: radial-gradient(circle at 20% 20%, rgb(255, 172, 30) 0%, transparent 40%),
+            radial-gradient(circle at 80% 80%, rgb(255, 118, 50) 0%, transparent 40%),
+            repeating-linear-gradient(135deg, rgb(253, 17, 17) 0 2px, transparent 2px 6px),
+            linear-gradient(180deg, #0b0b0c 0%, #141516 100%);
+            background-blend-mode: overlay, overlay, multiply, normal;
+            color: #eee;
+        }
+
+        .node {
+            position: absolute;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid rgba(255, 190, 80, 0.3);
+            border-radius: 10px;
+            color: #ffd580;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(3px);
+            z-index: 2;
+        }
+
+        .node:hover {
+            background: rgba(255, 190, 80, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 190, 80, 0.4);
+        }
+
+        h1 {
+            color: #ffd580;
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            text-align: center;
+            text-shadow: 0 0 8px rgba(255, 190, 80, 0.3);
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(255, 190, 80, 0.15);
+            border-radius: 14px;
+            padding: 20px 25px;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #f0f0f0;
+            transition: all 0.1s ease;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 0 transparent;
+            position: page;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255, 215, 100, 0.15), transparent 30%);
+            transition: left 1s ease;
+        }
+
+        .card:hover::before {
+            left: 70%;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(255, 215, 100, 0.4);
+            box-shadow: 0 0 20px rgba(255, 190, 80, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+    </style>
+{% endblock %}

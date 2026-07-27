@@ -1,0 +1,15 @@
+.messages .error {
+    color: #990d0d;
+}
+
+.messages .info {
+    color: #feff6b;
+}
+
+.messages .warning {
+    color: #ee8736;
+}
+
+.messages .success {
+    color: #41cdff;
+}

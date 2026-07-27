@@ -1,0 +1,901 @@
+{#{% extends 'parent/base.html' %}#}
+{##}
+{#{% block title %}#}
+{#    free_twit#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{##}
+{#    <div class="twit-page">#}
+{#        <form method="post" class="twit-form">#}
+{#            {% csrf_token %}#}
+{#            {% for field in form %}#}
+{#                <div class="form-group">#}
+{#                    {{ field }}#}
+{#                    <span class="field-error">{{ field.errors }}</span>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{##}
+{#            <input type="submit" value="share" class="submit-btn">#}
+{#        </form>#}
+{#    <div class="twit-page">#}
+{#        <form method="post" class="twit-form">#}
+{#            {% csrf_token %}#}
+{##}
+{#            {% for field in form %}#}
+{#                {% if field.name == 'title' %}#}
+{#                    <div class="form-group">#}
+{#                        {{ field }}#}
+{#                    </div>#}
+{#                {% elif field.name == 'description' %}#}
+{#                    <div class="form-group">#}
+{#                        {{ field }}#}
+{#                    </div>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+{##}
+{#            <input type="submit" value="➤" class="submit-btn">#}
+{#        </form>#}
+{#    </div>#}
+{#    <div class="twit-list">#}
+{#        <h2 class="section-title">Twits</h2>#}
+{##}
+{#        {% for twit in twits.reverse %}#}
+{#            {% for my in my_twits %}#}
+{#                {% if twit == my %}#}
+{#                    <article class="twit-card twit-card--mine">#}
+{#                        <div class="twit-head">#}
+{#                            <span class="comments-title">{{ twit.writer }}</span>#}
+{#                            <span class="comment-form">{{ twit.create_time }}</span>#}
+{#                        </div>#}
+{##}
+{#                        <p class="twit-body">{{ twit.description }}</p>#}
+{##}
+{#                        <div class="twit-meta">#}
+{#                            <span class="submit-btn">wrote about: <strong>{{ twit.title }}</strong></span>#}
+{#                            <a href="{% url 'blog:delete_twit_view' twit.id %}" class="back-btn">delete</a>#}
+{#                        </div>#}
+{#                    </article>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+{##}
+{#            {% for another in another_twits %}#}
+{#                {% if twit == another %}#}
+{#                    <article class="twit-card twit-card--another">#}
+{#                        <div class="twit-head">#}
+{#                            <span class="comments-title">{{ twit.writer }}</span>#}
+{#                            <span class="comment-form">{{ twit.create_time }}</span>#}
+{#                        </div>#}
+{##}
+{#                        <p class="twit-body">{{ twit.description }}</p>#}
+{##}
+{#                        <div class="twit-meta">#}
+{#                            <span class="submit-btn">wrote about: <strong>{{ twit.title }}</strong></span>#}
+{#                        </div>#}
+{#                    </article>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
+{#        {% endfor %}#}
+{#    </div>#}
+{#{% endblock %}#}
+{##}
+{#{% block head %}#}
+{#    <style>#}
+{#        body {#}
+{#            background: linear-gradient(180deg, #f5f8ff 0%, #dbeafe 100%);#}
+{#            color: #e5e7eb;#}
+{#        }#}
+{##}
+{#        .twit-page {#}
+{#            width: 100%;#}
+{#            max-width: 980px;#}
+{#            margin: 0 auto;#}
+{#            padding: 24px 16px 48px;#}
+{#            display: grid;#}
+{#            grid-template-columns: 360px 1fr;#}
+{#            gap: 24px;#}
+{#            align-items: start;#}
+{#        }#}
+{##}
+{#        .twit-form {#}
+{#            position: fixed;#}
+{#            top: 88px;#}
+{#            align-self: start;#}
+{#            background: rgba(15, 23, 42, 0.96);#}
+{#            border: 1px solid rgba(148, 163, 184, 0.16);#}
+{#            border-radius: 20px;#}
+{#            padding: 20px;#}
+{#            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);#}
+{#            backdrop-filter: blur(12px);#}
+{#        }#}
+{##}
+{#        .twit-form-title,#}
+{#        .section-title {#}
+{#            font-size: 20px;#}
+{#            font-weight: 800;#}
+{#            color: #f8fafc;#}
+{#            margin-bottom: 18px;#}
+{#        }#}
+{##}
+{#        .form-group {#}
+{#            margin-bottom: 14px;#}
+{#        }#}
+{##}
+{#        .comments-title {#}
+{#            display: inline-block;#}
+{#            margin-bottom: 8px;#}
+{#            color: #cbd5e1;#}
+{#            font-size: 14px;#}
+{#            font-weight: 700;#}
+{#        }#}
+{##}
+{#        .twit-form input[type="text"],#}
+{#        .twit-form input[type="email"],#}
+{#        .twit-form input[type="password"],#}
+{#        .twit-form input[type="number"],#}
+{#        .twit-form textarea,#}
+{#        .twit-form select {#}
+{#            width: 100%;#}
+{#            box-sizing: border-box;#}
+{#            padding: 12px 14px;#}
+{#            border-radius: 14px;#}
+{#            border: 1px solid #334155;#}
+{#            background: #0f172a;#}
+{#            color: #e2e8f0;#}
+{#            outline: none;#}
+{#            transition: 0.2s ease;#}
+{#        }#}
+{##}
+{#        .twit-form input:focus,#}
+{#        .twit-form textarea:focus,#}
+{#        .twit-form select:focus {#}
+{#            border-color: #60a5fa;#}
+{#            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.12);#}
+{#        }#}
+{##}
+{#        .field-error {#}
+{#            display: block;#}
+{#            margin-top: 6px;#}
+{#            color: #fda4af;#}
+{#            font-size: 12px;#}
+{#        }#}
+{##}
+{#        .submit-btn {#}
+{#            display: inline-flex;#}
+{#            align-items: center;#}
+{#            justify-content: center;#}
+{#            gap: 6px;#}
+{#            width: 100%;#}
+{#            margin-top: 8px;#}
+{#            padding: 12px 16px;#}
+{#            border: none;#}
+{#            border-radius: 999px;#}
+{#            background: linear-gradient(135deg, #1d9bf0, #1a8cd8);#}
+{#            color: #fff;#}
+{#            font-weight: 800;#}
+{#            cursor: pointer;#}
+{#            transition: 0.2s ease;#}
+{#            text-decoration: none;#}
+{#        }#}
+{##}
+{#        .submit-btn:hover {#}
+{#            transform: translateY(-1px);#}
+{#            filter: brightness(1.05);#}
+{#        }#}
+{##}
+{#        .twit-list {#}
+{#            margin-left:50%;#}
+{#            width: 50%;#}
+{#            display: inline-block;#}
+{#            flex-direction: column;#}
+{#            gap: 16px;#}
+{#        }#}
+{##}
+{#        .twit-card {#}
+{#            background: rgba(255, 255, 255, 0.82);#}
+{#            border: 1px solid rgba(148, 163, 184, 0.18);#}
+{#            border-radius: 20px;#}
+{#            padding: 18px;#}
+{#            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);#}
+{#            backdrop-filter: blur(8px);#}
+{#            color: #0f172a;#}
+{#        }#}
+{##}
+{#        .twit-card--mine {#}
+{#            border-right: 4px solid #3897ff;#}
+{#        }#}
+{##}
+{#        .twit-card--another {#}
+{#            border-right: 4px solid #758090;#}
+{#        }#}
+{##}
+{#        .twit-head {#}
+{#            display: flex;#}
+{#            justify-content: space-between;#}
+{#            gap: 12px;#}
+{#            margin-bottom: 12px;#}
+{#            flex-wrap: wrap;#}
+{#        }#}
+{##}
+{#        .comment-form {#}
+{#            color: #64748b;#}
+{#            font-size: 13px;#}
+{#        }#}
+{##}
+{#        .twit-body {#}
+{#            margin: 0 0 14px;#}
+{#            line-height: 1.8;#}
+{#            color: #1e293b;#}
+{#            font-size: 15px;#}
+{#            word-break: break-word;#}
+{#        }#}
+{##}
+{#        .twit-meta {#}
+{#            display: flex;#}
+{#            justify-content: space-between;#}
+{#            gap: 12px;#}
+{#            align-items: center;#}
+{#            flex-wrap: wrap;#}
+{#        }#}
+{##}
+{#        .twit-meta .submit-btn {#}
+{#            width: auto;#}
+{#            padding: 8px 12px;#}
+{#            font-size: 13px;#}
+{#        }#}
+{##}
+{#        .back-btn {#}
+{#            color: #ef4444;#}
+{#            text-decoration: none;#}
+{#            font-weight: 700;#}
+{#            font-size: 14px;#}
+{#        }#}
+{##}
+{#        .back-btn:hover {#}
+{#            text-decoration: underline;#}
+{#        }#}
+{##}
+{#@media (max-width: 900px) {#}
+{#    .twit-page {#}
+{#        grid-template-columns: 1fr;#}
+{#    }#}
+{##}
+{#    .twit-form {#}
+{#height: 100px;#}
+{#position: fixed#}
+{##}
+{#;#}
+{#        top: 100%;#}
+{#        bottom: 10px;#}
+{#        left: 10px;#}
+{#        right: 10px;#}
+{#        z-index: 10;#}
+{#        border-radius: 8px;#}
+{#    }#}
+{##}
+{#    .twit-form textarea {#}
+{#        margin-right: 0;#}
+{#        width: 70%;#}
+{#        height: 30px;#}
+{#        box-sizing: border-box;#}
+{#        padding: 2px 14px;#}
+{#        border-radius: 14px;#}
+{#        border: 1px solid #334155;#}
+{#        background: #0f172a;#}
+{#        color: #e2e8f0;#}
+{#        outline: none;#}
+{#        transition: 0.2s ease;#}
+{#    }#}
+{##}
+{#    .twit-form input[type="text"],#}
+{#    .twit-form input[type="email"],#}
+{#    .twit-form input[type="password"],#}
+{#    .twit-form input[type="number"],#}
+{#    .twit-form select {#}
+{#        width: 20%;#}
+{#        height: 30px;#}
+{#        box-sizing: border-box;#}
+{#        padding: 2px 14px;#}
+{#        border-radius: 14px;#}
+{#        border: 1px solid #334155;#}
+{#        background: #0f172a;#}
+{#        color: #e2e8f0;#}
+{#        outline: none;#}
+{#        transition: 0.2s ease;#}
+{#    }#}
+{##}
+{#    .twit-form-title,#}
+{#    .section-title {#}
+{#        font-size: 1px;#}
+{#        font-weight: 800;#}
+{#        color: #f8fafc;#}
+{#        margin-bottom: 18px;#}
+{#    }#}
+{##}
+{#    .twit-form input:focus,#}
+{#    .twit-form textarea:focus,#}
+{#    .twit-form select:focus {#}
+{#        border-color: #60a5fa;#}
+{#        box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.12);#}
+{#    }#}
+{#        @media (max-width: 900px) {#}
+{#            .twit-page {#}
+{#                grid-template-columns: 1fr;#}
+{#                padding-bottom: 80px;#}
+{#            }#}
+{##}
+{#            .twit-form {#}
+{#                top: 100%;#}
+{#                position: fixed;#}
+{#                bottom: 10px;#}
+{#                left: 10px;#}
+{#                right: 10px;#}
+{#                z-index: 10;#}
+{#                display: flex;#}
+{#                align-items: center;#}
+{#                gap: 8px;#}
+{#                padding: 8px 12px;#}
+{#                background: #0f172a;#}
+{#                border: 1px solid #334155;#}
+{#                border-radius: 24px;#}
+{#                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);#}
+{#            }#}
+{##}
+{#            .form-group {#}
+{#                display: contents;#}
+{#            }#}
+{##}
+{#            .twit-form textarea {#}
+{#                width: 70%;#}
+{#                height: 36px;#}
+{#                padding: 8px 12px;#}
+{#                border: none;#}
+{#                background: transparent;#}
+{#                color: #e2e8f0;#}
+{#                outline: none;#}
+{#                font-size: 14px;#}
+{#                resize: none;#}
+{#                border-radius: 12px;#}
+{#            }#}
+{##}
+{#            .twit-form input[type="text"],#}
+{#            .twit-form input[type="email"],#}
+{#            .twit-form input[type="password"],#}
+{#            .twit-form input[type="number"],#}
+{#            .twit-form select {#}
+{#                width: 25%;#}
+{#                height: 36px;#}
+{#                padding: 8px 12px;#}
+{#                border: none;#}
+{#                background: transparent;#}
+{#                color: #e2e8f0;#}
+{#                outline: none;#}
+{#                font-size: 14px;#}
+{#                resize: none;#}
+{#                border-radius: 12px;#}
+{#            }#}
+{##}
+{#            .twit-form input::placeholder,#}
+{#            .twit-form textarea::placeholder {#}
+{#                color: #64748b;#}
+{#            }#}
+{##}
+{#            .twit-form input:focus,#}
+{#            .twit-form textarea:focus,#}
+{#            .twit-form select:focus {#}
+{#                background: rgba(96, 165, 250, 0.1);#}
+{#            }#}
+{##}
+{#            .submit-btn {#}
+{#                width: 36px;#}
+{#                height: 36px;#}
+{#                padding: 0;#}
+{#                margin-bottom: 10px;#}
+{#                border: none;#}
+{#                background: #3b82f6;#}
+{#                color: white;#}
+{#                border-radius: 50%;#}
+{#                cursor: pointer;#}
+{#                display: flex;#}
+{#                align-items: center;#}
+{#                justify-content: center;#}
+{#                transition: 0.2s ease;#}
+{#                flex-shrink: 0;#}
+{#                font-size: 18px;#}
+{#                font-weight: bold;#}
+{#            }#}
+{##}
+{#            .submit-btn:hover {#}
+{#                background: #2563eb;#}
+{#            }#}
+{##}
+{#            .field-error {#}
+{#                display: none;#}
+{#            }#}
+{#        }#}
+{##}
+{#        @media (max-width: 640px) {#}
+{#            .twit-page {#}
+{#                padding: 16px 12px 32px;#}
+{#            }#}
+{##}
+{#            .twit-card,#}
+{#            .twit-form {#}
+{#                border-radius: 16px;#}
+{#            }#}
+{#        }#}
+{#    </style>#}
+{#{% endblock %}#}
+
+{% extends 'parent/base.html' %}
+
+{% block title %}
+    Twits
+{% endblock %}
+
+{% block content %}
+
+    <div class="twits-container">
+        <div class="twits-wrapper">
+
+            <!-- 📝 Form Section -->
+            <section class="twit-form-section">
+                <div class="form-header">
+                    <h2>Share Your Thoughts</h2>
+                    <p>Write what's on your mind</p>
+                </div>
+
+                <form method="post" class="twit-form">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                        {% if field.name == 'title' %}
+                            <div class="form-group">
+                                <label>{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <span class="field-error">{{ field.errors }}</span>
+                                {% endif %}
+                            </div>
+                        {% elif field.name == 'description' %}
+                            <div class="form-group">
+                                <label>{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <span class="field-error">{{ field.errors }}</span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    <button type="submit" class="submit-btn">Share ➤</button>
+                </form>
+            </section>
+
+            <!-- 💬 Twits List Section -->
+            <section class="twits-list-section">
+                <div class="section-header">
+                    <h2>Twits</h2>
+                    <span class="header-line"></span>
+                </div>
+
+                <div class="twits-list">
+                    {% for twit in twits.reverse %}
+                        {% for my in my_twits %}
+                            {% if twit == my %}
+                                <article class="twit-card twit-card--mine">
+                                    <div class="twit-header">
+                                        <div class="twit-author-info">
+                                            <span class="twit-author">{{ twit.writer }}</span>
+                                            <span class="twit-time">{{ twit.create_time }}</span>
+                                        </div>
+                                        <a href="{% url 'blog:delete_twit_view' twit.id %}" class="twit-delete">×</a>
+                                    </div>
+
+                                    <p class="twit-description">{{ twit.description }}</p>
+
+                                    <div class="twit-footer">
+                                        <span class="twit-topic">{{ twit.title }}</span>
+                                    </div>
+                                </article>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% for another in another_twits %}
+                            {% if twit == another %}
+                                <article class="twit-card twit-card--other">
+                                    <div class="twit-header">
+                                        <div class="twit-author-info">
+                                            <span class="twit-author">{{ twit.writer }}</span>
+                                            <span class="twit-time">{{ twit.create_time }}</span>
+                                        </div>
+                                    </div>
+
+                                    <p class="twit-description">{{ twit.description }}</p>
+
+                                    <div class="twit-footer">
+                                        <span class="twit-topic">{{ twit.title }}</span>
+                                    </div>
+                                </article>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block head %}
+    <style>
+        body {
+            background: radial-gradient(circle at 20% 20%, rgba(255, 0, 128, 0.20), transparent 24%),
+            radial-gradient(circle at 80% 15%, rgba(0, 200, 255, 0.20), transparent 22%),
+            radial-gradient(circle at 70% 80%, rgba(120, 80, 255, 0.18), transparent 26%),
+            radial-gradient(circle at 25% 85%, rgba(0, 255, 170, 0.12), transparent 24%),
+            linear-gradient(135deg, #050816, #0b1023);
+            background-size: 160% 160%;
+            animation: bodyGlowMove 28s ease-in-out infinite alternate;
+            overflow-x: hidden;
+        }
+
+        @keyframes bodyGlowMove {
+            0% {
+                background-position: 0% 0%, 100% 0%, 50% 100%, 0% 100%, center;
+            }
+            100% {
+                background-position: 18% 12%, 82% 18%, 58% 82%, 12% 68%, center;
+            }
+        }
+
+        .twits-container {
+            padding: 24px 14px 48px;
+            width: 100%;
+        }
+
+        .twits-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* ============ Form Section ============ */
+        .twit-form-section {
+            background: rgba(16, 23, 42, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(16px);
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .form-header {
+            margin-bottom: 20px;
+        }
+
+        .form-header h2 {
+            font-size: 20px;
+            font-weight: 900;
+            color: #f8fafc;
+            margin: 0 0 6px;
+        }
+
+        .form-header p {
+            margin: 0;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .twit-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .twit-form input[type="text"],
+        .twit-form textarea {
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+            color: #e2e8f0;
+            outline: none;
+            transition: 0.2s ease;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .twit-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .twit-form input:focus,
+        .twit-form textarea:focus {
+            border-color: rgba(96, 165, 250, 0.4);
+            background: rgba(96, 165, 250, 0.08);
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.12);
+        }
+
+        .field-error {
+            display: block;
+            font-size: 11px;
+            color: #fca5a5;
+            margin-top: 4px;
+        }
+
+        .submit-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: #fff;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+        }
+
+        /* ============ Twits List Section ============ */
+        .twits-list-section {
+            background: rgba(16, 23, 42, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(16px);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 900;
+            color: #f8fafc;
+        }
+
+        .header-line {
+            height: 1px;
+            flex: 1;
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.6), rgba(139, 92, 246, 0.3), transparent);
+        }
+
+        .twits-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .twit-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 16px;
+            transition: 0.2s ease;
+        }
+
+        .twit-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .twit-card--mine {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .twit-card--other {
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .twit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 8px;
+        }
+
+        .twit-author-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .twit-author {
+            font-weight: 800;
+            color: #f8fafc;
+            font-size: 14px;
+        }
+
+        .twit-time {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .twit-delete {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.12);
+            border: none;
+            color: #fca5a5;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s ease;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .twit-delete:hover {
+            background: rgba(239, 68, 68, 0.25);
+        }
+
+        .twit-description {
+            margin: 0 0 12px;
+            color: #e2e8f0;
+            font-size: 14px;
+            line-height: 1.8;
+            word-break: break-word;
+        }
+
+        .twit-footer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .twit-topic {
+            display: inline-flex;
+            padding: 6px 12px;
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 999px;
+            color: #93c5fd;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* ============ Responsive ============ */
+        @media (max-width: 1024px) {
+            .twits-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .twit-form-section {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .twits-container {
+                padding: 16px 10px 32px;
+            }
+
+            .twits-wrapper {
+                gap: 16px;
+            }
+
+            .twit-form-section,
+            .twits-list-section {
+                padding: 16px;
+                border-radius: 18px;
+            }
+
+            .form-header h2 {
+                font-size: 18px;
+            }
+
+            .section-header h2 {
+                font-size: 18px;
+            }
+
+            .twit-card {
+                padding: 14px;
+                border-radius: 14px;
+            }
+
+            .twit-description {
+                font-size: 13px;
+            }
+
+            .twit-topic {
+                font-size: 11px;
+                padding: 5px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .twits-container {
+                padding: 12px 8px 24px;
+            }
+
+            .twit-form-section,
+            .twits-list-section {
+                padding: 12px;
+                border-radius: 16px;
+            }
+
+            .form-header h2 {
+                font-size: 16px;
+            }
+
+            .section-header h2 {
+                font-size: 16px;
+            }
+
+            .twit-form input[type="text"],
+            .twit-form textarea {
+                font-size: 13px;
+                padding: 10px 12px;
+            }
+
+            .twit-form textarea {
+                min-height: 70px;
+            }
+
+            .submit-btn {
+                font-size: 13px;
+                padding: 10px 16px;
+            }
+
+            .twit-card {
+                padding: 12px;
+            }
+
+            .twit-author {
+                font-size: 13px;
+            }
+
+            .twit-time {
+                font-size: 11px;
+            }
+
+            .twit-description {
+                font-size: 12px;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+{% endblock %}

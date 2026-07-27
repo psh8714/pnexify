@@ -1,0 +1,19 @@
+{% if users_ticket %}
+    {% for ticket in users_ticket %}
+        {% with ticket.user as user %}
+            {% if not user.is_staff %}
+            {% if user.user_tickets.last.read %}
+                <a href="{% url 'blog:local_ticket_admin' user.id %}">{{ user.username }}</a>
+                {{ user.user_tickets.last.ticket }}
+            {% else %}
+                <span style="color: #f86969">!!!</span>
+                <a href="{% url 'blog:local_ticket_admin' user.id %}">{{ user.username }}</a>
+                {{ user.user_tickets.last.ticket }}
+            {% endif %}
+            {% endif %}
+        {% endwith %}
+    {% endfor %}
+{% else %}
+    empty
+{% endif %}
+<a href="{% url 'blog:index' %}">home</a>

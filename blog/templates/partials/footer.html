@@ -1,0 +1,104 @@
+<footer class="site-footer">
+    <div class="container footer-content">
+
+        <div class="footer-about">
+            <h3>MyDjango</h3>
+            <p>
+                یک پروژه آموزشی با جنگو برای یادگیری اصولی
+                بک‌اند و طراحی وب
+            </p>
+        </div>
+
+        <div class="footer-links">
+            <h4>لینک‌های مفید</h4>
+            <ul>
+                <li><a href="#">صفحه اصلی</a></li>
+                <li><a href="#">پست‌ها</a></li>
+                <li><a href="#">درباره ما</a></li>
+                <li><a href="#">تماس با ما</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-auth">
+            <h4>حساب کاربری</h4>
+{#            <ul>#}
+{#                {% if user.is_authenticated %}#}
+{#                    <li>سلام {{ user.username }} 👋</li>#}
+{#                    <li><a href="{% url 'logout' %}">خروج</a></li>#}
+{#                {% else %}#}
+{#                    <li><a href="{% url 'login' %}">ورود</a></li>#}
+{#                    <li><a href="{% url 'register' %}">ثبت‌نام</a></li>#}
+{#                {% endif %}#}
+{#            </ul>#}
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2025 MyDjango — تمام حقوق محفوظ است</p>
+    </div>
+</footer>
+<head>
+    <style>
+        .site-footer {
+    background-color: #0b0b0b;
+    color: #ccc;
+    margin-top: 60px;
+}
+
+.site-footer .container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 50px 20px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+}
+
+.site-footer h3,
+.site-footer h4 {
+    color: #fff;
+    margin-bottom: 14px;
+}
+
+.site-footer p {
+    line-height: 1.8;
+    font-size: 14px;
+}
+
+.footer-links ul,
+.footer-auth ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li,
+.footer-auth li {
+    margin-bottom: 8px;
+}
+
+.site-footer a {
+    color: #aaa;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.site-footer a:hover {
+    color: #4da3ff;
+}
+
+.footer-bottom {
+    border-top: 1px solid #222;
+    text-align: center;
+    padding: 15px;
+    font-size: 13px;
+    color: #888;
+}
+
+    </style>
+</head>

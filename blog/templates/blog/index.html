@@ -1,0 +1,773 @@
+{#{% extends 'parent/base.html' %}#}
+{#{% load  blog_tags %}#}
+{#{% block title %}#}
+{#    صفحه اصلی#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#    <section class="hero">#}
+{#        <div class="hero-content">#}
+{#            <h1>به سایت ما خوش آمدید 👋</h1>#}
+{#            <div class="card">#}
+{#                <h2 class="post-title">{{ post.title }}</h2>#}
+{#                <p class="post-description" {{ post.description | truncatewords:20 }}></p>#}
+{#                <p class="post-description">{{ post.get_absolute_url }}</p>#}
+{#                <a href="{{ post.get_absolute_url }}" class="read-more">#}
+{#                    Reds More →#}
+{#                </a>#}
+{#            </div>#}
+{#            <div class="comments-section">#}
+{#                <h2 class="btn"> آمار:</h2>#}
+{#                <p class="post-card">تعداد پست:{% post_number %}</p>#}
+{#                <p class="post-card">تعداد کامنت:{% comment_number %}</p>#}
+{#                <p class="post-card">تاریخ آخرین پست:{% last_post_publish %}</p>#}
+{#            </div>#}
+{#            <p>#}
+{#                اینجا می‌تونی جدیدترین مطالب، آموزش‌ها و پست‌ها رو ببینی#}
+{#            </p>#}
+{##}
+{#            <div class="hero-actions">#}
+{#                <a href="{% url 'blog:post_list' %}" class="btn btn-primary">مشاهده پست‌ها</a>#}
+{#                <a href="#" class="btn btn-outline">درباره ما</a>#}
+{#            </div>#}
+{#            <div>#}
+{#                {% latest_posts %}#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{#    </section>#}
+{#{% endblock %}#}
+{#{% block head %}#}
+{#    <style>#}
+{#        .hero {#}
+{#            min-height: 70vh;#}
+{#            display: flex;#}
+{#            justify-content: center;#}
+{#            align-items: center;#}
+{#            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);#}
+{#            color: #fff;#}
+{#            text-align: center;#}
+{#            padding: 40px 20px;#}
+{#        }#}
+{##}
+{#        .hero-content {#}
+{#            max-width: 700px;#}
+{#        }#}
+{##}
+{#        .hero h1 {#}
+{#            font-size: 42px;#}
+{#            margin-bottom: 16px;#}
+{#        }#}
+{##}
+{#        .hero p {#}
+{#            font-size: 18px;#}
+{#            line-height: 1.8;#}
+{#            color: #ddd;#}
+{#            margin-bottom: 30px;#}
+{#        }#}
+{##}
+{#        .hero-actions {#}
+{#            display: flex;#}
+{#            justify-content: center;#}
+{#            gap: 15px;#}
+{#        }#}
+{##}
+{#        .btn {#}
+{#            padding: 12px 28px;#}
+{#            border-radius: 6px;#}
+{#            font-size: 15px;#}
+{#            text-decoration: none;#}
+{#            transition: all 0.3s ease;#}
+{#        }#}
+{##}
+{#        .btn-primary {#}
+{#            background-color: #4da3ff;#}
+{#            color: #fff;#}
+{#        }#}
+{##}
+{#        .btn-primary:hover {#}
+{#            background-color: #1e88ff;#}
+{#        }#}
+{##}
+{#        .btn-outline {#}
+{#            border: 1px solid #fff;#}
+{#            color: #fff;#}
+{#        }#}
+{##}
+{#        .btn-outline:hover {#}
+{#            background-color: #fff;#}
+{#            color: #000;#}
+{#        }#}
+{#    </style>#}
+{#{% endblock %}#}
+{% extends 'parent/base.html' %}
+{% load blog_tags %}
+{% load static %}
+
+{% block title %}صفحه اصلی{% endblock %}
+
+{% block content %}
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        {% if notif.s_description|length > 3 %}
+            <span class="notification-text">
+        {{ notif.s_description }}
+        </span>
+        {% endif %}
+        <div class="container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-8 col-md-10 mx-auto text-center">
+                    <div class="hero-content">
+                        <span class="badge bg-primary mb-3">{{ text1.s_description }}</span>
+                        <h1 class="display-3 fw-bold mb-4">
+                            <span class="gradient-text">{{ text2.s_description }}</span>
+                        </h1>
+                        <p style="color:#5c7fa5;">
+                            {{ text3.s_description }}
+                        </p>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-3 justify-content-center flex-wrap mb-5">
+                            <a href="{% url 'blog:post_list' %}" class="btn btn-lg btn-primary btn-modern">
+                                <i class="bi bi-arrow-right-circle"></i> {{ text4.s_description }}
+                            </a>
+                            <a href="{% url 'blog:about_us' %}" class="btn btn-lg btn-outline-light btn-modern">
+                                <i class="bi bi-info-circle"></i> {{ text5.s_description }}
+                            </a>
+                        </div>
+
+                        <!-- Stats -->
+                        <div class="stats-row">
+                            <div class="stat-card">
+                                <h3 class="stat-number">{% post_number %}</h3>
+                                <p class="stat-label">پست منتشر شده</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3 class="stat-number">{% comment_number %}</h3>
+                                <p class="stat-label">کامنت و بحث</p>
+                            </div>
+                            <div class="stat-card">
+                                {% last_post_publish as last_p %}
+                                <h3 class="stat-number">{{ last_p | date:" Y/m/d" }}</h3>
+                                <p class="stat-label">آخرین فعالیت</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Post Section -->
+    <section class="featured-section py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">{{ text6.s_description }}</h2>
+                <div class="title-line"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="featured-card">
+                        <div class="featured-badge">{{ text12.s_description }}</div>
+                        {% if post != 'empty page' %}
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="featured-image-wrapper">
+                                        <img src="{{ post.images.first.image_file.url }}"
+                                             alt="{{ post.title }}" class="featured-image">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 d-flex flex-column justify-content-center">
+                                    <span class="category-badge">{{ post.get_category_display }}</span>
+                                    <h3 class="featured-title">{{ post.title }}</h3>
+                                    <p class="featured-description">
+                                        {{ post.description | truncatewords:30 }}
+                                    </p>
+
+                                    <div class="featured-meta mb-4">
+                                <span class="meta-item">
+                                    <i class="bi bi-person-circle"></i> {{ post.author.get_full_name }}
+                                </span>
+                                        <span class="meta-item">
+                                    <i class="bi bi-calendar-event"></i> {{ post.publish | date:"d M Y" }}
+                                </span>
+                                    </div>
+
+                                    <a href="{{ post.get_absolute_url }}"
+                                       class="btn btn-primary btn-modern align-self-start">
+                                        مطالعه مقاله <i class="bi bi-arrow-left"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Posts Section -->
+    <section class="latest-posts-section py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">{{ text7.s_description }}</h2>
+                <div class="title-line"></div>
+            </div>
+
+            <div class="row g-4">
+                {% latest_posts %}
+            </div>
+
+            <!-- View All Button -->
+            <div class="text-center mt-5">
+                <a href="{% url 'blog:post_list' %}" class="btn btn-primary btn-lg btn-modern">
+                    {{ text8.s_description }}
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section py-5">
+        <div class="container">
+            <div class="cta-card text-center">
+                <h2 class="mb-3">{{ text9.s_description }}</h2>
+                <p class="mb-4">{{ text10.s_description }}</p>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'blog:new_post_view' %}" class="btn btn-light btn-lg btn-modern">
+                        <i class="bi bi-pen"></i> {{ text11.s_description }}
+                    </a>
+                {% else %}
+                    <a href="{% url 'blog:login' %}" class="btn btn-light btn-lg btn-modern">
+                        <i class="bi bi-box-arrow-in-right"></i> ورود به حساب
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+{% if request.user.is_authenticated %}
+    {% head_color request.user as color_ %}
+{% else %}
+    {% head_color as color_ %}
+{% endif %}
+{% block head %}
+{#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">#}
+    <link rel="stylesheet" href="{% static 'icons/bootstrap-icons.css' %}">
+    <style>
+        :root {
+            --primary-color: #7c5cff;
+            --primary-hover: #6a4df0;
+            --secondary-color: #22c55e;
+            --accent-color: #ffb84d;
+
+            --dark-bg: #0b1220;
+            --dark-bg-secondary: #111827;
+            --card-bg: rgba(17, 24, 39, 0.88);
+            --card-bg-soft: rgba(255, 255, 255, 0.04);
+
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(124, 92, 255, 0.45);
+
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.25);
+            --shadow-hover: 0 18px 40px rgba(124, 92, 255, 0.18);
+
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #6a6aff;
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #0b1220 0%, #111827 45%, #1f2937 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 15% 20%, rgba(124, 92, 255, 0.18) 0%, transparent 35%),
+            radial-gradient(circle at 85% 80%, rgba(34, 197, 94, 0.12) 0%, transparent 35%),
+            radial-gradient(circle at 50% 50%, rgba(255, 184, 77, 0.08) 0%, transparent 45%);
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 50%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 18px;
+            margin-top: 50px;
+        }
+
+        .stat-card {
+            background: var(--card-bg-soft);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            transition: var(--transition);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: var(--border-hover);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-number {
+            font-size: 30px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .btn-modern {
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 12px 28px;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #4f46e5 100%);
+            border: none;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-hover) 0%, #4338ca 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(124, 92, 255, 0.28);
+            color: #fff;
+        }
+
+        .btn-outline-light {
+            border: 2px solid rgba(255, 255, 255, 0.85);
+            color: #ffffff;
+            background: transparent;
+        }
+
+        .btn-outline-light:hover {
+            background: #ffffff;
+            color: #0b1220;
+            transform: translateY(-2px);
+        }
+
+        .featured-section,
+        .latest-posts-section {
+            background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
+        }
+
+        .section-title {
+            font-size: 34px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .title-line {
+            width: 70px;
+            height: 4px;
+            background: linear-gradient(135deg, #7c5cff 0%, #22c55e 100%);
+            margin: 0 auto;
+            border-radius: 999px;
+        }
+
+        .featured-card {
+            background: linear-gradient(135deg, rgba(124, 92, 255, 0.08) 0%, rgba(34, 197, 94, 0.05) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+            transition: var(--transition);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .featured-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-5px);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ef4444, #f97316);
+            color: white;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 1;
+        }
+
+        .featured-image-wrapper {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            height: 100%;
+            min-height: 300px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .featured-image-wrapper:hover .featured-image {
+            transform: scale(1.05);
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #7c5cff, #60a5fa);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+
+        .featured-title {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            line-height: 1.35;
+            color: #ffffff;
+        }
+
+        .featured-description {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.9;
+            margin-bottom: 20px;
+        }
+
+        .featured-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 14px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+        }
+
+        .post-card {
+            background: linear-gradient(135deg, rgba(124, 92, 255, 0.06) 0%, rgba(34, 197, 94, 0.04) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .post-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-8px);
+        }
+
+        /* فقط این بخش تغییر کرده */
+        .post-image-wrapper {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 14px 14px 0 0;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+            display: block;
+        }
+
+        .post-card:hover .post-image {
+            transform: scale(1.08);
+        }
+
+        .post-content {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .post-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #ffffff;
+            padding: 5px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            width: fit-content;
+        }
+
+        .post-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            color: #ffffff;
+        }
+
+        .post-excerpt {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 15px;
+            flex: 1;
+            line-height: 1.8;
+        }
+
+        .post-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .post-author,
+        .post-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #6d28d9 0%, #2563eb 100%);
+        }
+
+        .cta-card {
+            padding: 60px 40px;
+            border-radius: 18px;
+            background: rgba(0, 0, 0, 0.18);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .cta-card h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .cta-card p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1068px) {
+            .hero-section {
+                min-height: auto;
+                padding: 40px 0;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .featured-card {
+                padding: 22px;
+            }
+
+            .featured-title {
+                font-size: 22px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .btn-modern {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .cta-card {
+                padding: 30px 20px;
+            }
+
+            .cta-card h2 {
+                font-size: 24px;
+            }
+
+            .cta-card p {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-section {
+                padding: 20px 0;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-modern {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .featured-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .post-footer {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .notification-text {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px 14px;
+            color: #e5e7eb;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.9;
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 14px;
+            direction: rtl;
+            unicode-bidi: plaintext;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: .25s ease;
+            text-align: center;
+        }
+
+        .notification-text:hover {
+            border-color: rgba(139, 92, 246, .35);
+            background: rgba(139, 92, 246, .06);
+        }
+    </style>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function lighten(hex, percent) {
+            let num = parseInt(hex.replace("#", ""), 16);
+
+            let r = (num >> 16);
+            let g = (num >> 8) & 255;
+            let b = num & 255;
+
+            r += (255 - r) * percent;
+            g += (255 - g) * percent;
+            b += (255 - b) * percent;
+
+            return "#" +
+                Math.round(r).toString(16).padStart(2, "0") +
+                Math.round(g).toString(16).padStart(2, "0") +
+                Math.round(b).toString(16).padStart(2, "0");
+        }
+
+        function darken(hex, percent) {
+            let num = parseInt(hex.replace("#", ""), 16);
+
+            let r = (num >> 16);
+            let g = (num >> 8) & 255;
+            let b = num & 255;
+
+            r *= (1 - percent);
+            g *= (1 - percent);
+            b *= (1 - percent);
+
+            return "#" +
+                Math.round(r).toString(16).padStart(2, "0") +
+                Math.round(g).toString(16).padStart(2, "0") +
+                Math.round(b).toString(16).padStart(2, "0");
+        }
+    </script>
+{% endblock %}

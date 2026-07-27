@@ -1,0 +1,321 @@
+{#<div class="back_page" aria-label="navigation">#}
+{#    <ul class="pagination">#}
+{##}
+{#        {% if page.has_previous %}#}
+{#            <li class="page-item">#}
+{#                <a class="page-link prev" href="?page={{ page.previous_page_number }}">قبلی</a>#}
+{#            </li>#}
+{#        {% endif %}#}
+{##}
+{#        {% if page.number > 3 %}#}
+{#            <li class="page-item">#}
+{#                <a class="page-link" href="?page=1">1</a>#}
+{#            </li>#}
+{##}
+{#            {% if page.number > 4 %}#}
+{#                <li class="page-item disabled">#}
+{#                    <span class="page-link">…</span>#}
+{#                </li>#}
+{#            {% endif %}#}
+{#        {% endif %}#}
+{##}
+{#        {% for num in page.paginator.page_range %}#}
+{#            {% if num >= page.number|add:"-2" and num <= page.number|add:"2" %}#}
+{#                {% if page.number == num %}#}
+{#                    <li class="page-item active">#}
+{#                        <span class="page-link">{{ num }}</span>#}
+{#                    </li>#}
+{#                {% else %}#}
+{#                    <li class="page-item">#}
+{#                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>#}
+{#                    </li>#}
+{#                {% endif %}#}
+{#            {% endif %}#}
+{#        {% endfor %}#}
+{##}
+{#        {% if page.number < page.paginator.num_pages|add:"-2" %}#}
+{#            <li class="page-item disabled">#}
+{#                <span class="page-link">…</span>#}
+{#            </li>#}
+{##}
+{#            <li class="page-item">#}
+{#                <a class="page-link" href="?page={{ page.paginator.num_pages }}">#}
+{#                    {{ page.paginator.num_pages }}#}
+{#                </a>#}
+{#            </li>#}
+{#        {% endif %}#}
+{##}
+{#        {% if page.has_next %}#}
+{#            <li class="page-item">#}
+{#                <a class="page-link next" href="?page={{ page.next_page_number }}">بعدی</a>#}
+{#            </li>#}
+{#        {% endif %}#}
+{##}
+{#    </ul>#}
+{#</div>#}
+{#<style>#}
+{#    /* کانتینر */#}
+{#.back_page {#}
+{#    margin: 40px 0;#}
+{#    direction: ltr;#}
+{#}#}
+{##}
+{#/* لیست pagination */#}
+{#.back_page .pagination {#}
+{#    display: flex;#}
+{#    justify-content: center;#}
+{#    align-items: center;#}
+{#    gap: 10px;#}
+{#    padding: 14px 18px;#}
+{#    border-radius: 18px;#}
+{#    background: rgba(255, 255, 255, 0.6);#}
+{#    backdrop-filter: blur(10px);#}
+{#    box-shadow:#}
+{#        0 12px 30px rgba(0, 0, 0, 0.08),#}
+{#        inset 0 0 0 1px rgba(255, 255, 255, 0.4);#}
+{#}#}
+{##}
+{#/* آیتم */#}
+{#.back_page .page-item {#}
+{#    list-style: none;#}
+{#}#}
+{##}
+{#/* لینک‌ها */#}
+{#.back_page .page-link {#}
+{#    min-width: 42px;#}
+{#    height: 42px;#}
+{#    padding: 0 14px;#}
+{#    display: flex;#}
+{#    align-items: center;#}
+{#    justify-content: center;#}
+{##}
+{#    border-radius: 14px;#}
+{#    border: none;#}
+{##}
+{#    background: linear-gradient(145deg, #ffffff, #f1f1f1);#}
+{#    color: #333;#}
+{#    font-size: 14px;#}
+{#    font-weight: 500;#}
+{#    text-decoration: none;#}
+{##}
+{#    box-shadow:#}
+{#        0 6px 16px rgba(0, 0, 0, 0.08),#}
+{#        inset 0 -2px 4px rgba(0, 0, 0, 0.05);#}
+{##}
+{#    transition: all 0.25s ease;#}
+{#}#}
+{##}
+{#/* هاور */#}
+{#.back_page .page-link:hover {#}
+{#    transform: translateY(-3px) scale(1.05);#}
+{#    background: linear-gradient(145deg, #fdfdfd, #eaeaea);#}
+{#    box-shadow:#}
+{#        0 10px 22px rgba(0, 0, 0, 0.12);#}
+{#}#}
+{##}
+{#/* صفحه فعال */#}
+{#.back_page .page-item.active .page-link {#}
+{#    background: linear-gradient(135deg, #ff416c, #ff4b2b);#}
+{#    color: #fff;#}
+{#    font-weight: bold;#}
+{#    box-shadow:#}
+{#        0 12px 28px rgba(255, 75, 43, 0.45);#}
+{#    transform: scale(1.1);#}
+{#}#}
+{##}
+{#/* قبلی / بعدی */#}
+{#.back_page .page-link.prev,#}
+{#.back_page .page-link.next {#}
+{#    padding: 0 20px;#}
+{#    font-weight: 600;#}
+{#    background: linear-gradient(135deg, #667eea, #764ba2);#}
+{#    color: #fff;#}
+{#}#}
+{##}
+{#/* hover قبلی / بعدی */#}
+{#.back_page .page-link.prev:hover,#}
+{#.back_page .page-link.next:hover {#}
+{#    background: linear-gradient(135deg, #5a6eea, #6a3fa2);#}
+{#}#}
+{##}
+{#/* disabled */#}
+{#.back_page .page-item.disabled .page-link {#}
+{#    background: #f2f2f2;#}
+{#    color: #aaa;#}
+{#    box-shadow: none;#}
+{#    transform: none;#}
+{#    cursor: default;#}
+{#}#}
+{##}
+{#/* ریسپانسیو */#}
+{#@media (max-width: 576px) {#}
+{#    .back_page .pagination {#}
+{#        gap: 6px;#}
+{#        padding: 10px;#}
+{#    }#}
+{##}
+{#    .back_page .page-link {#}
+{#        min-width: 34px;#}
+{#        height: 34px;#}
+{#        font-size: 13px;#}
+{#    }#}
+{##}
+{##}
+{#</style>#}
+
+{#-------------------------------------------------------------------#}
+
+<div class="back_page" aria-label="navigation">
+    <ul class="pagination">
+
+        {% if page.has_previous %}
+            <li class="page-item">
+                <a class="page-link prev" href="?{{ page_param|default:'page' }}={{ page.previous_page_number }}">قبلی</a>
+            </li>
+        {% endif %}
+
+        {% if page.number > 3 %}
+            <li class="page-item">
+                <a class="page-link" href="?{{ page_param|default:'page' }}=1">1</a>
+            </li>
+
+            {% if page.number > 4 %}
+                <li class="page-item disabled">
+                    <span class="page-link">…</span>
+                </li>
+            {% endif %}
+        {% endif %}
+
+        {% for num in page.paginator.page_range %}
+            {% if num >= page.number|add:"-2" and num <= page.number|add:"2" %}
+                {% if page.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{{ page_param|default:'page' }}={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+        {% if page.number < page.paginator.num_pages|add:"-2" %}
+            <li class="page-item disabled">
+                <span class="page-link">…</span>
+            </li>
+
+            <li class="page-item">
+                <a class="page-link" href="?{{ page_param|default:'page' }}={{ page.paginator.num_pages }}">
+                    {{ page.paginator.num_pages }}
+                </a>
+            </li>
+        {% endif %}
+
+        {% if page.has_next %}
+            <li class="page-item">
+                <a class="page-link next" href="?{{ page_param|default:'page' }}={{ page.next_page_number }}">بعدی</a>
+            </li>
+        {% endif %}
+
+    </ul>
+</div>
+
+<style>
+    .back_page {
+        margin: 32px 0;
+        direction: ltr;
+    }
+
+    .back_page .pagination {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        padding: 0;
+        margin: 0;
+    }
+
+    .back_page .page-item {
+        list-style: none;
+    }
+
+    .back_page .page-link {
+        min-width: 42px;
+        height: 42px;
+        padding: 0 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        color: #0f172a;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+        transition: all 0.2s ease;
+    }
+
+    .back_page .page-link:hover {
+        transform: translateY(-2px);
+        background: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1d4ed8;
+    }
+
+    .back_page .page-item.active .page-link {
+        background: linear-gradient(135deg, #1d9bf0, #1a8cd8);
+        color: #fff;
+        border-color: transparent;
+        box-shadow: 0 10px 24px rgba(29, 155, 240, 0.28);
+        transform: translateY(-1px);
+    }
+
+    .back_page .page-link.prev,
+    .back_page .page-link.next {
+        padding: 0 18px;
+        background: #0f172a;
+        color: #fff;
+        border-color: #0f172a;
+    }
+
+    .back_page .page-link.prev:hover,
+    .back_page .page-link.next:hover {
+        background: #1e293b;
+        color: #fff;
+    }
+
+    .back_page .page-item.disabled .page-link {
+        background: #f1f5f9;
+        color: #94a3b8;
+        box-shadow: none;
+        cursor: default;
+        transform: none;
+    }
+
+    @media (max-width: 576px) {
+        .back_page {
+            margin: 24px 0;
+        }
+
+        .back_page .pagination {
+            gap: 6px;
+        }
+
+        .back_page .page-link {
+            min-width: 36px;
+            height: 36px;
+            padding: 0 12px;
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        .back_page .page-link.prev,
+        .back_page .page-link.next {
+            padding: 0 14px;
+        }
+    }
+</style>

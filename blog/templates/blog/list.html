@@ -1,0 +1,318 @@
+{% extends 'parent/base.html' %}
+{% load static %}
+
+{% block title %}Post List{% endblock %}
+
+{% block head %}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #ececec;
+            font-family: "Bricolage Grotesque", sans-serif;
+        }
+
+        .post-page {
+            min-height: 100vh;
+            padding: 32px 16px 80px;
+        }
+
+        .post-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: none;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .title {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: #111827;
+            margin-bottom: 18px;
+        }
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(17, 24, 39, 0.12);
+            background: rgba(255, 255, 255, 0.7);
+            color: #374151;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: 0.25s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .category:hover {
+            transform: translateY(-1px);
+            background: #ffffff;
+            border-color: rgba(17, 24, 39, 0.18);
+        }
+
+        .category.active {
+            background: #111827;
+            color: #fff;
+            border: 1px solid rgba(17, 24, 39, 0.12);
+        }
+
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .post-card {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(17, 24, 39, 0.08);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(17, 24, 39, 0.08);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            backdrop-filter: blur(12px);
+        }
+
+        .post-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 40px rgba(17, 24, 39, 0.12);
+        }
+
+        .post-media {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            overflow: hidden;
+            background: #e5e7eb;
+        }
+
+        .post-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.35s ease;
+        }
+
+        .post-card:hover .post-media img {
+            transform: scale(1.06);
+        }
+
+        .post-placeholder {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .post-body {
+            padding: 18px;
+        }
+
+        .post-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .post-description {
+            direction: rtl;
+            unicode-bidi: plaintext;
+            text-align: right;
+            color: #4b5563;
+            font-size: 0.98rem;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .post-footer {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            color: #111827;
+            font-weight: 700;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: #f3f4f6;
+            transition: 0.2s ease;
+        }
+
+        .read-more:hover {
+            background: #111827;
+            color: #fff;
+        }
+
+        .empty-state,
+        .loading-trigger,
+        .no-more {
+            grid-column: 1 / -1;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(17, 24, 39, 0.08);
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            color: #374151;
+            backdrop-filter: blur(12px);
+        }
+
+        .spinner {
+            width: 26px;
+            height: 26px;
+            border: 3px solid rgba(17, 24, 39, 0.15);
+            border-top-color: #111827;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            animation: spin 0.9s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text,
+        .no-more p {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .no-more-emoji {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .post-page {
+                padding: 20px 12px 70px;
+            }
+
+            .categories {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 6px;
+            }
+
+            .category {
+                flex: 0 0 auto;
+            }
+        }
+    </style>
+
+{#    <script src="https://unpkg.com/htmx.org@1.9.12"></script>#}
+<script src={% static  'js/htmx.min.js' %}></script>
+
+{% endblock %}
+
+{% block content %}
+    <div class="post-page">
+        <div class="post-container">
+            <div class="page-header">
+                <h1 class="title">{{ text1.s_description}}</h1>
+
+                <div class="categories">
+                    <a href="{% url 'blog:post_list' %}"
+                       id="c1"
+                       class="category {% if not category %}active{% endif %}"
+                       hx-get="{% url 'blog:post_list' %}"
+                       hx-target="#posts-grid"
+                       hx-swap="innerHTML"
+                       hx-push-url="{% url 'blog:post_list' %}">
+                        all
+                    </a>
+
+                    <a href="{% url 'blog:post_list_category' 'WIL' %}"
+                       id="c2"
+                       class="category {% if category == 'WIL' %}active{% endif %}"
+                       hx-get="{% url 'blog:post_list_category' 'WIL' %}"
+                       hx-target="#posts-grid"
+                       hx-swap="innerHTML"
+                       hx-push-url="{% url 'blog:post_list_category' 'WIL' %}">
+                        ایده و یادگیری
+                    </a>
+
+                    <a href="{% url 'blog:post_list_category' 'WIC' %}"
+                       id="c3"
+                       class="category {% if category == 'WIC' %}active{% endif %}"
+                       hx-get="{% url 'blog:post_list_category' 'WIC' %}"
+                       hx-target="#posts-grid"
+                       hx-swap="innerHTML"
+                       hx-push-url="{% url 'blog:post_list_category' 'WIC' %}">
+                        پروزه یا نمونه کار
+                    </a>
+
+                    <a href="{% url 'blog:post_list_category' 'SFT' %}"
+                       id="c4"
+                       class="category {% if category == 'SFT' %}active{% endif %}"
+                       hx-get="{% url 'blog:post_list_category' 'SFT' %}"
+                       hx-target="#posts-grid"
+                       hx-swap="innerHTML"
+                       hx-push-url="{% url 'blog:post_list_category' 'SFT' %}">
+                        هم تیمی
+                    </a>
+
+                    <a href="{% url 'blog:post_list_category' 'IHQ' %}"
+                       id="c5"
+                       class="category {% if category == 'IHQ' %}active{% endif %}"
+                       hx-get="{% url 'blog:post_list_category' 'IHQ' %}"
+                       hx-target="#posts-grid"
+                       hx-swap="innerHTML"
+                       hx-push-url="{% url 'blog:post_list_category' 'IHQ' %}">
+                        پرسش ها
+                    </a>
+                </div>
+            </div>
+
+            <div class="posts-grid" id="posts-grid">
+                {% include 'blog/htmx_list.html' %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>#}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#c1, #c2, #c3, #c4, #c5').click(function () {
+                $('#c1, #c2, #c3, #c4, #c5').css({
+                    'background': 'none',
+                    'color': 'black'
+                });
+
+                $(this).css({
+                    'background': 'black',
+                    'color': 'white'
+                });
+            });
+        });
+    </script>
+{% endblock %}

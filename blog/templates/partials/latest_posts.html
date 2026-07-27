@@ -1,0 +1,22 @@
+{% for post in posts %}
+<div class="col-lg-4 col-md-6">
+    <div class="post-card">
+        {% with img=post.images.first %}
+            <div class="post-image-wrapper">
+                <img src="{{ img.image_file.url }}"
+                     alt="{{ post.title }}" class="post-image">
+            </div>
+        {% endwith %}
+
+        <div class="post-content">
+            <span class="post-category">{{ post.get_category_display }}</span>
+            <h3 class="post-title">{{ post.title }}</h3>
+            <p class="post-excerpt">{{ post.description|truncatewords:15 }}</p>
+            <div class="post-footer mt-auto">
+                <span class="post-author">{{ post.author.get_full_name }}</span>
+                <span class="post-date">{{ post.publish|date:"d M Y" }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

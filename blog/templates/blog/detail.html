@@ -1,0 +1,1322 @@
+{#{% extends 'parent/base.html' %}#}
+{#{% block title %}{{ post.title }} detail{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#    <div class="detail-container">#}
+{#        <h1 class="detail-title">{{ post.title }}</h1>#}
+{#        <div class="detail-meta">#}
+{#            <span class="detail-author">👤 نویسنده: <a href="{% url 'blog:user_info' post.author_id %}">{{ post.author }}</a></span>#}
+{#            <span class="detail-author">👤 نویسنده: {{ post.author }}</span>#}
+{#            <span class="detail-date"> 🕒 تاریخ انتشار: {{ new_date | date:'d-m-Y' }}</span>#}
+{#        </div>#}
+{#        <div class="detail-description">#}
+{#            {{ post.description | linebreaks }}#}
+{#        </div>#}
+{##}
+{#        <div class="detail-title">#}
+{#            {% with comments.count as cm_count %}#}
+{#                {{ cm_count }} comment{{ cm_count|pluralize }}#}
+{#            {% endwith %}#}
+{#        </div>#}
+{##}
+{#        <div>#}
+{#            {% for cm in comments %}#}
+{#                {{ cm.body|linebreaks }}#}
+{#                <br>#}
+{#                {{ cm.name }}#}
+{#            {% empty %}#}
+{#                any comment is not exist!#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#        <form method="post" action="{% url 'blog:post_comment' post.slug %}">#}
+{#            {% csrf_token %}#}
+{#            {% for field in form %}#}
+{#                {{ field.label_tag }}#}
+{#                {{ field }}#}
+{#                {{ field.errors }}#}
+{#                <br>#}
+{#                <br>#}
+{#            {% endfor %}#}
+{#            <input type="submit" value="افزودن کامنت">#}
+{#        </form>#}
+{##}
+{#        <a href="{% url 'blog:post_list' %}" class="back-btn">بازگشت به لیست</a>#}
+{##}
+{#        <div class="comment-box">#}
+{#            <div class="comments-section">#}
+{#                {% for comment in comments %}#}
+{#                    <span class="comment-author">#}
+{#            {{ comment.name }}:#}
+{#            </span>#}
+{#                    <div class="comment-box">#}
+{#            {{ comment.body |linebreaks }}#}
+{#            </div>#}
+{#                {% empty %}#}
+{#                    <div class="empty-form">empty!</div>#}
+{#                {% endfor %}#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="comments-section">#}
+{#            <hr>#}
+{#            <form method="post" action="{% url 'blog:post_comment' post.slug %}">#}
+{#                {% csrf_token %}#}
+{#                <div class="form-group">#}
+{#                    {% for field in form %}#}
+{#                        <span class="comment-author">#}
+{#                    {{ field.label }}:#}
+{#                    </span>#}
+{#                        <span class="comment-body">#}
+{#                    {{ field }}#}
+{#                    </span>#}
+{#                        {% if field.errors %}#}
+{#                            {{ field.errors }}#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                </div>#}
+{#                <button type="submit" class="submit-btn">"add comment"</button>#}
+{##}
+{#            </form>#}
+{#        </div>#}
+{##}
+{#        <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="back-btn">بازگشت به لیست</a>#}
+{#    </div>#}
+{#{% endblock %}#}
+{##}
+{#{% block head %}#}
+{#    <style>#}
+{#        /* ===== Comments Section ===== */#}
+{#        .comments-section {#}
+{#            margin-top: 50px;#}
+{#            padding: 25px;#}
+{#            background-color: #a3a3ff;#}
+{#            border-radius: 12px;#}
+{#        }#}
+{##}
+{#        .comments-title {#}
+{#            color: #f5f5f5;#}
+{#            margin-bottom: 20px;#}
+{#            font-size: 20px;#}
+{#            border-bottom: 1px solid #333;#}
+{#            padding-bottom: 10px;#}
+{#        }#}
+{##}
+{#        .comment-box {#}
+{#            background-color: #d4daff;#}
+{#            padding: 15px 50px;#}
+{#            border-radius: 10px;#}
+{#            margin-bottom: 15px;#}
+{#        }#}
+{##}
+{#        .comment-body {#}
+{#            color: #a2cdff;#}
+{#            line-height: 1.8;#}
+{#            margin-bottom: 8px;#}
+{#        }#}
+{##}
+{#        .comment-author {#}
+{#            display: inline-block;#}
+{#            margin-top: 8px;#}
+{#            padding: 15px 10px;#}
+{##}
+{#            font-size: 12px;#}
+{#            color: #cfcfcf;#}
+{##}
+{#            background-color: rgba(105, 104, 104, 0.79);#}
+{#            border: 1px solid #6a6aff;#}
+{#            border-radius: 15px;#}
+{##}
+{#            letter-spacing: 0.3px;#}
+{#        }#}
+{##}
+{##}
+{#        .no-comment {#}
+{#            color: #ffffff;#}
+{#            font-style: italic;#}
+{#        }#}
+{##}
+{#        /* ===== Comment Form ===== */#}
+{#        .comment-form {#}
+{#            margin-top: 40px;#}
+{#            padding: 25px;#}
+{#            background-color: #adb7ff;#}
+{#            border-radius: 12px;#}
+{#        }#}
+{##}
+{#        .comment-form h3 {#}
+{#            color: #f5f5f5;#}
+{#            margin-bottom: 20px;#}
+{#        }#}
+{##}
+{#        .form-group {#}
+{#            margin-bottom: 18px;#}
+{#        }#}
+{##}
+{#        .form-group label {#}
+{#            display: block;#}
+{#            margin-bottom: 6px;#}
+{#            color: #ffffff;#}
+{#            font-size: 14px;#}
+{#        }#}
+{##}
+{#        .form-group input,#}
+{#        .form-group textarea {#}
+{#            width: 97%;#}
+{#            padding: 10px 12px;#}
+{#            background-color: #d5d5ff;#}
+{#            border: 1px solid #6a6aff;#}
+{#            border-radius: 8px;#}
+{#            color: #fff;#}
+{#            font-size: 14px;#}
+{#        }#}
+{##}
+{#        .form-group input:focus,#}
+{#        .form-group textarea:focus {#}
+{#            outline: none;#}
+{#            border-color: #6a8dff;#}
+{#        }#}
+{##}
+{#        /* ===== Errors ===== */#}
+{#        .field-error {#}
+{#            color: #ff6b6b;#}
+{#            font-size: 13px;#}
+{#            margin-top: 5px;#}
+{#        }#}
+{##}
+{#        /* ===== Buttons ===== */#}
+{#        .submit-btn {#}
+{#            background-color: #6a8dff;#}
+{#            border: none;#}
+{#            padding: 10px 25px;#}
+{#            color: #fff;#}
+{#            font-size: 14px;#}
+{#            border-radius: 8px;#}
+{#            cursor: pointer;#}
+{#            transition: 0.3s;#}
+{#        }#}
+{##}
+{#        .submit-btn:hover {#}
+{#            background-color: #5576e8;#}
+{#        }#}
+{##}
+{#        .back-btn {#}
+{#            display: inline-block;#}
+{#            margin-top: 30px;#}
+{#            color: #bbb;#}
+{#            text-decoration: none;#}
+{#            font-size: 14px;#}
+{#        }#}
+{##}
+{#        .back-btn:hover {#}
+{#            color: #fff;#}
+{#            text-decoration: underline;#}
+{#        }#}
+{##}
+{#        .detail-container {#}
+{#            background: #ffffff;#}
+{#            padding: 40px;#}
+{#            border-radius: 22px;#}
+{#            max-width: 850px;#}
+{#            margin: 40px auto;#}
+{#            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);#}
+{#        }#}
+{##}
+{#        .detail-title {#}
+{#            font-size: 32px;#}
+{#            font-weight: bold;#}
+{#            color: #333;#}
+{#            margin-bottom: 20px;#}
+{#            border-bottom: 3px solid #4a90e2;#}
+{#            padding-bottom: 10px;#}
+{#        }#}
+{##}
+{#        .detail-meta {#}
+{#            display: flex;#}
+{#            gap: 25px;#}
+{#            margin-bottom: 25px;#}
+{#            font-size: 16px;#}
+{#            color: #555;#}
+{#        }#}
+{##}
+{#        .detail-description {#}
+{#            font-size: 18px;#}
+{#            line-height: 1.9;#}
+{#            color: #444;#}
+{#            background: #fafafa;#}
+{#            padding: 25px;#}
+{#            border-radius: 15px;#}
+{#            margin-bottom: 35px;#}
+{#            border-left: 6px solid #4a90e2;#}
+{#        }#}
+{##}
+{#        .detail-author {#}
+{#            font-size: 12px;#}
+{#            line-height: 1.9;#}
+{#            color: #444;#}
+{#            background: #fafafa;#}
+{#            padding: 25px;#}
+{#            border-radius: 15px;#}
+{#            margin-bottom: 35px;#}
+{#        }#}
+{##}
+{#        .detail-date {#}
+{#            font-size: 12px;#}
+{#            line-height: 1.9;#}
+{#            color: #444;#}
+{#            background: #fafafa;#}
+{#            padding: 25px;#}
+{#            border-radius: 15px;#}
+{#            margin-bottom: 35px;#}
+{#            margin-left: 440px;#}
+{#        }#}
+{##}
+{#        .back-btn {#}
+{#            display: inline-block;#}
+{#            background: #4a90e2;#}
+{#            color: white;#}
+{#            padding: 12px 22px;#}
+{#            text-decoration: none;#}
+{#            border-radius: 12px;#}
+{#            transition: 0.25s;#}
+{#            font-size: 16px;#}
+{#        }#}
+{##}
+{#        .back-btn:hover {#}
+{#            background: #3277c5;#}
+{#        }#}
+{#    </style>#}
+{#{% endblock %}#}
+
+{#----------------------------------------------------------------------------#}
+
+{#{% extends 'parent/base.html' %}#}
+{#{% block title %}{{ post.title }} detail{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#    <div class="detail-page">#}
+{#        <div class="detail-container">#}
+{#            <div class="post-card">#}
+{#                <h1 class="detail-title">{{ post.title }}</h1>#}
+{##}
+{#                <div class="detail-meta" data-post-id="{{ post.id }}" data-user="{{ post.author.username }}">#}
+{#                    <span class="post-like-class">{{ post.likes.count }}Like{{ post.likes.count | pluralize }}</span>#}
+{#                    <button class="post-like-button">#}
+{#                        {% if request.user in post.likes.all %}#}
+{#                            UnLike#}
+{#                        {% else %}#}
+{#                            Like#}
+{#                        {% endif %}#}
+{#                    </button>#}
+{#                    <button class="follow-btn">#}
+{#                        {% if request.user.account in post.author.account.follower_users.all %}#}
+{#                            UnFollow#}
+{#                        {% else %}#}
+{#                            Follow#}
+{#                        {% endif %}#}
+{#                    </button>#}
+{##}
+{#                    <span class="detail-pill">#}
+{#                    👤 نویسنده:#}
+{#                    <a href="{% url 'blog:user_info' post.author_id %}">{{ post.author }}</a>#}
+{#                </span>#}
+{#                    <span class="detail-pill">#}
+{#                    🕒 تاریخ انتشار: {{ new_date|date:'d-m-Y' }}#}
+{#                </span>#}
+{#                </div>#}
+{##}
+{#                <div class="post-images-scroll">#}
+{#                    {% for image in post.images.all %}#}
+{#                        <div class="post-image-item">#}
+{#                            <img src="{{ image.image_file.url }}" alt="{{ post.title }}" class="post-image">#}
+{#                        </div>#}
+{#                    {% endfor %}#}
+{#                </div>#}
+{##}
+{#                <div class="detail-description">#}
+{#                    {{ post.description|linebreaks }}#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <div class="section-card">#}
+{#                <div class="section-header">#}
+{#                    <h2>Comments</h2>#}
+{#                    <span class="comment-count">#}
+{#                    {% with comments.count as cm_count %}#}
+{#                        {{ cm_count }} comment{{ cm_count|pluralize }}#}
+{#                    {% endwith %}#}
+{#                </span>#}
+{#                </div>#}
+{##}
+{#                <div class="comments-list">#}
+{#                    {% for comment in comments %}#}
+{#                        <div class="comment-item">#}
+{#                            <div class="comment-author">{{ comment.name }}</div>#}
+{#                            <div class="comment-body">{{ comment.body|linebreaks }}</div>#}
+{#                        </div>#}
+{#                    {% empty %}#}
+{#                        <div class="empty-state">No comments yet.</div>#}
+{#                    {% endfor %}#}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#            <div class="section-card">#}
+{#                <div class="section-header">#}
+{#                    <h2>Add Comment</h2>#}
+{#                </div>#}
+{##}
+{#                <form method="post" action="{% url 'blog:post_comment' post.slug %}" class="comment-form">#}
+{#                    {% csrf_token %}#}
+{#                    {% for field in form %}#}
+{#                        <div class="form-group">#}
+{#                            <label>{{ field.label }}</label>#}
+{#                            {{ field }}#}
+{#                            <div class="field-error">{{ field.errors }}</div>#}
+{#                        </div>#}
+{#                    {% endfor %}#}
+{##}
+{#                    <button type="submit" class="submit-btn">Add Comment</button>#}
+{#                </form>#}
+{#            </div>#}
+{##}
+{#            <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="back-btn">بازگشت به لیست</a>#}
+{#        </div>#}
+{#    </div>#}
+{#{% endblock %}#}
+{##}
+{#{% block head %}#}
+{#    <style>#}
+{#        body {#}
+{#            background: linear-gradient(180deg, #f5f8ff 0%, #dbeafe 100%);#}
+{#            color: #0f172a;#}
+{#        }#}
+{##}
+{#        .detail-page {#}
+{#            padding: 32px 16px 48px;#}
+{#        }#}
+{##}
+{#        .detail-container {#}
+{#            max-width: 900px;#}
+{#            margin: 0 auto;#}
+{#            display: flex;#}
+{#            flex-direction: column;#}
+{#            gap: 20px;#}
+{#        }#}
+{##}
+{#        .post-card,#}
+{#        .section-card {#}
+{#            background: rgba(255, 255, 255, 0.88);#}
+{#            border: 1px solid rgba(148, 163, 184, 0.16);#}
+{#            border-radius: 22px;#}
+{#            padding: 24px;#}
+{#            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);#}
+{#            backdrop-filter: blur(10px);#}
+{#        }#}
+{##}
+{#        .detail-title {#}
+{#            font-size: 30px;#}
+{#            font-weight: 900;#}
+{#            margin: 0 0 16px;#}
+{#            color: #0f172a;#}
+{#            line-height: 1.4;#}
+{#        }#}
+{##}
+{#        .detail-meta {#}
+{#            display: flex;#}
+{#            flex-wrap: wrap;#}
+{#            gap: 12px;#}
+{#            margin-bottom: 18px;#}
+{#        }#}
+{##}
+{#        .post-images-scroll {#}
+{#            display: flex;#}
+{#            gap: 10px;#}
+{#            overflow-x: auto;#}
+{#            padding-bottom: 10px;#}
+{#            scroll-snap-type: x mandatory;#}
+{#            -webkit-overflow-scrolling: touch;#}
+{#        }#}
+{##}
+{#        .post-images-scroll::-webkit-scrollbar {#}
+{#            height: 8px;#}
+{#        }#}
+{##}
+{#        .post-images-scroll::-webkit-scrollbar-thumb {#}
+{#            background: #888;#}
+{#            border-radius: 10px;#}
+{#        }#}
+{##}
+{#        .post-image-item {#}
+{#            flex: 0 0 auto;#}
+{#            width: 260px;#}
+{#            height: 200px;#}
+{#            scroll-snap-align: start;#}
+{#            overflow: hidden;#}
+{#            border-radius: 14px;#}
+{#        }#}
+{##}
+{#        .post-image {#}
+{#            width: 100%;#}
+{#            height: 100%;#}
+{#            object-fit: cover;#}
+{#            display: block;#}
+{#            transition: transform 0.3s ease;#}
+{#        }#}
+{##}
+{#        .post-image-item:hover .post-image {#}
+{#            transform: scale(1.05);#}
+{#        }#}
+{##}
+{#        .detail-pill {#}
+{#            display: inline-flex;#}
+{#            align-items: center;#}
+{#            gap: 8px;#}
+{#            padding: 10px 14px;#}
+{#            border-radius: 999px;#}
+{#            background: #eff6ff;#}
+{#            color: #1e293b;#}
+{#            font-size: 14px;#}
+{#            font-weight: 700;#}
+{#        }#}
+{##}
+{#        .detail-pill a {#}
+{#            color: #1d4ed8;#}
+{#            text-decoration: none;#}
+{#        }#}
+{##}
+{#        .detail-pill a:hover {#}
+{#            text-decoration: underline;#}
+{#        }#}
+{##}
+{#        .detail-description {#}
+{#            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);#}
+{#            border: 1px solid #e2e8f0;#}
+{#            border-right: 4px solid #1d9bf0;#}
+{#            border-radius: 18px;#}
+{#            padding: 20px;#}
+{#            font-size: 16px;#}
+{#            line-height: 2;#}
+{#            color: #334155;#}
+{#            word-break: break-word;#}
+{#        }#}
+{##}
+{#        .section-header {#}
+{#            display: flex;#}
+{#            justify-content: space-between;#}
+{#            align-items: center;#}
+{#            gap: 12px;#}
+{#            margin-bottom: 16px;#}
+{#            flex-wrap: wrap;#}
+{#        }#}
+{##}
+{#        .section-header h2 {#}
+{#            margin: 0;#}
+{#            font-size: 20px;#}
+{#            font-weight: 800;#}
+{#            color: #0f172a;#}
+{#        }#}
+{##}
+{#        .comment-count {#}
+{#            color: #64748b;#}
+{#            font-size: 14px;#}
+{#            font-weight: 700;#}
+{#        }#}
+{##}
+{#        .comments-list {#}
+{#            display: flex;#}
+{#            flex-direction: column;#}
+{#            gap: 14px;#}
+{#        }#}
+{##}
+{#        .comment-item {#}
+{#            background: #ffffff;#}
+{#            border: 1px solid #e2e8f0;#}
+{#            border-radius: 16px;#}
+{#            padding: 16px;#}
+{#        }#}
+{##}
+{#        .comment-author {#}
+{#            display: inline-flex;#}
+{#            padding: 8px 12px;#}
+{#            border-radius: 999px;#}
+{#            background: #0f172a;#}
+{#            color: #fff;#}
+{#            font-size: 13px;#}
+{#            font-weight: 800;#}
+{#            margin-bottom: 12px;#}
+{#        }#}
+{##}
+{#        .comment-body {#}
+{#            color: #334155;#}
+{#            line-height: 1.9;#}
+{#            font-size: 15px;#}
+{#        }#}
+{##}
+{#        .empty-state {#}
+{#            text-align: center;#}
+{#            padding: 20px;#}
+{#            color: #64748b;#}
+{#            border: 1px dashed #cbd5e1;#}
+{#            border-radius: 16px;#}
+{#            background: #f8fafc;#}
+{#        }#}
+{##}
+{#        .comment-form .form-group {#}
+{#            margin-bottom: 16px;#}
+{#        }#}
+{##}
+{#        .comment-form label {#}
+{#            display: block;#}
+{#            margin-bottom: 8px;#}
+{#            font-size: 14px;#}
+{#            font-weight: 700;#}
+{#            color: #334155;#}
+{#        }#}
+{##}
+{#        .comment-form input,#}
+{#        .comment-form textarea,#}
+{#        .comment-form select {#}
+{#            width: 100%;#}
+{#            box-sizing: border-box;#}
+{#            padding: 12px 14px;#}
+{#            border-radius: 14px;#}
+{#            border: 1px solid #cbd5e1;#}
+{#            background: #ffffff;#}
+{#            color: #0f172a;#}
+{#            outline: none;#}
+{#            transition: 0.2s ease;#}
+{#        }#}
+{##}
+{#        .comment-form input:focus,#}
+{#        .comment-form textarea:focus,#}
+{#        .comment-form select:focus {#}
+{#            border-color: #1d9bf0;#}
+{#            box-shadow: 0 0 0 4px rgba(29, 155, 240, 0.12);#}
+{#        }#}
+{##}
+{#        .field-error {#}
+{#            margin-top: 6px;#}
+{#            color: #ef4444;#}
+{#            font-size: 12px;#}
+{#        }#}
+{##}
+{#        .submit-btn,#}
+{#        .back-btn {#}
+{#            display: inline-flex;#}
+{#            align-items: center;#}
+{#            justify-content: center;#}
+{#            border: none;#}
+{#            text-decoration: none;#}
+{#            border-radius: 999px;#}
+{#            font-weight: 800;#}
+{#            transition: 0.2s ease;#}
+{#        }#}
+{##}
+{#        .follow-btn {#}
+{#            display: inline-flex;#}
+{#            align-items: center;#}
+{#            justify-content: center;#}
+{#            border: none;#}
+{#            text-decoration: none;#}
+{#            border-radius: 999px;#}
+{#            font-weight: 800;#}
+{#            transition: 0.2s ease;#}
+{#            padding: 22px 18px;#}
+{#            background: linear-gradient(135deg, #1d9bf0, #1a8cd8);#}
+{#            color: #fff;#}
+{#            cursor: pointer;#}
+{#        }#}
+{##}
+{#        .submit-btn {#}
+{#            padding: 12px 18px;#}
+{#            background: linear-gradient(135deg, #1d9bf0, #1a8cd8);#}
+{#            color: #fff;#}
+{#            cursor: pointer;#}
+{#        }#}
+{##}
+{#        .submit-btn:hover {#}
+{#            transform: translateY(-1px);#}
+{#            filter: brightness(1.05);#}
+{#        }#}
+{##}
+{#        .back-btn {#}
+{#            align-self: flex-start;#}
+{#            margin-top: 4px;#}
+{#            padding: 12px 18px;#}
+{#            background: #e2e8f0;#}
+{#            color: #0f172a;#}
+{#        }#}
+{##}
+{#        .back-btn:hover {#}
+{#            background: #cbd5e1;#}
+{#        }#}
+{##}
+{#        @media (max-width: 768px) {#}
+{#            .detail-page {#}
+{#                padding: 20px 12px 36px;#}
+{#            }#}
+{##}
+{#            .post-card,#}
+{#            .section-card {#}
+{#                padding: 18px;#}
+{#                border-radius: 18px;#}
+{#            }#}
+{##}
+{#            .detail-title {#}
+{#                font-size: 24px;#}
+{#            }#}
+{##}
+{#            .detail-description {#}
+{#                padding: 16px;#}
+{#                font-size: 15px;#}
+{#            }#}
+{#        }#}
+{#    </style>#}
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"#}
+{#            integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="#}
+{#            crossorigin="anonymous" referrerpolicy="no-referrer"></script>#}
+{#    <script>#}
+{#        $(document).ready(function () {#}
+{#            $('.post-like-button').click(function () {#}
+{#                var post_id = $(this).closest('.detail-meta').data('post-id');#}
+{#                var button = $(this);#}
+{##}
+{#                $.ajax({#}
+{#                    type: 'POST',#}
+{#                    url: '{% url 'blog:post_like' %}',#}
+{#                    data: {#}
+{#                        'p_id': post_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'#}
+{#                    },#}
+{##}
+{#                    success: function (data) {#}
+{#                        if (data.liked) {#}
+{#                            button.text('UnLike');#}
+{#                        } else {#}
+{#                            button.text('Like');#}
+{#                        }#}
+{#                        $('.post-like-class').text(data.post_likes_count + 'Like' + (data.post_likes_count === 1 ? '' : 's'));#}
+{#                    },#}
+{##}
+{##}
+{#                });#}
+{#            });#}
+{##}
+{##}
+{#            $('.follow-btn').click(function () {#}
+{#                var user = $(this).closest('.detail-meta').data('user');#}
+{#                var follow_button = $(this);#}
+{##}
+{#                $.ajax({#}
+{#                    type: 'POST',#}
+{#                    url: '{% url 'blog:user_follow' %}',#}
+{#                    data: {#}
+{#                        'user':user, 'csrfmiddlewaretoken':'{{ csrf_token }}'#}
+{#                    },#}
+{##}
+{#                    success: function (data){#}
+{#                        if (data.followed) {#}
+{#                            follow_button.text('UnFollow');#}
+{#                        } else {#}
+{#                            follow_button.text('Follow');#}
+{#                        }#}
+{#                    },#}
+{#                });#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+{#{% endblock %}#}
+
+{#------------------------------------------------------------------------------------------------------#}
+
+{% extends 'parent/base.html' %}
+{% load static %}
+{% load blog_tags %}
+
+{% block title %}{{ post.title }} - جزئیات{% endblock %}
+
+{% block head %}
+    <style>
+        body {
+            background-color: #f8fafc;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+        }
+
+        .detail-card {
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .detail-title {
+            font-weight: 900;
+            line-height: 1.2;
+            color: #0f172a;
+        }
+
+        .meta-bar {
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .post-image {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .post-image-item:hover .post-image {
+            transform: scale(1.08);
+        }
+
+        .scrollbar-thin::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 20px;
+        }
+
+        #save_button {
+            border: none;
+            outline: none;
+            background: transparent;
+            padding: 0;
+        }
+
+        #save_button:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .brand-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            box-shadow: 0 0 12px rgba(96, 165, 250, 0.8);
+        }
+
+        .similar-posts {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 12px 4px 18px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* اسکرول بار */
+        .similar-posts::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .similar-posts::-webkit-scrollbar-thumb {
+            background: #8b5cf6;
+            border-radius: 20px;
+        }
+
+        .similar-posts::-webkit-scrollbar-track {
+            background: #1d1d1d;
+        }
+
+        /* کارت */
+        .similar-card {
+            flex: 0 0 270px;
+            background: linear-gradient(135deg, #89bfff, #3b82f6);
+            box-shadow: 0 0 12px rgba(96, 165, 250, 0.8);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 20px;
+            padding: 18px;
+            text-decoration: none;
+            color: white;
+            scroll-snap-align: start;
+            transition: .25s;
+        }
+
+        /* هاور */
+        .similar-card:hover {
+            transform: translateY(-5px);
+            border-color: #8b5cf6;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, .25);
+        }
+
+        /* دسته‌بندی */
+        .similar-category {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #8b5cf6;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        /* عنوان */
+        .similar-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        /* توضیح */
+        .similar-desc {
+            color: #ffffff;
+            line-height: 1.7;
+            font-size: 14px;
+            min-height: 70px;
+        }
+
+        /* پایین کارت */
+        .similar-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #9d9d9d;
+        }
+
+        /* موبایل */
+        @media (max-width: 768px) {
+            .similar-card {
+                flex: 0 0 220px;
+            }
+
+            .similar-title {
+                font-size: 16px;
+            }
+        }
+
+        .blur-text {
+            filter: blur(6px);
+            cursor: pointer;
+            transition: filter .2s ease;
+            user-select: none;
+        }
+
+        .blur-text.show {
+            filter: blur(0);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-9">
+
+                <!-- Main Card -->
+                <div class="glass detail-card">
+
+                    <!-- Header / Title -->
+                    <div class="p-4 p-md-5 border-bottom border-light-subtle">
+                        <h1 class="detail-title fs-2 fs-md-1">
+                            {{ post.title }}
+                        </h1>
+                    </div>
+
+                    <!-- Meta Information -->
+                    <div class="meta-bar px-4 px-md-5 py-4 d-flex flex-wrap align-items-center gap-3 gap-md-4"
+                         data-post-id="{{ post.id }}" data-user="{{ post.author.username }}">
+
+                        <div class="d-flex align-items-center gap-2 bg-light px-3 py-2 rounded-4">
+                        <span class="post-like-class fw-bold text-secondary">
+                            {{ post.likes.count }} لایک
+                        </span>
+
+                            {% if request.user.is_authenticated %}
+                                <button type="button"
+                                        class="post-like-button btn btn-outline border-0 btn-sm rounded-4 px-3">
+                                    {% if request.user in post.likes.all %}
+                                        ❤️
+                                    {% else %}
+                                        🤍
+                                    {% endif %}
+                                </button>
+                            {% else %}
+                                <button type="button" class="btn btn-outline border-0 btn-sm rounded-4 px-3"
+                                        onclick="showHint('حساب بساز یا وارد حساب خودت شو')">
+                                    🤍
+                                </button>
+                            {% endif %}
+
+                            {% if request.user.is_authenticated %}
+                                <button id="save_button" type="button" class="ms-1">
+                                    {% if request.user in post.saver_accounts.all %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24"
+                                             fill="currentColor">
+                                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                        </svg>
+                                    {% else %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24"
+                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                             stroke-linejoin="round">
+                                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                        </svg>
+                                    {% endif %}
+                                </button>
+                            {% else %}
+                                <button type="button" class="btn btn-outline border-0 btn-sm rounded-4 px-3"
+                                        onclick="showHint('حساب بساز یا وارد حساب خودت شو')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                    </svg>
+                                </button>
+                            {% endif %}
+                        </div>
+
+                        {% if request.user.is_authenticated %}
+                            <button type="button"
+                                    class="follow-btn btn btn-primary rounded-4 px-4 py-2 fw-semibold shadow-sm">
+                                {% if request.user in post.author.followings.all %}
+                                    UnFollow
+                                {% else %}
+                                    Follow
+                                {% endif %}
+                            </button>
+                        {% else %}
+                            <button type="button"
+                                    class="follow-btn btn btn-primary rounded-4 px-4 py-2 fw-semibold shadow-sm"
+                                    onclick="showHint('حساب بساز یا وارد حساب خودت شو')">Follow
+                            </button>
+                        {% endif %}
+
+                        <button onclick="sharePost()" class="glass" style="border: none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+
+                                <line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line>
+                                <line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line>
+                            </svg>
+                        </button>
+
+                        <div class="flex-grow-1"></div>
+
+                        <div class="d-flex flex-wrap align-items-center gap-3 text-secondary">
+                            {#                        <a href="{% url 'blog:user_info' post.author_id %}"#}
+                            <a href="{% url 'blog:user_detail' post.author %}"
+                               class="text-decoration-none text-secondary">
+                                👤 <span class="fw-medium">{{ post.author }}</span>
+                            </a>
+                            <span class="text-muted">•</span>
+                            <span>🕒 {{ new_date|date:'d F Y' }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Images Horizontal Scroll -->
+                    {% if post.images.all %}
+                        <div class="px-4 px-md-5 py-4 bg-light border-top border-bottom">
+                            <div class="d-flex gap-3 overflow-auto pb-3 scrollbar-thin">
+                                {% for image in post.images.all %}
+                                    <div class="post-image-item flex-shrink-0"
+                                         style="width: 320px; height: 256px; border-radius: 18px; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.10);">
+                                        <img src="{{ image.image_file.url }}"
+                                             alt="{{ post.title }}"
+                                             class="post-image w-100 h-100 object-fit-cover">
+                                    </div>
+                                    <a href="{% url 'blog:image_download' image.id %}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="7 10 12 15 17 10"></polyline>
+                                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                                        </svg>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+
+                    <!-- Description -->
+                    <div class="p-4 p-md-5">
+                        <div class="text-secondary fs-6 lh-lg" style="
+            direction: rtl;
+            unicode-bidi: plaintext;
+            text-align: right;">
+                            {{ post.description|linebreaks }}
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                {% if post.author.tel_id or post.author.phone_number %}
+                    <div class="glass detail-card">
+                        <div class="p-4 p-md-5">
+                            {% if post.project_detail.project_url %}
+                                <div class="caption-text">address: <a style="text-decoration: none" href="{{ post.project_detail.project_url }}">{{ post.project_detail.project_url }}</a></div>
+                                <br>
+                                <hr>
+                            {% endif %}
+                            {% if post.project_detail.github_url %}
+                                <div class="caption-text">github: <a style="text-decoration: none" href="{{ post.project_detail.github_url }}">{{ post.project_detail.github_url }}</a></div>
+                                <br>
+                                <hr>
+                            {% endif %}
+                            {% if request.user in post.author.followers %}
+                                {% if post.author.tel_id %}
+                                    <div class="caption-text">telegram id: {{ post.author.tel_id }}</div>
+                                {% endif %}
+                                {% if post.author.phone_number %}
+                                    <div class="caption-text">phone number: {{ post.author.phone_number }}</div>
+                                {% endif %}
+                            {% else %}
+                                {% if post.author.tel_id %}
+                                    <div class="caption-text">telegram id: <span
+                                            class="blur-text">{{ post.author.tel_id }}</span></div>
+                                {% endif %}
+                                {% if post.author.phone_number %}
+                                    <div class="caption-text"
+                                         onclick="showHint('دنبال کردن کاربر راه ارتباط است')">phone number:
+                                        <span class="blur-text">{{ post.author.phone_number }}</span></div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Comments Section -->
+                <div class="glass rounded-4 shadow-sm p-4 p-md-5 mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h4 fw-bold text-dark mb-0">نظرات</h2>
+                        <span class="bg-light text-secondary px-3 py-2 rounded-4 small fw-medium">
+                        {{ comments.count }} نظر
+                    </span>
+                    </div>
+
+                    <div id="comments-list" class="comments-list d-grid gap-3 mb-4" data-post-slug="{{ post.slug }}">
+                        {% for comment in comments %}
+                            <div class="bg-white rounded-4 p-4 shadow-sm">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="d-flex align-items-center justify-content-center text-white fw-bold"
+                                         style="width: 38px; height: 38px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #3b82f6);">
+                                        {{ comment.name|slice:":1"|upper }}
+                                    </div>
+                                    <div class="fw-semibold text-dark">
+                                        {{ comment.name }}
+                                    </div>
+                                </div>
+                                <div class="text-secondary lh-lg">
+                                    {{ comment.body|linebreaks }}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="text-center py-5 text-secondary bg-white rounded-4">
+                                هنوز نظری ثبت نشده است.
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Add Comment Form -->
+                    <div>
+                        <h3 class="h5 fw-bold mb-4 text-dark">نظر خود را بنویسید</h3>
+
+                        <form method="post" action="{% url 'blog:post_comment' %}" class="d-grid gap-3" id="c_form">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div>
+                                    <label class="form-label fw-semibold text-secondary mb-2">
+                                        {{ field.label }}
+                                    </label>
+                                    {{ field|add_class:"form-control form-control-lg rounded-4" }}
+                                    <div class="text-danger small mt-1">{{ field.errors }}</div>
+                                </div>
+                            {% endfor %}
+                            <input type="hidden" name="next" value="{{ request.GET.next }}">
+
+                            <button type="submit" class="btn btn-primary btn-lg rounded-4 px-4 py-3 fw-bold"
+                                    id="comment_btn">
+                                ارسال نظر
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Back Button -->
+                <div class="mt-4 d-flex justify-content-center">
+                    <a href="{{ request.META.HTTP_REFERER|default:'/' }}"
+                       class="btn btn-light border rounded-4 px-4 py-3 fw-semibold">
+                        ← بازگشت
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="similar-posts">
+                {% for post in similar_posts %}
+                    <a href="{{ post.get_absolute_url }}" class="similar-card">
+                        <div class="similar-category">{{ post.get_category_display }}</div>
+                        <h5 class="similar-title">
+                            {{ post.title }}
+                        </h5>
+                        <p class="similar-desc">
+                            {{ post.description|truncatechars:55 }}
+                        </p>
+                        <div class="similar-footer">
+                            <span style="color:#ffffff;">❤️ {{ post.total_likes }}</span>
+                            <span style="color: white">📅 {{ post.publish|date:"Y/m/d" }}</span>
+                        </div>
+                    </a>
+                {% empty %}
+                    <p style="color:#aaa;">پست مشابهی پیدا نشد.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>#}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script>
+
+        function showHint(msg) {
+            const toast = document.createElement("div");
+            toast.textContent = msg;
+            toast.style.cssText = `
+        position:fixed;
+        bottom:30px;
+        left:50%;
+        transform:translateX(-50%);
+        background:#222;
+        color:white;
+        padding:10px 18px;
+        border-radius:12px;
+        z-index:99999;
+        opacity:0;
+        transition:.3s;
+    `;
+            document.body.appendChild(toast);
+            requestAnimationFrame(() => toast.style.opacity = 1);
+            setTimeout(() => {
+                toast.style.opacity = 0;
+                setTimeout(() => toast.remove(), 300);
+            }, 1800);
+        }
+
+        async function sharePost() {
+            try {
+                console.log("before");
+                await navigator.share({
+                    title: "Test",
+                    text: "Hello",
+                    url: "https://google.com"
+                });
+                console.log("success");
+            } catch (err) {
+                console.error("error", err);
+            }
+        }
+
+        $(document).ready(function () {
+
+
+            $('.post-like-button').click(function () {
+                const post_id = $(this).closest('.detail-meta, .meta-bar').data('post-id');
+                const button = $(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "blog:post_like" %}',
+                    data: {
+                        'p_id': post_id,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                        if (data.liked) {
+                            button.html('❤️');
+                        } else {
+                            button.html('🤍');
+                        }
+                        $('.post-like-class').text(data.post_likes_count + ' لایک');
+                    }
+                });
+            });
+
+            $('.follow-btn').click(function () {
+                const username = $(this).closest('.meta-bar').data('user');
+                const btn = $(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "blog:user_follow" %}',
+                    data: {
+                        'user': username,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                        btn.text(data.followed ? 'UnFollow' : 'Follow');
+                    }
+                });
+            });
+
+            $("#save_button").click(function () {
+                const btn = $(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "blog:save_post" %}',
+                    data: {
+                        'post_id': {{ post.id }},
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (data) {
+                        if (data.saved) {
+                            btn.html(`
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        `);
+                        } else {
+                            btn.html(`
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        `);
+                        }
+                    },
+                    error: function (error) {
+                        console.log("# error in AJAX request" + error);
+                    }
+                });
+            });
+
+
+            $('#comment_btn').click(function () {
+                const post_slug = $('.comments-list').data('post-slug');
+                $('#c_form').submit(function (e) {
+                    e.preventDefault();
+                });
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "blog:post_comment" %}',
+                    data: {
+                        'name': $('#id_name').val(),
+                        'body': $('#id_body').val(),
+                        'post_slug': post_slug,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        $('#comments-list').prepend(response.comment_html)
+                        if (response.next_url) {
+                            window.location.href = response.next_url;
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

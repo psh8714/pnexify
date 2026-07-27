@@ -1,0 +1,390 @@
+{% extends 'parent/base.html' %}
+{% load static %}
+
+{% block title %}your tasks{% endblock %}
+
+{% block content %}
+    <form method="post" class="post-container">
+        {% csrf_token %}
+        {% for filed in form %}
+            {{ filed.label_tag }}
+            {{ filed }}
+            {{ filed.errors }}
+        {% endfor %}
+        <input type="submit" value="done">
+    </form>
+
+    <div>
+        <text class="cool-title">tasks</text>
+        <br>
+        <br>
+        <br>
+        {% if tasks %}
+            {% for task in tasks %}
+                {% if task.deadline1 == 1 %}
+                    <span class="task1">
+                    {{ task.description }}
+                    {{ task.deadline1 }}
+                    <a href="{% url 'blog:to_do_list_change' task.pk task.situation %}"
+                       style="text-decoration: none; color: #728eff">&#9744;</a>
+                    <a href="{% url 'blog:to_do_list_delete' task.id %}">delete task</a>
+                    </span>
+                    <br>
+                {% elif task.deadline1 == 0 %}
+                    <span class="task0">
+                    {{ task.description }}
+                    {{ task.deadline1 }}
+                    <a href="{% url 'blog:to_do_list_change' task.pk task.situation %}"
+                       style="text-decoration: none; color: #728eff">&#9744;</a>
+                    <a href="{% url 'blog:to_do_list_delete' task.id %}">delete task</a>
+                    </span>
+                    <br>
+                {% else %}
+                    <span class="task">
+                        {{ task.description }}
+                        {{ task.deadline1 }}
+                        <a href="{% url 'blog:to_do_list_change' task.pk task.situation %}"
+                           style="text-decoration: none; color: #728eff">&#9744;</a>
+                        <a href="{% url 'blog:to_do_list_delete' task.id %}">delete task</a>
+                    </span>
+                    <br>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            empty
+        {% endif %}
+    </div>
+    <div>
+        <h1 class="cool-title">finished tasks</h1>
+        <br>
+        <br>
+        <br>
+        {% if f_tasks %}
+            {% for f_task in f_tasks %}
+                <span class="f_task">
+                {{ f_task.description }}
+                {{ f_task.deadline1 }}
+                <a href="{% url 'blog:to_do_list_change' f_task.pk f_task.situation %}"
+                   style="text-decoration: none; color: #728eff">&#9745;</a>
+                <a href="{% url 'blog:to_do_list_delete' f_task.id %}">delete task</a>
+                </span>
+                <br>
+            {% endfor %}
+        {% else %}
+            empty
+        {% endif %}
+    </div>
+    <script src="{% static 'js/practice.js' %}" type="module"></script>
+    <script src="{% static 'js/practice2.js' %}" type="module"></script>
+{% endblock %}
+
+{% block head %}
+    <style>
+        .task {
+            display: inherit;
+            background: linear-gradient(90deg, rgba(125, 123, 123, 0.44), rgba(248, 177, 107, 0.48));
+            border: 1.5px solid rgba(255, 190, 80, 0.15);
+            border-radius: 14px;
+            padding: 20px 25px;
+            margin-bottom: 10px;
+            font-size: 1.45rem;
+            line-height: 1;
+            color: #040303;
+            transition: all 0.35s ease;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 0 transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255, 215, 100, 0.15), transparent 60%);
+            transition: left 0.5s ease;
+        }
+
+        .task:hover::before {
+            left: 100%;
+            background: rgba(255, 176, 32, 0.09);
+        }
+
+        .task:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(255, 215, 100, 0.4);
+            box-shadow: 0 0 20px rgba(255, 190, 80, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .task1 {
+            display: inherit;
+            background: linear-gradient(90deg, rgba(125, 123, 123, 0.44), rgba(248, 116, 107, 0.38));
+            border: 1.5px solid rgba(255, 190, 80, 0.15);
+            border-radius: 14px;
+            padding: 20px 25px;
+            margin-bottom: 10px;
+            font-size: 1.45rem;
+            line-height: 1;
+            color: #040303;
+            transition: all 0.35s ease;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 0 transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task1::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255, 215, 100, 0.15), transparent 60%);
+            transition: left 0.5s ease;
+        }
+
+        .task1:hover::before {
+            left: 100%;
+            background: rgba(255, 176, 32, 0.09);
+        }
+
+        .task1:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(255, 215, 100, 0.4);
+            box-shadow: 0 0 20px rgba(255, 190, 80, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .task0 {
+            display: inherit;
+            background: linear-gradient(90deg, rgba(156, 156, 156, 0.44), rgba(248, 107, 107, 0.8));
+            border: 1.5px solid rgba(255, 190, 80, 0.15);
+            border-radius: 14px;
+            padding: 20px 25px;
+            margin-bottom: 10px;
+            font-size: 1.45rem;
+            line-height: 1;
+            color: #040303;
+            transition: all 0.35s ease;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 0 transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task0::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255, 215, 100, 0.15), transparent 60%);
+            transition: left 0.5s ease;
+        }
+
+        .task0:hover::before {
+            left: 100%;
+            background: rgba(255, 176, 32, 0.09);
+        }
+
+        .task0:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(255, 215, 100, 0.4);
+            box-shadow: 0 0 20px rgba(255, 190, 80, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .f_task {
+            display: inherit;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.44), rgba(48, 42, 34, 0.39));
+            border: 1.5px solid rgba(255, 190, 80, 0.15);
+            border-radius: 14px;
+            padding: 20px 25px;
+            margin-bottom: 10px;
+            font-size: 1.45rem;
+            line-height: 1;
+            color: #040303;
+            transition: all 0.35s ease;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 0 transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .f_task::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, rgba(255, 215, 100, 0.15), transparent 60%);
+            transition: left 0.5s ease;
+        }
+
+        .f_task:hover::before {
+            left: 100%;
+            background: rgba(255, 176, 32, 0.09);
+        }
+
+        .f_task:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(255, 215, 100, 0.4);
+            box-shadow: 0 0 20px rgba(255, 190, 80, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* کانتینر فرم */
+        .post-container {
+            max-width: 620px;
+            margin: 60px auto;
+            padding: 35px;
+            background: #dfdfdf;
+            border-radius: 50px;
+            box-shadow: 0 12px 30px rgb(111, 111, 111);
+        }
+
+        /* عنوان */
+        .post-container .title {
+            text-align: center;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #000000;
+            letter-spacing: 0.5px;
+        }
+
+        /* پاراگراف‌های فرم Django */
+        .post-container form p {
+            margin-bottom: 15px;
+        }
+
+        /* لیبل‌ها */
+        .post-container label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #000000;
+        }
+
+        /* ورودی‌ها */
+        .post-container input[type="text"],
+        .post-container input[type="email"],
+        .post-container input[type="password"],
+        .post-container input[type="number"],
+        .post-container textarea,
+        .post-container select {
+            width: 100%;
+            padding: 10px 12px;
+            background: linear-gradient(90deg, #8c8c8c, #adadad);
+            border: 1px solid #a6a6a6;
+            border-radius: 8px;
+            color: #000000;
+            font-size: 14px;
+            transition: border 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* فوکوس */
+        .post-container input:focus,
+        .post-container textarea:focus,
+        .post-container select:focus {
+            outline: none;
+            border-color: #666;
+            box-shadow: 0 0 0 2px rgb(124, 124, 124);
+        }
+
+        /* textarea */
+        .post-container textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* دکمه ارسال */
+        .post-container input[type="submit"] {
+            width: 100%;
+            margin-top: 25px;
+            padding: 12px;
+            background: linear-gradient(90deg, #3a3a3a, rgba(66, 31, 19, 0.78));
+            border: none;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s ease;
+            box-shadow: 0 6px 18px rgb(163, 199, 254);
+        }
+
+        /* هاور دکمه */
+        .post-container input[type="submit"]:hover {
+            background: linear-gradient(90deg, #3a3a3a, #4a4a4a);
+        }
+
+        /* پیام خطا */
+        .post-container .errorlist {
+            margin: 6px 0 0;
+            padding: 0;
+            list-style: none;
+            color: #ffffff;
+            font-size: 13px;
+        }
+
+        .post-container .errorlist li {
+            background: #2a2a2a;
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin-top: 6px;
+        }
+
+        /* help text */
+        .post-container .helptext {
+            font-size: 12px;
+            color: #9a9a9a;
+        }
+
+        .cool-title {
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #c6c6c6, rgba(152, 152, 152, 0.51), rgba(143, 142, 142, 0.58));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline;
+            position: relative;
+            margin: 6px 0 10px;
+            text-align: inherit;
+            line-height: 1.05;
+            text-shadow: 0 0 6px rgba(255, 215, 100, 0.06);
+        }
+
+        .cool-title::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -10px;
+            height: 6px;
+            background: #000000;
+            border-radius: 4px;
+            display: block;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 520px;
+        }
+
+        body {
+
+
+            background: linear-gradient(135deg, rgb(4, 3, 3), rgb(101, 101, 101), rgba(224, 224, 224, 0.6));
+            color: #fff;
+
+        }
+
+
+    </style>
+{% endblock %}

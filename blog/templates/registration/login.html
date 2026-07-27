@@ -1,0 +1,288 @@
+{#{% extends 'parent/base.html' %}#}
+{##}
+{#{% block title %}login{% endblock %}#}
+{##}
+{#{% block content %}#}
+{##}
+{#    <h1>login</h1>#}
+{#    <p>write details carefully</p>#}
+{#    <form method="post">#}
+{#        {% csrf_token %}#}
+{#        {% for field in form %}#}
+{#            <div class="form-group">#}
+{#                {{ field.label_tag }}#}
+{#                {{ field }}#}
+{#                {{ field.errors }}#}
+{#            </div>#}
+{#        {% endfor %}#}
+{#        <input type="submit" value="login">#}
+{#        <input type="reset" value="reset">#}
+{#    </form>#}
+{##}
+{#{% endblock %}#}
+{##}
+{#{% block head %}#}
+{#    <style>#}
+{#        body {#}
+{#            font-family: Arial, sans-serif;#}
+{#            background: #f4f7fb;#}
+{#            display: flex;#}
+{#            justify-content: center;#}
+{#            align-items: center;#}
+{#            min-height: 100vh;#}
+{#            margin: 0;#}
+{#        }#}
+{##}
+{#        h1 {#}
+{#            text-align: center;#}
+{#            color: #222;#}
+{#            margin-bottom: 10px;#}
+{#        }#}
+{##}
+{#        p {#}
+{#            text-align: center;#}
+{#            color: #666;#}
+{#            margin-bottom: 25px;#}
+{#        }#}
+{##}
+{#        form {#}
+{#            background: #fff;#}
+{#            padding: 30px;#}
+{#            border-radius: 12px;#}
+{#            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);#}
+{#            width: 100%;#}
+{#            max-width: 400px;#}
+{#        }#}
+{##}
+{#        form label {#}
+{#            display: block;#}
+{#            margin-bottom: 8px;#}
+{#            color: #333;#}
+{#            font-weight: 600;#}
+{#        }#}
+{##}
+{#        form input[type="text"],#}
+{#        form input[type="password"],#}
+{#        form input[type="email"],#}
+{#        form input[type="number"] {#}
+{#            width: 100%;#}
+{#            padding: 10px 12px;#}
+{#            margin-bottom: 15px;#}
+{#            border: 1px solid #ccc;#}
+{#            border-radius: 8px;#}
+{#            outline: none;#}
+{#            transition: 0.3s;#}
+{#            box-sizing: border-box;#}
+{#        }#}
+{##}
+{#        form input:focus {#}
+{#            border-color: #4a90e2;#}
+{#            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);#}
+{#        }#}
+{##}
+{#        .errorlist {#}
+{#            color: #d93025;#}
+{#            margin: -8px 0 12px;#}
+{#            padding-left: 18px;#}
+{#            font-size: 14px;#}
+{#        }#}
+{##}
+{#        input[type="submit"],#}
+{#        input[type="reset"] {#}
+{#            width: 48%;#}
+{#            padding: 10px;#}
+{#            border: none;#}
+{#            border-radius: 8px;#}
+{#            cursor: pointer;#}
+{#            font-weight: bold;#}
+{#            margin-top: 10px;#}
+{#        }#}
+{##}
+{#        input[type="submit"] {#}
+{#            background: #4a90e2;#}
+{#            color: white;#}
+{#        }#}
+{##}
+{#        input[type="reset"] {#}
+{#            background: #e0e0e0;#}
+{#            color: #333;#}
+{#            float: right;#}
+{#        }#}
+{##}
+{#        input[type="submit"]:hover {#}
+{#            background: #357abd;#}
+{#        }#}
+{##}
+{#        input[type="reset"]:hover {#}
+{#            background: #cfcfcf;#}
+{#        }#}
+{#    </style>#}
+{#{% endblock %}#}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود</title>
+    <style>
+        body {
+            font-family: 'Tahoma', sans-serif; /* فونت فارسی خواناتر */
+            background-color: #eef2f7; /* رنگ پس‌زمینه روشن و ملایم */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .login-wrapper { /* یه کانتینر کلی برای وسط چین کردن */
+            width: 100%;
+            max-width: 400px; /* حداکثر عرض فرم */
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            margin: 20px; /* کمی فاصله از لبه‌های صفحه */
+        }
+
+        h1 {
+            color: #2c3e50; /* رنگ آبی تیره برای عنوان */
+            margin-bottom: 15px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 35px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* استایل برای فرم */
+        .post-container {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch; /* عرض کامل برای آیتم‌ها */
+        }
+
+        /* استایل برای هر فیلد فرم (که توسط form.as_p ایجاد میشه) */
+        .post-container p {
+            margin-bottom: 25px; /* فاصله بین فیلدها */
+            text-align: right; /* راست‌چین کردن لیبل و فیلد */
+            display: flex;
+            flex-direction: column; /* لیبل بالای اینپوت */
+            align-items: flex-end; /* راست‌چین کردن خود پاراگراف */
+        }
+
+        .post-container label {
+            display: block; /* اطمینان از اینکه لیبل در خط خودش قرار می‌گیره */
+            margin-bottom: 10px;
+            color: #34495e;
+            font-weight: 500;
+            font-size: 15px;
+            width: 100%; /* لیبل هم عرض کامل */
+        }
+
+        .post-container input[type="text"],
+        .post-container input[type="password"],
+        .post-container input[type="email"] {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid #bdc3c7; /* حاشیه خاکستری ملایم */
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            text-align: right; /* متن ورودی راست‌چین باشه */
+        }
+
+        .post-container input:focus {
+            border-color: #3498db; /* آبی روشن برای فوکوس */
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); /* سایه ملایم هنگام فوکوس */
+            outline: none;
+        }
+
+        /* استایل برای دکمه ورود */
+        .post-container input[type="submit"] {
+            background-color: #2980b9; /* رنگ آبی تیره و جذاب */
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+            margin-top: 15px; /* کمی فاصله بالاتر از بقیه */
+        }
+
+        .post-container input[type="submit"]:hover {
+            background-color: #1f618d; /* تیره‌تر در هاور */
+            transform: translateY(-2px); /* کمی بالا آمدن */
+        }
+
+        /* استایل برای لینک فراموشی رمز عبور */
+        .forget-password-link {
+            display: block; /* تا در خط خودش باشه */
+            margin-top: 25px;
+            color: #2980b9;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .forget-password-link:hover {
+            color: #1f618d;
+            text-decoration: underline;
+        }
+
+        /* استایل برای نمایش خطاها */
+        .post-container .errorlist {
+            list-style: none;
+            padding: 0;
+            margin-top: 8px;
+            color: #e74c3c; /* رنگ قرمز برای خطا */
+            font-size: 13px;
+            text-align: right; /* خطاها هم راست‌چین */
+            width: 100%;
+        }
+
+        .post-container .errorlist li {
+            margin-bottom: 4px;
+        }
+
+        /* اگر form.as_p() خطاهای کلی فرم رو هم در تگ <p> قرار بده */
+        .post-container p .errorlist {
+            margin-top: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="login-wrapper">
+    <h1>ورود</h1>
+    <p>لطفا اطلاعات خود را وارد کنید:</p>
+
+    <form method="post" class="post-container">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        <!-- توجه: اگر خروجی form.as_p خطاها را در جای دیگری قرار می دهد،
+             ممکن است نیاز به تنظیم CSS برای .post-container.errorlist باشد.
+             اما معمولا خطاها در همان تگ <p> مربوط به فیلد قرار می گیرند.
+        -->
+
+        {#        <input type="hidden" name="next" value="{{ next }}">#}
+
+        <input type="submit" value="ورود">
+    </form>
+
+    <a href='{% url 'blog:reset_password' %}' class="forget-password-link">رمز عبور خود را فراموش کرده‌اید؟</a>
+</div>
+
+</body>
+</html>

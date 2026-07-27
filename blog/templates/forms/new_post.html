@@ -1,0 +1,599 @@
+{% extends 'parent/base.html' %}
+{% load static %}
+{% load blog_tags %}
+
+{% block title %}
+    add_post
+{% endblock %}
+
+{% block content %}
+    <div class="post-page">
+        <form method="post" class="post-form" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-header">
+                {% if post %}
+                    <h2 class="form-title">{{ text1.s_description }}</h2>
+                    <p class="form-subtitle">{{ text2.s_description }}</p>
+                {% else %}
+                    <h2 class="form-title">{{ text1.s_description }}</h2>
+                    <p class="form-subtitle">{{ text2.s_description }}</p>
+                {% endif %}
+            </div>
+
+            <div class="form-fields">
+                {% for field in form %}
+                    <div class="field-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
+            </div>
+            {{ image_formset.management_form }}
+
+            {% if post %}
+                <div class="form-fields">
+                    {% for field in detail_form %}
+                        <div class="field-group">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {{ field.errors }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="image-section">
+                    <h3 class="image-section-title">Uploaded Images</h3>
+                    <div class="image-gallery">
+                        {% for form in image_formset %}
+                            {% if form.instance.pk %}
+                                <div class="image-card">
+                                    <img src="{{ form.instance.image_file.url }}"
+                                         class="scroll-image">
+
+                                    {{ form.id }}
+                                </div>
+                                <label class="delete-image">
+                                    {{ form.DELETE }}
+                                    🗑
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="image-section">
+
+                <h3 class="image-section-title">
+                    Add Images
+                </h3>
+                <div id="image-forms" class="upload-gallery">
+                    {% for form in image_formset %}
+                        {% if not form.instance.pk %}
+                            <div class="upload-card" id="image-form">
+                                {{ form.image_file }}
+                                {{ form.id }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <button type="button" id="add-image" class="submit-btn"
+                        style=" background: linear-gradient(135deg, #228cc5, #f6df5c);">
+                    ➕ افزودن تصویر
+                </button>
+            </div>
+
+            <button type="submit" class="submit-btn">Save Post</button>
+        </form>
+    </div>
+    {#    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>#}
+    <script src="{% static 'js/tom-select.complete.min.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+
+    {#    <link#}
+    {#            rel="stylesheet"#}
+    {#            href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css">#}
+    <link
+            rel="stylesheet"
+            href="{% static 'css/tom-select.css' %}">
+
+    <style>
+        :root {
+            --bg: #0b1020;
+            --card: rgba(16, 23, 42, 0.78);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --accent: #8b5cf6;
+            --accent-2: #22c55e;
+            --input-bg: rgba(255, 255, 255, 0.04);
+            --input-border: rgba(255, 255, 255, 0.10);
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+        }
+
+        body {
+            background: radial-gradient(circle at top left, rgba(139, 92, 246, 0.15), transparent 30%),
+            radial-gradient(circle at top right, rgba(34, 197, 94, 0.12), transparent 25%),
+            linear-gradient(180deg, #070b16 0%, #0b1020 100%);
+            color: var(--text);
+        }
+
+        .post-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 16px;
+        }
+
+        .post-form {
+            width: 100%;
+            max-width: 860px;
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(18px);
+            border-radius: 28px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .form-title {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: #fff;
+            letter-spacing: 0.3px;
+        }
+
+        .form-subtitle {
+            color: var(--muted);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .field-group {
+            margin-bottom: 18px;
+        }
+
+        .post-form label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e2e8f0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .post-form input[type="text"],
+        .post-form input[type="url"],
+        .post-form input[type="email"],
+        .post-form input[type="password"],
+        .post-form input[type="number"],
+        .post-form input[type="file"],
+        .post-form textarea,
+        .post-form select {
+            direction: rtl;
+            unicode-bidi: plaintext;
+            text-align: right;
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text);
+            border-radius: 16px;
+            padding: 14px 16px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s ease;
+        }
+
+        .post-form input:focus,
+        .post-form textarea:focus,
+        .post-form select:focus {
+            border-color: rgba(139, 92, 246, 0.75);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.14);
+            transform: translateY(-1px);
+        }
+
+        .post-form input[type="checkbox"] {
+            border-radius: unset;
+            box-shadow: none;
+        }
+
+        .post-form textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        {#--------------------------------#}
+        .image-section {
+            margin-top: 28px;
+            margin-bottom: 10px;
+        }
+
+        .image-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: #fff;
+        }
+
+        .image-scroll {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding: 8px 2px 14px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .image-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .image-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 999px;
+        }
+
+        .image-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            border-radius: 999px;
+        }
+
+        .image-card {
+            flex: 0 0 auto;
+            width: 220px;
+            height: 160px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            scroll-snap-align: start;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            background: #111827;
+        }
+
+        .scroll-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.35s ease, filter 0.35s ease;
+        }
+
+        .image-card:hover .scroll-image {
+            transform: scale(1.12);
+            filter: brightness(1.08);
+        }
+
+        .image-gallery,
+        .upload-gallery {
+            display: flex;
+            gap: 18px;
+            overflow-x: auto;
+            padding: 12px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .image-gallery::-webkit-scrollbar,
+        .upload-gallery::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .image-gallery::-webkit-scrollbar-thumb,
+        .upload-gallery::-webkit-scrollbar-thumb {
+            background: #8b5cf6;
+            border-radius: 999px;
+        }
+
+        .image-card,
+        .upload-card {
+            flex: 0 0 230px;
+            scroll-snap-align: start;
+        }
+
+        .upload-card {
+            background: #181e30;
+            border: 2px dashed rgba(65, 166, 138, 0.14);
+            border-radius: 18px;
+            padding: 18px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+            color: white;
+            cursor: pointer;
+        }
+
+        {#--------------------------------#}
+
+        .submit-btn {
+            width: 100%;
+            margin-top: 28px;
+            padding: 14px 18px;
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #8b5cf6, #22c55e);
+            box-shadow: 0 12px 30px rgba(139, 92, 246, 0.25);
+            transition: 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 36px rgba(139, 92, 246, 0.32);
+        }
+
+        .errorlist {
+            margin: 8px 0 0;
+            padding: 0;
+            list-style: none;
+            color: #ff6b6b;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .post-form {
+                padding: 22px;
+                border-radius: 22px;
+            }
+
+            .form-title {
+                font-size: 24px;
+            }
+
+            .image-card {
+                width: 180px;
+                height: 140px;
+            }
+        }
+
+
+        .ts-wrapper {
+            width: 100%;
+            font-family: inherit;
+        }
+
+        /* قسمت بسته */
+        .ts-wrapper.single .ts-control,
+        .ts-wrapper.multi .ts-control {
+            background: rgb(24, 30, 48) !important;
+            border: 1px solid rgba(255, 255, 255, .08) !important;
+            border-radius: 16px !important;
+            color: #fff !important;
+            min-height: 54px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, .35);
+            transition: .3s;
+        }
+
+        /* هنگام فوکوس */
+        .ts-wrapper.focus .ts-control {
+            border-color: #8b5cf6 !important;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, .18),
+            0 10px 30px rgba(139, 92, 246, .25);
+        }
+
+
+        /* سرچ داخلی */
+        .ts-control input {
+            color: #fff !important;
+            font-size: 15px;
+        }
+
+        /* placeholder */
+        .ts-control input::placeholder {
+            color: #9ca3af;
+        }
+
+        /* فلش سمت راست */
+        .ts-wrapper.single .ts-control::after,
+        .ts-wrapper.multi .ts-control::after {
+            border-color: #b8b8b8 transparent transparent transparent !important;
+            right: 16px;
+        }
+
+        /* لیست باز شده */
+        .ts-dropdown {
+            margin-top: 8px;
+            background: rgb(14, 21, 39) !important;
+            border: 1px solid rgba(255, 255, 255, .08) !important;
+            border-radius: 16px !important;
+            overflow: hidden;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, .45);
+            backdrop-filter: blur(20px);
+        }
+
+        /* هر گزینه */
+        .ts-dropdown .option {
+            padding: 14px 18px;
+            color: #f5f5f5;
+            font-size: 14px;
+            transition: .25s;
+        }
+
+        /* هاور */
+        .ts-dropdown .option:hover {
+            background: linear-gradient(90deg, #8b5cf6, #6d28d9);
+            color: #fff;
+        }
+
+        /* گزینه انتخاب شده */
+        .ts-dropdown .active {
+            background: #6f78cc !important;
+            color: #fff !important;
+        }
+
+        /* اسکرول بار */
+        .ts-dropdown-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .ts-dropdown-content::-webkit-scrollbar-track {
+            background: #171717;
+        }
+
+        .ts-dropdown-content::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 50px;
+        }
+
+        .ts-dropdown-content::-webkit-scrollbar-thumb:hover {
+            background: #8b5cf6;
+        }
+
+
+        /* تگ انتخاب‌شده */
+        .ts-control .item {
+            background: linear-gradient(135deg, #9f7af2, #966dcf) !important;
+            color: #fff !important;
+            border-radius: 999px;
+            padding: 6px 12px;
+            margin: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, .12);
+            transition: .25s;
+        }
+
+        /* وقتی تگ فعال است */
+        .ts-control .item.active {
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            box-shadow: 0 0 12px rgba(139, 92, 246, .35);
+        }
+
+        /* آخرین تگ انتخاب‌شده */
+        .ts-control .item.last-active {
+            border: 1px solid #a78bfa;
+        }
+
+        /* هاور */
+        .ts-control .item:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function showHint(msg) {
+            const toast = document.createElement("div");
+            toast.textContent = msg;
+            toast.style.cssText = `
+                        position:fixed;
+                        bottom:30px;
+                        left:50%;
+                        transform:translateX(-50%);
+                        background:#222;
+                        color:white;
+                        padding:10px 18px;
+                        border-radius:12px;
+                        z-index:99999;
+                        opacity:0;
+                        transition:.3s;
+                    `;
+            document.body.appendChild(toast);
+            requestAnimationFrame(() => toast.style.opacity = 1);
+            setTimeout(() => {
+                toast.style.opacity = 0;
+                setTimeout(() => toast.remove(), 300);
+            }, 1800);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const addButton = document.getElementById("add-image");
+            const formContainer = document.getElementById("image-forms");
+            const formIn_formContainer = document.getElementById("image-form");
+            const totalForms = document.getElementById("id_images-TOTAL_FORMS");
+            // تعداد فرم‌های فعلی
+            let formNum = Number(totalForms.value);
+            {#const totalImages = document.getElementById("id_images-TOTAL_FORMS");#}
+
+
+            new TomSelect("#category-select", {});
+            {% if post %}
+                new TomSelect("#status-select", {});
+            {% endif %}
+            new TomSelect("#id_tags", {plugins: ["remove_button"]});
+            addButton.addEventListener("click", function () {
+                // تعداد فرم‌های فعلی
+                formNum = Number(totalForms.value);
+                if (formNum < 3) {
+                    // آخرین فرم را کپی کن
+                    let newForm = formContainer.lastElementChild.cloneNode(true);
+                    // تمام input و select ها
+                    let inputs = newForm.querySelectorAll("input, select, textarea");
+                    inputs.forEach(function (input) {
+                        // شماره فرم را تغییر بده
+                        input.name = input.name.replace(
+                            `images-${formNum - 1}`,
+                            `images-${formNum}`
+                        );
+                        input.id = input.id.replace(
+                            `images-${formNum - 1}`,
+                            `images-${formNum}`
+                        );
+                        // مقدار قبلی را پاک کن
+                        if (input.type !== "hidden") {
+                            input.value = "";
+                        }
+                    });
+                    // فرم جدید را اضافه کن
+                    formContainer.appendChild(newForm);
+                    // تعداد فرم‌ها را زیاد کن
+                    totalForms.value = formNum + 1;
+                    console.log(formNum);
+                } else {
+                    showHint('حداکثر سه تصویر');
+                    console.log(formNum);
+                }
+            });
+            formIn_formContainer.addEventListener("click", function () {
+                if (formNum > 3) {
+                    showHint('حداکثر سه تصویر')
+                    formContainer.innerHTML = '';
+                    formIn_formContainer.innerHTML = '';
+                    console.log('clicked')
+                }
+            });
+            formContainer.addEventListener("click", function () {
+                if (formNum > 3) {
+                    showHint('حداکثر سه تصویر')
+                    formContainer.innerHTML = '';
+                    formIn_formContainer.innerHTML = '';
+                }
+            });
+            if (formNum > 3) {
+                const imageInput4 = document.getElementById("id_images-4-image_file");
+
+                imageInput4.addEventListener("change", function () {
+                    showHint('image selected')
+                });
+            }
+
+        });
+
+    </script>
+{% endblock %}

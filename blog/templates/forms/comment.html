@@ -1,0 +1,21 @@
+{% extends 'parent/base.html' %}
+
+{% block title %}post comment{% endblock %}
+{% block content %}
+    {% if comment %}
+        commenting has compilated
+        <a href="{{ post.get_absolute_url }}">back to post</a>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                {{ field.label_tag }}
+                {{ field }}
+                {{ field.errors }}
+                <br>
+                <br>
+            {% endfor %}
+            <input type="submit" value="افزودن کامنت">
+        </form>
+    {% endif %}
+{% endblock %}

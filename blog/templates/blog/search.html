@@ -1,0 +1,83 @@
+{% extends 'parent/base.html' %}
+
+{% block title %}search post{% endblock %}
+{% block content %}
+    <div class="search-info">
+        <span>{{ results.count }} result{{ results.count|pluralize }} for {{ query }}</span>
+    </div>
+    <div class="search-results">
+        {% for post in results %}
+            <div class="search-card">
+                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                <p>{{ post.description | truncatewords:30 }}</p>
+            </div>
+        {% empty %}
+            <div class="empty-result">
+                هیچ نتیجه‌ای پیدا نشد 😕
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block head %}
+    <style>
+        .search-info {
+            margin-bottom: 20px;
+            color: #cbd5f5;
+            font-size: 14px;
+        }
+
+        .search-info span {
+            color: #60a5fa;
+            font-weight: 600;
+        }
+
+        .search-results {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .search-card {
+            background: #020617;
+            border: 1px solid #1e293b;
+            border-radius: 14px;
+            padding: 18px;
+            transition: 0.3s;
+        }
+
+        .search-card:hover {
+            border-color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .search-card a {
+            font-size: 18px;
+            color: #93c5fd;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .search-card a:hover {
+            color: #3b82f6;
+        }
+
+        .search-card p {
+            margin-top: 8px;
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .empty-result {
+            margin-top: 30px;
+            padding: 20px;
+            text-align: center;
+            background: #020617;
+            border: 1px dashed #334155;
+            border-radius: 14px;
+            color: #f87171;
+            font-size: 15px;
+        }
+    </style>
+{% endblock %}

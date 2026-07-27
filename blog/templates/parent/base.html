@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>blog | {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+{#    <link rel="stylesheet" type="text/css" href="{% static 'icons/bootstrap-icons.css' %}">#}
+    {% block head %}{% endblock %}
+</head>
+<body dir="ltr">
+{% include 'partials/header.html' %}
+{% include 'partials/navigation.html' %}
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% block content %}{% endblock %}
+{% include 'partials/footer.html' %}
+{% block scripts %}{% endblock %}
+{#<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>#}
+</body>
+
+</html>
