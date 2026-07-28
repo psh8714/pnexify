@@ -1,0 +1,192 @@
+<article class="project-showcase-card">
+
+    <div class="project-showcase-media">
+        {% if post.images.exists %}
+            {% with image=post.images.first %}
+                <img src="{{ image.image_file.url }}"
+                     alt="{{ post.title }}"
+                     class="project-showcase-image">
+            {% endwith %}
+        {% else %}
+            <div class="project-showcase-placeholder">
+                🚀
+            </div>
+        {% endif %}
+        <div class="project-showcase-overlay">
+            <a href="{% url 'blog:post_detail' post.slug %}?next={{ request.get_full_path }}"
+               class="project-showcase-button">
+                مشاهده پروژه
+            </a>
+        </div>
+    </div>
+    <div class="project-showcase-content">
+        <div class="project-showcase-type">
+            🚀 Project Showcase
+        </div>
+        <h2 class="project-showcase-title">
+            {{ post.title }}
+        </h2>
+        <p class="project-showcase-description">
+            {{ post.description|truncatewords:22 }}
+        </p>
+        <div class="project-showcase-footer">
+            <div class="learning-stats">
+                <span>❤️ {{ post.total_likes }}</span>
+                <span>                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                           viewBox="0 0 24 24"
+                                           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                           stroke-linejoin="round">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+                    {{ post.saver_accounts.count }}</span>
+            </div>
+            <span class="project-showcase-author">
+                {{ post.author.username }}
+            </span>
+        </div>
+    </div>
+</article>
+
+<style>
+    .project-showcase-card {
+        overflow: hidden;
+        background: #fff;
+        border: 3px solid rgba(89, 100, 255, 0.32);
+        border-radius: 21px;
+        transition: .45s cubic-bezier(.2, .8, .2, 1);
+        position: relative;
+        background: rgba(255, 255, 255, .55);
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, .08),
+        inset 0 1px 1px rgba(255, 255, 255, .6);
+    }
+
+    .project-showcase-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(140deg,
+        rgba(37, 99, 235, .08),
+        rgba(14, 165, 233, .05),
+        transparent);
+        opacity: 0;
+        transition: .45s;
+    }
+
+    .project-showcase-card:hover {
+        transform: translateY(-14px) scale(1.015);
+        box-shadow: 0 35px 80px rgba(0, 0, 0, .22);
+    }
+
+    .project-showcase-card:hover::before {
+        opacity: 1;
+    }
+
+    .project-showcase-media {
+        height: 290px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .project-showcase-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: .8s;
+    }
+
+    .project-showcase-card:hover .project-showcase-image {
+        transform: scale(1.15) rotate(2deg);
+    }
+
+    .project-showcase-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(15, 23, 42, .55);
+        backdrop-filter: blur(5px);
+        opacity: 0;
+        transition: .45s;
+    }
+
+    .project-showcase-card:hover .project-showcase-overlay {
+        opacity: 1;
+    }
+
+    .project-showcase-button {
+        color: #fff;
+        text-decoration: none;
+        background: linear-gradient(135deg, #e8e8e8, #8fa0e9);
+        padding: 14px 26px;
+        border-radius: 999px;
+        font-weight: 700;
+        transition: .3s;
+    }
+
+    .project-showcase-button:hover {
+        transform: scale(1.08);
+    }
+
+    .project-showcase-placeholder {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 70px;
+        background: linear-gradient(135deg, #1e293b, #0f172a);
+        color: white;
+    }
+
+    .project-showcase-content {
+        padding: 24px;
+    }
+
+    .project-showcase-type {
+        display: inline-block;
+        padding: 7px 14px;
+        border-radius: 999px;
+        background: #dbeafe;
+        color: #2563eb;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+
+    .project-showcase-title {
+        direction: rtl;
+        text-align: right;
+        font-size: 1.6rem;
+        font-weight: 800;
+        margin-bottom: 12px;
+    }
+
+    .project-showcase-description {
+        direction: rtl;
+        text-align: right;
+        color: #64748b;
+        line-height: 1.9;
+        min-height: 70px;
+    }
+
+    .project-showcase-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 24px;
+    }
+
+    .project-showcase-stats {
+        display: flex;
+        gap: 18px;
+        color: #475569;
+        font-weight: 600;
+    }
+
+    .project-showcase-author {
+        color: #2563eb;
+        font-weight: 700;
+    }
+
+</style>

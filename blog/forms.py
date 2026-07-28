@@ -49,9 +49,10 @@ class NewPost(forms.ModelForm):
         queryset=Tag.objects.all(),
         required=False
     )
+
     class Meta:
         model = Post
-        fields = ['title', 'description', 'category', 'tags']
+        fields = ['title', 'description', 'category', 'tags', 'reading_time']
 
         widgets = {
             "category": forms.Select(
@@ -67,7 +68,6 @@ class ImagePostForm(forms.ModelForm):
     class Meta:
         model = ImagePost
         fields = ['image_file']
-
 
 
 ImageFormSet = inlineformset_factory(
@@ -96,12 +96,12 @@ class ProjectDetailForm(forms.ModelForm):
                 }
             ),
             "github_url": forms.URLInput(
-                attrs={'placeholder':'example: http://github/.../project1'}
+                attrs={'placeholder': 'example: http://github/.../project1'}
             ),
             "project_url": forms.URLInput(
                 attrs={
-                    'placeholder':'example: http://pnexify.ir',
-                       }
+                    'placeholder': 'example: http://pnexify.ir',
+                }
             )
         }
 
@@ -185,11 +185,39 @@ class UserForm(forms.ModelForm):
         fields = ['username', 'first_name', 'last_name', 'email', 'photo', 'ostan', 'city', 'github_id', 'bio',
                   'tel_id', 'main_skill', 'date_of_birth']
 
+        widgets = {
+            "ostan": forms.Select(
+                attrs={'id': 'ostan_select'}
+            ),
+            "date_of_birth": forms.DateInput(
+                attrs={'placeholder': 'example: 1387-4-5'}
+            ),
+
+            "tel_id": forms.TextInput(
+                attrs={'placeholder': 'example: parham_sh_87'}
+            ),
+            "username": forms.TextInput(
+                attrs={'placeholder': 'your unique nickname'}
+            ),
+            "github_id": forms.TextInput(
+                attrs={'placeholder': 'example: https://.../psh8714'}
+            ),
+            "main_skill": forms.TextInput(
+                attrs={'placeholder': 'a programing language(english name)'}
+            ),
+        }
+
 
 class SkillForm(forms.ModelForm):
     class Meta:
         model = Skill
         fields = ['skill', 'level']
+
+        widgets = {
+            "level": forms.Select(
+                attrs={'id': 'level_select'}
+            )
+        }
 
 
 SkillFormSet = modelformset_factory(

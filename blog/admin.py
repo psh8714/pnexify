@@ -41,7 +41,7 @@ class PostAdmin(admin.ModelAdmin):
         }),
         ("تنظیمات پیشرفته", {
             "classes": ("collapse",),
-            "fields": ("slug", "publish", "status", "category", 'total_likes'),
+            "fields": ("slug", "publish", "status", "category", 'total_likes', 'total_saves'),
         }),
     )
     raw_id_fields = ('author',)
@@ -59,9 +59,9 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(CommentModel)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['name', 'user', 'active', 'post', 'created']
+    list_display = ['name', 'user', 'active', 'helpful', 'post', 'created']
     list_filter = ['name', 'active']
-    list_editable = ['active']
+    list_editable = ['active','helpful']
     search_fields = ['name', 'body', 'post__title']
 
 
@@ -76,7 +76,7 @@ class UserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + ((
                                            'Additional Info', {
                                            'fields': ('date_of_birth', 'city', 'phone_number', 'bio', 'tel_id', 'github_id', 'main_skill',
-                                                      'photo', 'followings', 'notif')}
+                                                      'photo', 'followings', 'notif', 'verify', 'ostan')}
                                        ),)
 
 

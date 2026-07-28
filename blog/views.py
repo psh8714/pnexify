@@ -77,9 +77,9 @@ def about_us_view(request):
 
 def post_list(request, category=None):
     if category is not None:
-        posts = Post.published.filter(category=category).order_by('-total_likes', '-created')
+        posts = Post.published.filter(category=category).order_by('-total_likes', '-total_saves', '-publish')
     else:
-        posts = Post.published.all().order_by('-total_likes', '-created')
+        posts = Post.published.all().order_by('-total_likes', '-total_saves', '-publish')
     paginator = Paginator(posts, 1)
     page_number = request.GET.get('page', 1)
     try:
@@ -110,7 +110,7 @@ def post_list(request, category=None):
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug, status=Post.Status.PUBLISHED)
-    comments = post.comments.filter(active=True)
+    comments = post.comments.filter(active=True).order_by('helpful')
     form = CommentForm()
 
     similar_posts = Post.published.exclude(pk=post.pk).annotate(
@@ -432,7 +432,7 @@ def delete_twit(request, twit_id):
 
 def log_out(request):
     logout(request)
-    return redirect(request.META.get('HTTP_REFERER'))
+    return redirect('blog:post_list')
 
 
 def user_register(request):
@@ -454,7 +454,7 @@ def user_register(request):
 def user_edit(request):
     user = request.user
     if request.method == "POST":
-        user_form = UserForm(request.POST, instance=user)
+        user_form = UserForm(request.POST,request.FILES, instance=user)
         formset = SkillFormSet(
             request.POST,
             queryset=Skill.objects.filter(user=user)
@@ -636,9 +636,13 @@ def save_post(request):
         if user in post.saver_accounts.all():
             user.saved_posts.remove(post)
             saved = False
+            post.total_saves -= 1
+            post.save()
         else:
             user.saved_posts.add(post)
             saved = True
+            post.total_saves += 1
+            post.save()
         response = {
             'saved': saved,
         }
@@ -653,12 +657,12 @@ def user_list(request, user_id=None, is_follow=None):
         t_user = get_object_or_404(User, id=user_id)
         if is_follow == 'follower':
             users = t_user.followers.annotate(post_count=Count('post'),
-                                              comment_count=Count('comments')).order_by('-post_count',
+                                              comment_count=Count('comments', filter=Q(comments__helpful=True))).order_by('-verify', '-post_count',
                                                                                         '-comment_count')
             return render(request, 'user/user_list.html', {'users': users})
         if is_follow == 'following':
             users = t_user.followings.annotate(post_count=Count('post'),
-                                               comment_count=Count('comments')).order_by(
+                                               comment_count=Count('comments', filter=Q(comments__helpful=True))).order_by('-verify',
                 '-post_count',
                 '-comment_count')
             return render(request, 'user/user_list.html', {'users': users})
@@ -666,8 +670,8 @@ def user_list(request, user_id=None, is_follow=None):
 
     else:
         users = User.objects.filter(is_active=True).annotate(post_count=Count('post'),
-                                                             comment_count=Count('comments')).order_by('-post_count',
-                                                                                                       '-comment_count')
+                                                             comment_count=Count('comments', filter=Q(comments__helpful=True))).order_by('-verify',
+                                                                                                       '-comment_count','-post_count')
         return render(request, 'user/user_list.html', {'users': users})
 
 
@@ -753,3 +757,4 @@ def header_color_success(request):
 
 def team_maker(request):
     pass
+

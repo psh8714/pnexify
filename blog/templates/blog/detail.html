@@ -734,13 +734,244 @@
 
 {% block head %}
     <style>
+        * {
+            color: black;
+        }
+
         body {
-            background-color: #f8fafc;
+            margin: 0;
+            min-height: 100vh;
+            background: rgba(92, 178, 255, 0.91);
+            overflow-x: hidden;
+        }
+
+        .glass-bg {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        /* ذرات شیشه */
+        .particle {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 30% 70% 60% 40%;
+            box-shadow: 0 10px 40px rgba(100, 150, 255, 0.15),
+            inset 0 0 20px rgba(255, 255, 255, .8);
+            animation: float 18s infinite ease-in-out;
+        }
+
+        /* جای هر ذره */
+        .particle:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            top: 10%;
+            left: 15%;
+            animation-duration: 22s;
+        }
+
+        .particle:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            top: 30%;
+            left: 70%;
+            animation-duration: 15s;
+        }
+
+        .particle:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 65%;
+            left: 20%;
+            animation-duration: 25s;
+        }
+
+        .particle:nth-child(4) {
+            width: 90px;
+            height: 90px;
+            top: 75%;
+            left: 75%;
+            animation-duration: 20s;
+        }
+
+        .particle:nth-child(5) {
+            width: 45px;
+            height: 45px;
+            top: 15%;
+            left: 85%;
+        }
+
+        .particle:nth-child(6) {
+            width: 100px;
+            height: 100px;
+            top: 50%;
+            left: 50%;
+        }
+
+        .particle:nth-child(7) {
+            width: 70px;
+            height: 70px;
+            top: 80%;
+            left: 45%;
+        }
+
+        .particle:nth-child(8) {
+            width: 130px;
+            height: 130px;
+            top: 40%;
+            left: 5%;
+        }
+
+        .particle:nth-child(9) {
+            width: 55px;
+            height: 55px;
+            top: 60%;
+            left: 90%;
+        }
+
+        .particle:nth-child(10) {
+            width: 110px;
+            height: 110px;
+            top: 5%;
+            left: 45%;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            50% {
+                transform: translate(40px, -60px) rotate(180deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: rgba(145, 201, 255, 0.88);
+            overflow-x: hidden;
+        }
+
+        .glass-bg {
+            background: rgba(153, 153, 255, 0.23);
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        /* ذرات شیشه */
+        .particle {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: rgb(106, 106, 255);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 30% 70% 60% 40%;
+            box-shadow: 0 10px 40px rgba(100, 150, 255, 0.15),
+            inset 0 0 20px rgba(255, 255, 255, .8);
+            animation: float 18s infinite ease-in-out;
+        }
+
+        /* جای هر ذره */
+        .particle:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            top: 10%;
+            left: 15%;
+            animation-duration: 22s;
+        }
+
+        .particle:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            top: 30%;
+            left: 70%;
+            animation-duration: 15s;
+        }
+
+        .particle:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 65%;
+            left: 20%;
+            animation-duration: 25s;
+        }
+
+        .particle:nth-child(4) {
+            width: 90px;
+            height: 90px;
+            top: 75%;
+            left: 75%;
+            animation-duration: 20s;
+        }
+
+        .particle:nth-child(5) {
+            width: 45px;
+            height: 45px;
+            top: 15%;
+            left: 85%;
+        }
+
+        .particle:nth-child(6) {
+            width: 100px;
+            height: 100px;
+            top: 50%;
+            left: 50%;
+        }
+
+        .particle:nth-child(7) {
+            width: 70px;
+            height: 70px;
+            top: 80%;
+            left: 45%;
+        }
+
+        .particle:nth-child(8) {
+            width: 130px;
+            height: 130px;
+            top: 40%;
+            left: 5%;
+        }
+
+        .particle:nth-child(9) {
+            width: 55px;
+            height: 55px;
+            top: 60%;
+            left: 90%;
+        }
+
+        .particle:nth-child(10) {
+            width: 110px;
+            height: 110px;
+            top: 5%;
+            left: 45%;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            50% {
+                transform: translate(40px, -60px) rotate(180deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
         }
 
         .glass {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.27);
+            backdrop-filter: blur(21px);
         }
 
         .detail-card {
@@ -757,7 +988,7 @@
         }
 
         .meta-bar {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.18);
         }
 
         .post-image {
@@ -773,7 +1004,7 @@
         }
 
         .scrollbar-thin::-webkit-scrollbar-thumb {
-            background: #94a3b8;
+            background: rgba(148, 163, 184, 0.18);
             border-radius: 20px;
         }
 
@@ -814,19 +1045,19 @@
         }
 
         .similar-posts::-webkit-scrollbar-thumb {
-            background: #8b5cf6;
+            background: rgba(139, 92, 246, 0.06);
             border-radius: 20px;
         }
 
         .similar-posts::-webkit-scrollbar-track {
-            background: #1d1d1d;
+            background: rgba(29, 29, 29, 0.2);
         }
 
         /* کارت */
         .similar-card {
             flex: 0 0 270px;
-            background: linear-gradient(135deg, #89bfff, #3b82f6);
-            box-shadow: 0 0 12px rgba(96, 165, 250, 0.8);
+            background: linear-gradient(135deg, rgba(64, 118, 255, 0.01), rgba(59, 130, 246, 0.73));
+            box-shadow: 0 0 12px rgba(31, 125, 239, 0.88);
             backdrop-filter: blur(18px);
             border: 1px solid rgba(255, 255, 255, .08);
             border-radius: 20px;
@@ -848,11 +1079,12 @@
         .similar-category {
             display: inline-block;
             padding: 4px 10px;
-            background: #8b5cf6;
+            background: rgba(139, 92, 246, 0.58);
             border-radius: 999px;
             font-size: 12px;
             font-weight: 600;
             margin-bottom: 10px;
+            color: white;
         }
 
         /* عنوان */
@@ -900,10 +1132,47 @@
         .blur-text.show {
             filter: blur(0);
         }
+
+        .needed-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+            margin-left: 21px;
+        }
+
+        .needed-skills span {
+            background: #f0fdf4;
+            color: #15803d;
+            border-radius: 999px;
+            padding: 7px 14px;
+            font-weight: 600;
+        }
+
+        .glass-section {
+            background: rgba(255, 255, 255, 0.13);
+        }
+
+        .form_field_glass {
+            background: rgba(255, 255, 255, 0.42);
+        }
+
     </style>
 {% endblock %}
 
 {% block content %}
+    <div class="glass-bg">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-12 col-lg-10 col-xl-9">
@@ -913,7 +1182,8 @@
 
                     <!-- Header / Title -->
                     <div class="p-4 p-md-5 border-bottom border-light-subtle">
-                        <h1 class="detail-title fs-2 fs-md-1">
+                        <h1 class="detail-title fs-2 fs-md-1"
+                            style="direction: rtl;unicode-bidi: plaintext;text-align: right;">
                             {{ post.title }}
                         </h1>
                     </div>
@@ -988,7 +1258,7 @@
                             </button>
                         {% endif %}
 
-                        <button onclick="sharePost()" class="glass" style="border: none">
+                        <button onclick="sharePost()" class="glass" style="border-radius: 21px;border: rgba(255,255,255,0.34);padding: 10px; background: rgba(255,255,255,0.13)">
                             <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
                                  stroke-linejoin="round">
@@ -1016,7 +1286,7 @@
 
                     <!-- Images Horizontal Scroll -->
                     {% if post.images.all %}
-                        <div class="px-4 px-md-5 py-4 bg-light border-top border-bottom">
+                        <div class="px-4 px-md-5 py-4 border-top border-bottom glass-section">
                             <div class="d-flex gap-3 overflow-auto pb-3 scrollbar-thin">
                                 {% for image in post.images.all %}
                                     <div class="post-image-item flex-shrink-0"
@@ -1056,12 +1326,16 @@
                     <div class="glass detail-card">
                         <div class="p-4 p-md-5">
                             {% if post.project_detail.project_url %}
-                                <div class="caption-text">address: <a style="text-decoration: none" href="{{ post.project_detail.project_url }}">{{ post.project_detail.project_url }}</a></div>
+                                <div class="caption-text">address: <a style="text-decoration: none"
+                                                                      href="{{ post.project_detail.project_url }}">{{ post.project_detail.project_url }}</a>
+                                </div>
                                 <br>
                                 <hr>
                             {% endif %}
                             {% if post.project_detail.github_url %}
-                                <div class="caption-text">github: <a style="text-decoration: none" href="{{ post.project_detail.github_url }}">{{ post.project_detail.github_url }}</a></div>
+                                <div class="caption-text">github: <a style="text-decoration: none"
+                                                                     href="{{ post.project_detail.github_url }}">{{ post.project_detail.github_url }}</a>
+                                </div>
                                 <br>
                                 <hr>
                             {% endif %}
@@ -1074,7 +1348,7 @@
                                 {% endif %}
                             {% else %}
                                 {% if post.author.tel_id %}
-                                    <div class="caption-text">telegram id: <span
+                                    <div class="caption-text" onclick="showHint('دنبال کردن کاربر راه ارتباط است')">telegram id: <span
                                             class="blur-text">{{ post.author.tel_id }}</span></div>
                                 {% endif %}
                                 {% if post.author.phone_number %}
@@ -1084,6 +1358,13 @@
                                 {% endif %}
                             {% endif %}
                         </div>
+                        <span style="display: flex; justify-content: center; font-weight: 700;">used technologies:</span>
+                        <div class="needed-skills">
+                            {% for technology in post.tags.all %}
+                                <span>{{ technology.name }}</span>
+                            {% endfor %}
+                        </div>
+                        <br>
                     </div>
                 {% endif %}
 
@@ -1098,10 +1379,10 @@
 
                     <div id="comments-list" class="comments-list d-grid gap-3 mb-4" data-post-slug="{{ post.slug }}">
                         {% for comment in comments %}
-                            <div class="bg-white rounded-4 p-4 shadow-sm">
+                            <div class=" rounded-4 p-4 shadow-sm" style="background: rgba(255,255,255,0.55)">
                                 <div class="d-flex align-items-center gap-3 mb-3">
                                     <div class="d-flex align-items-center justify-content-center text-white fw-bold"
-                                         style="width: 38px; height: 38px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #3b82f6);">
+                                         style="width: 38px; height: 38px; border-radius: 14px; background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(59,130,246,0.2));">
                                         {{ comment.name|slice:":1"|upper }}
                                     </div>
                                     <div class="fw-semibold text-dark">
@@ -1113,7 +1394,7 @@
                                 </div>
                             </div>
                         {% empty %}
-                            <div class="text-center py-5 text-secondary bg-white rounded-4">
+                            <div class="text-center py-5 text-secondary rounded-4" style="background:rgba(255, 255, 255, 0.4);">
                                 هنوز نظری ثبت نشده است.
                             </div>
                         {% endfor %}
@@ -1130,14 +1411,14 @@
                                     <label class="form-label fw-semibold text-secondary mb-2">
                                         {{ field.label }}
                                     </label>
-                                    {{ field|add_class:"form-control form-control-lg rounded-4" }}
+                                    {{ field|add_class:"form-control form_field_glass form-control-lg rounded-4" }}
                                     <div class="text-danger small mt-1">{{ field.errors }}</div>
                                 </div>
                             {% endfor %}
                             <input type="hidden" name="next" value="{{ request.GET.next }}">
 
                             <button type="submit" class="btn btn-primary btn-lg rounded-4 px-4 py-3 fw-bold"
-                                    id="comment_btn">
+                                    id="comment_btn" style="background: rgba(10,83,190,0.23)">
                                 ارسال نظر
                             </button>
                         </form>
@@ -1147,7 +1428,7 @@
                 <!-- Back Button -->
                 <div class="mt-4 d-flex justify-content-center">
                     <a href="{{ request.META.HTTP_REFERER|default:'/' }}"
-                       class="btn btn-light border rounded-4 px-4 py-3 fw-semibold">
+                       class="btn btn-light border rounded-4 px-4 py-3 fw-semibold" style="background: rgba(255,255,255,0.17)">
                         ← بازگشت
                     </a>
                 </div>

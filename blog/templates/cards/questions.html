@@ -1,0 +1,123 @@
+<article class="question-card">
+
+    <div class="question-header">
+        <span class="question-badge">
+            ❓ Question
+        </span>
+    </div>
+    <h2 class="question-title">
+        {{ post.title }}
+    </h2>
+    <p class="question-description">
+        {{ post.description|truncatewords:25 }}
+    </p>
+    <div class="question-tags">
+        {% for tag in post.tags.all %}
+            <span>{{ tag.name }}</span>
+        {% endfor %}
+    </div>
+    <div class="question-stats">
+        <span>
+            💬 {{ post.comments.count }}
+        </span>
+        <span>
+            ❤️ {{ post.saver_accounts.count }}
+        </span>
+        <span>
+            👁 {{ post.views }}
+        </span>
+    </div>
+    <div class="question-footer">
+        <span>
+            👤 {{ post.author.username }}
+        </span>
+        <a href="{% url 'blog:post_detail' post.slug %}">
+            مشاهده پاسخ‌ها →
+        </a>
+    </div>
+</article>
+
+<style>
+    .question-card {
+
+        background: #fff;
+        border-radius: 22px;
+        padding: 24px;
+        border: 2px solid rgba(234, 88, 12, 0.23);
+        position: relative;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.31);
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, .08),
+        inset 0 1px 1px rgba(255, 255, 255, .6);
+        transition: .45s;
+    }
+
+    .question-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, .12);
+        border: 2px solid rgb(234, 88, 12);
+    }
+
+    .question-badge {
+        background: #fff7ed;
+        color: #ea580c;
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-weight: 700;
+    }
+
+    .question-title {
+        margin-top: 18px;
+        direction: rtl;
+        text-align: right;
+        font-size: 1.4rem;
+        font-weight: 800;
+    }
+
+    .question-description {
+        direction: rtl;
+        text-align: right;
+        color: #555;
+        line-height: 1.8;
+        margin-top: 12px;
+    }
+
+    .question-tags {
+        margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        color: #ea580c;
+        font-weight: 600;
+        gap: 8px;
+    }
+
+    .question-tags span {
+        background: rgb(254, 238, 223);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: .9rem;
+    }
+
+    .question-stats {
+        margin-top: 20px;
+        display: flex;
+        gap: 20px;
+        color: #666;
+        font-size: .95rem;
+    }
+
+    .question-footer {
+        margin-top: 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .question-footer a {
+        text-decoration: none;
+        font-weight: 700;
+        color: #ea580c;
+    }
+</style>

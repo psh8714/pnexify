@@ -11,12 +11,6 @@
             box-sizing: border-box;
         }
 
-        body {
-            min-height: 100vh;
-            background-color: #ececec;
-            font-family: "Bricolage Grotesque", sans-serif;
-        }
-
         .post-page {
             min-height: 100vh;
             padding: 32px 16px 80px;
@@ -53,7 +47,7 @@
             padding: 10px 16px;
             border-radius: 999px;
             border: 1px solid rgba(17, 24, 39, 0.12);
-            background: rgba(255, 255, 255, 0.7);
+            background: none;
             color: #374151;
             text-decoration: none;
             font-size: 0.95rem;
@@ -76,7 +70,7 @@
 
         .posts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
             align-items: stretch;
         }
@@ -92,7 +86,7 @@
         }
 
         .post-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-10px);
             box-shadow: 0 18px 40px rgba(17, 24, 39, 0.12);
         }
 
@@ -209,6 +203,94 @@
             margin-bottom: 8px;
         }
 
+        body {
+            background: #f4f6fb;
+            overflow-x: hidden;
+        }
+
+        /* ---------- Aurora ---------- */
+        .aurora-bg {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .aurora-bg span {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: .35;
+            animation: float 18s ease-in-out infinite;
+        }
+
+        .aurora-bg span:nth-child(1) {
+            background: #6ea8fe;
+            left: -200px;
+            top: -150px;
+        }
+
+        .aurora-bg span:nth-child(2) {
+            background: #8b5cf6;
+            right: -250px;
+            top: 20%;
+            animation-duration: 22s;
+        }
+
+        .aurora-bg span:nth-child(3) {
+            background: #4ade80;
+            left: 35%;
+            bottom: -250px;
+            animation-duration: 26s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(80px, -40px) scale(1.08);
+            }
+            50% {
+                transform: translate(-40px, 70px) scale(.95);
+            }
+            75% {
+                transform: translate(60px, 20px) scale(1.05);
+            }
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+        }
+
+        /* ---------- Topographic Lines ---------- */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            opacity: .22;
+            background-image: radial-gradient(circle at 50% 50%, transparent 60%, rgba(0, 0, 0, .03) 61%, transparent 62%),
+            radial-gradient(circle at 40% 40%, transparent 45%, rgba(0, 0, 0, .025) 46%, transparent 47%),
+            radial-gradient(circle at 70% 60%, transparent 52%, rgba(0, 0, 0, .02) 53%, transparent 54%);
+            background-size: 700px 700px,
+            900px 900px,
+            1200px 1200px;
+            animation: linesMove 35s linear infinite;
+        }
+
+        @keyframes linesMove {
+            from {
+                background-position: 0 0, 0 0, 0 0;
+            }
+            to {
+                background-position: 120px 80px, -150px 60px, 80px -120px;
+            }
+        }
+
         @media (max-width: 768px) {
             .post-page {
                 padding: 20px 12px 70px;
@@ -226,27 +308,34 @@
         }
     </style>
 
-{#    <script src="https://unpkg.com/htmx.org@1.9.12"></script>#}
-<script src={% static  'js/htmx.min.js' %}></script>
+    {#    <script src="https://unpkg.com/htmx.org@1.9.12"></script>#}
+    <script src={% static  'js/htmx.min.js' %}></script>
 
 {% endblock %}
 
 {% block content %}
+    <div class="aurora-bg">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
     <div class="post-page">
         <div class="post-container">
             <div class="page-header">
-                <h1 class="title">{{ text1.s_description}}</h1>
+                <h1 class="title">{{ text1.s_description }}</h1>
 
                 <div class="categories">
-                    <a href="{% url 'blog:post_list' %}"
-                       id="c1"
-                       class="category {% if not category %}active{% endif %}"
-                       hx-get="{% url 'blog:post_list' %}"
-                       hx-target="#posts-grid"
-                       hx-swap="innerHTML"
-                       hx-push-url="{% url 'blog:post_list' %}">
-                        all
-                    </a>
+                    {% if request.user.is_staff %}
+                        <a href="{% url 'blog:post_list' %}"
+                           id="c1"
+                           class="category {% if not category %}active{% endif %}"
+                           hx-get="{% url 'blog:post_list' %}"
+                           hx-target="#posts-grid"
+                           hx-swap="innerHTML"
+                           hx-push-url="{% url 'blog:post_list' %}">
+                            all
+                        </a>
+                    {% endif %}
 
                     <a href="{% url 'blog:post_list_category' 'WIL' %}"
                        id="c2"
@@ -298,7 +387,7 @@
 {% endblock %}
 
 {% block scripts %}
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>#}
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>#}
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script>
         $(document).ready(function () {

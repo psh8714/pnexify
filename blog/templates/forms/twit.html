@@ -488,6 +488,7 @@
                                         <div class="twit-author-info">
                                             <span class="twit-author">{{ twit.writer }}</span>
                                             <span class="twit-time">{{ twit.create_time }}</span>
+                                            <span class="twit-time">{{ twit.create_time|timesince }} ago</span>
                                         </div>
                                         <a href="{% url 'blog:delete_twit_view' twit.id %}" class="twit-delete">×</a>
                                     </div>
@@ -508,6 +509,7 @@
                                         <div class="twit-author-info">
                                             <span class="twit-author">{{ twit.writer }}</span>
                                             <span class="twit-time">{{ twit.create_time }}</span>
+                                            <span class="twit-time">{{ twit.create_time|timesince }} ago</span>
                                         </div>
                                     </div>
 

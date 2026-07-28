@@ -1,32 +1,21 @@
 {% for post in posts %}
-    <article class="post-card">
-        <div class="post-media">
-            {% if post.images.exists %}
-                {% with image=post.images.first %}
-                    {% if image.image_file %}
-                        <img src="{{ image.image_file.url }}" alt="{{ post.title }}" loading="lazy">
-                    {% endif %}
-                {% endwith %}
-            {% else %}
-                <div class="post-placeholder">📸 No Image</div>
-            {% endif %}
-        </div>
+    {% if post.category == 'WIL' %}
+        {% include 'cards/what_i_learned.html' %}
+    {% endif %}
 
-        <div class="post-body">
-            <h2 class="post-title">{{ post.title }}</h2>
-            <div>{{ post.saver_accounts.count }}  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                             viewBox="0 0 24 24"
-                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                             stroke-linejoin="round">
-                                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                        </svg></div>
-            <p class="post-description">{{ post.description|truncatewords:20 }}</p>
-            <div class="post-footer">
-                <a href="{% url 'blog:post_detail' post.slug %}?next={{ request.get_full_path }}" class="read-more">Read
-                    More →</a>
-            </div>
-        </div>
-    </article>
+    {% if post.category == 'WIC' %}
+        {% include 'cards/projects.html' %}
+    {% endif %}
+
+    {% if post.category == 'SFT' %}
+        {% include 'cards/team_ups.html' %}
+    {% endif %}
+
+    {% if post.category == 'IHQ' %}
+        {% include 'cards/questions.html' %}
+    {% endif %}
+
+
 {% empty %}
     <div class="empty-state">
         <p>No posts found.</p>

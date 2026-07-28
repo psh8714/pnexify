@@ -54,6 +54,11 @@ class Province(models.TextChoices):
 
 
 class User(AbstractUser):
+    LEVEL_CHOICES = (
+        ('beginner', '(junior)مبتدی'),
+        ('middle', '(mid-level)متوسط'),
+        ('professional', '(senior)حرفه ای'),
+    )
     photo = models.ImageField(upload_to='blog/static/images/profile/', blank=True, null=True)
     ostan = models.CharField(verbose_name='استان', max_length=50, choices=Province.choices, blank=True, null=True)
     city = models.CharField(max_length=100, verbose_name='شهر', blank=True, null=True)
@@ -66,6 +71,10 @@ class User(AbstractUser):
     followings = models.ManyToManyField('self', related_name='followers', symmetrical=False)
     saved_posts = models.ManyToManyField('Post', related_name='saver_accounts', blank=True)
     notif = models.CharField(blank=True)
+    verify = models.BooleanField(default=False)
+    level = models.CharField(choices=LEVEL_CHOICES, verbose_name='سطح', default='beginner')
+
+
 
     def __str__(self):
         return self.username
@@ -93,9 +102,9 @@ class User(AbstractUser):
 
 class Skill(models.Model):
     LEVEL_CHOICES = (
-        ('beginner', 'مبتدی'),
-        ('middle', 'متوسط'),
-        ('professional', 'حرفه ای'),
+        ('beginner', '(junior)مبتدی'),
+        ('middle', '(mid-level)متوسط'),
+        ('professional', '(senior)حرفه ای'),
     )
     user = models.ForeignKey(User, related_name='abilities', on_delete=models.CASCADE)
     skill = models.CharField(max_length=250, verbose_name='مهارت', blank=True)
@@ -136,7 +145,9 @@ class Post(models.Model):
     category = models.CharField(choices=CATEGORY_CHOICES, default='WIL')
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
     total_likes = models.PositiveIntegerField(default=0)
+    total_saves = models.PositiveIntegerField(default=0)
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
+    reading_time = models.PositiveIntegerField(default=0)
 
     objects = models.Manager()
     published = PublishedManager()
@@ -185,6 +196,9 @@ class CommentModel(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+    helpful = models.BooleanField(default=False)
+
+
 
     class Meta:
         ordering = ['-created']

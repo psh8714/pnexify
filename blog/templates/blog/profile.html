@@ -7,7 +7,7 @@
     {% if user.notif %}
         <br>
         <div class="glass-card">
-        <span>{{ user.notif }}</span>
+            <span>{{ user.notif }}</span>
         </div>
     {% endif %}
     <div class="activity-page">
@@ -62,7 +62,8 @@
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td class="post-name"><a href="{{ post.get_absolute_url }}"
-                                                         style="color: white;text-decoration: none">{{ post.title }}</a>
+                                                         style="color: white;text-decoration: none;direction: rtl;unicode-bidi: plaintext;text-align: right;">
+                                    {{ post.title }}</a>
                                 </td>
                                 {% if post.images.first.image_file %}
                                     <td><img src="{{ post.images.first.image_file.url }}" alt="{{ post.title }}"
@@ -111,9 +112,10 @@
                             <div class="comment-top">
                                 <a class="comment-name"
                                    href="{% url 'blog:user_detail' comment.user %}">{{ comment.name }}</a>
-                                <span class="comment-meta">on {{ comment.post }}</span>
+                                <span class="comment-meta" style="direction: rtl;unicode-bidi: plaintext;text-align: right;">on {{ comment.post }}</span>
                             </div>
-                            <div class="comment-body">{{ comment.body|truncatechars:80 }}</div>
+                            <div class="comment-body" style="direction: rtl;unicode-bidi: plaintext;text-align: right;">
+                                {{ comment.body|truncatechars:80 }}</div>
                         </div>
                     {% empty %}
                         <div class="empty-state">کامنتی وجود ندارد</div>
