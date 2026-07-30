@@ -1,7 +1,9 @@
 {% extends 'parent/base.html' %}
+{% load static %}
 
 {% block head %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+{#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">#}
+    <link rel="stylesheet" href="{% static 'icons/bootstrap-icons.css' %}">
     <style>
         * {
             color: rgb(0, 0, 0);
@@ -246,6 +248,16 @@
             transform: translateY(-4px);
             box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5);
         }
+
+        .level_user {
+            color: black;
+            margin-left: 50px;
+            font-size: 21px;
+            background: rgba(244, 240, 253, 0.2);
+            border-radius: 999px;
+            padding: 7px 14px;
+            font-weight: 300;
+        }
     </style>
 {% endblock %}
 
@@ -270,7 +282,7 @@
                 <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
                     <div class="d-flex flex-column flex-md-row align-items-center text-center text-md-start">
                         {% if user.photo %}
-                            <img src="{{ user.photo.url }}" alt="{{ user.username }}" class="profile-avatar me-md-5">
+                            <a href="{{ user.photo.url }}"><img src="{{ user.photo.url }}" alt="{{ user.username }}" class="profile-avatar me-md-5"></a>
                         {% else %}
                             <div class="profile-avatar bg-dark d-flex align-items-center justify-content-center me-md-5">
                                 <i class="bi bi-person-fill text-light" style="font-size: 5rem;"></i>
@@ -279,13 +291,23 @@
 
                         <div>
                             <h2 class="profile-info fw-bold mb-2">{{ user.username }}</h2>
-                            {% if user.main_skill %}
-                                <p class="fs-4 text-indigo-300 mb-2">{{ user.main_skill }}</p>
-                            {% endif %}
+                            <div class="d-flex align-items-center mb-2">
+                                {% if user.main_skill %}
+                                    <p class="fs-4 text-indigo-300 mb-0">
+                                        {{ user.main_skill }} developer
+                                    </p>
+                                {% endif %}
+                                {% if user.level %}
+                                    <p class="level_user mb-0">
+                                        {{ user.get_level_display }}
+                                    </p>
+                                {% endif %}
+                            </div>
                             <p class="text-slate-400">
                                 {% if user.city or user.get_ostan_display %}
                                     <i class="bi bi-geo-alt"></i>
-                                {% endif %}{% if user.city %}{{ user.city }}{% endif %}
+                                {% endif %}
+                                {% if user.city %}{{ user.city }}{% endif %}
                                 {% if user.city and user.get_ostan_display %} • {% endif %}
                                 {% if user.ostan %}{{ user.get_ostan_display }}{% endif %}
                             </p>
@@ -338,7 +360,7 @@
                         <h5 class="fw-bold mb-0">درباره من</h5>
                     </div>
                     <p class="lead lh-relaxed text-slate-300">
-                        {{ user.bio|default:"بیوگرافی ثبت نشده است." }}
+                        {{ user.bio|default:"بیوگرافی ثبت نشده است."|linebreaks }}
                     </p>
                 </div>
             </div>
@@ -375,7 +397,7 @@
                     </div>
                     <div class="d-flex flex-wrap gap-3">
                         {% if user.github_id %}
-                            <a href="{{ user.github_id }}" target="_blank" class="btn btn-dark px-5 py-3 rounded-pill">
+                            <a href="https://github.com/{{ user.github_id }}" target="_blank" class="btn btn-dark px-5 py-3 rounded-pill">
                                 <i class="bi bi-github me-2"></i> GitHub
                             </a>
                         {% endif %}
@@ -393,7 +415,8 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>#}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
     <script>
         $(document).ready(function () {
             $('#follow_button').on('click', function () {

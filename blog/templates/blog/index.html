@@ -100,20 +100,715 @@
 {#        }#}
 {#    </style>#}
 {#{% endblock %}#}
+
+{#----------------------------------------------------------------------------------------------------------------------#}
+
+{#{% extends 'parent/base.html' %}#}
+{#{% load blog_tags %}#}
+{#{% load static %}#}
+{##}
+{#{% block title %}صفحه اصلی{% endblock %}#}
+{##}
+{#{% block content %}#}
+{##}
+{#    <!-- Hero Section -->#}
+{#    <section class="hero-section">#}
+{#        {% if notif.s_description|length > 3 %}#}
+{#            <span class="notification-text">#}
+{#        {{ notif.s_description }}#}
+{#        </span>#}
+{#        {% endif %}#}
+{#        <div class="container">#}
+{#            <div class="row align-items-center min-vh-100">#}
+{#                <div class="col-lg-8 col-md-10 mx-auto text-center">#}
+{#                    <div class="hero-content">#}
+{#                        <span class="badge bg-primary mb-3">{{ text1.s_description }}</span>#}
+{#                        <h1 class="display-3 fw-bold mb-4">#}
+{#                            <span class="gradient-text">{{ text2.s_description }}</span>#}
+{#                        </h1>#}
+{#                        <p style="color:#5c7fa5;">#}
+{#                            {{ text3.s_description }}#}
+{#                        </p>#}
+{##}
+{#                        <!-- Action Buttons -->#}
+{#                        <div class="d-flex gap-3 justify-content-center flex-wrap mb-5">#}
+{#                            <a href="{% url 'blog:post_list' %}" class="btn btn-lg btn-primary btn-modern">#}
+{#                                <i class="bi bi-arrow-right-circle"></i> {{ text4.s_description }}#}
+{#                            </a>#}
+{#                            <a href="{% url 'blog:about_us' %}" class="btn btn-lg btn-outline-light btn-modern">#}
+{#                                <i class="bi bi-info-circle"></i> {{ text5.s_description }}#}
+{#                            </a>#}
+{#                        </div>#}
+{##}
+{#                        <!-- Stats -->#}
+{#                        <div class="stats-row">#}
+{#                            <div class="stat-card">#}
+{#                                <h3 class="stat-number">{% post_number %}</h3>#}
+{#                                <p class="stat-label">پست منتشر شده</p>#}
+{#                            </div>#}
+{#                            <div class="stat-card">#}
+{#                                <h3 class="stat-number">{% comment_number %}</h3>#}
+{#                                <p class="stat-label">کامنت و بحث</p>#}
+{#                            </div>#}
+{#                            <div class="stat-card">#}
+{#                                {% last_post_publish as last_p %}#}
+{#                                <h3 class="stat-number">{{ last_p | date:" Y/m/d" }}</h3>#}
+{#                                <p class="stat-label">آخرین فعالیت</p>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </section>#}
+{##}
+{#    <!-- Featured Post Section -->#}
+{#    <section class="featured-section py-5">#}
+{#        <div class="container">#}
+{#            <div class="text-center mb-5">#}
+{#                <h2 class="section-title">{{ text6.s_description }}</h2>#}
+{#                <div class="title-line"></div>#}
+{#            </div>#}
+{##}
+{#            <div class="row">#}
+{#                <div class="col-lg-10 mx-auto">#}
+{#                    <div class="featured-card">#}
+{#                        <div class="featured-badge">{{ text12.s_description }}</div>#}
+{#                        {% if post != 'empty page' %}#}
+{#                            <div class="row g-4">#}
+{#                                <div class="col-md-6">#}
+{#                                    <div class="featured-image-wrapper">#}
+{#                                        {% if post.images.first.image_file %}#}
+{#                                        <img src="{{ post.images.first.image_file.url }}"#}
+{#                                             alt="{{ post.title }}" class="featured-image">#}
+{#                                            {% else %}#}
+{#                                            <div style="background: linear-gradient(135deg, #1f1b40, rgba(168,85,247,0.21), #3f162a); width: 500px; height: 500px; align-items: center; text-align:center; justify-content: center; display: flex; font-size: 21px; font-weight: bold">no image</div>#}
+{#                                            {% endif %}#}
+{#                                    </div>#}
+{#                                </div>#}
+{##}
+{#                                <div class="col-md-6 d-flex flex-column justify-content-center">#}
+{#                                    <span class="category-badge">{{ post.get_category_display }}</span>#}
+{#                                    <h3 class="featured-title">{{ post.title }}</h3>#}
+{#                                    <p class="featured-description">#}
+{#                                        {{ post.description | truncatewords:30 }}#}
+{#                                    </p>#}
+{##}
+{#                                    <div class="featured-meta mb-4">#}
+{#                                <span class="meta-item">#}
+{#                                    <i class="bi bi-person-circle"></i> {{ post.author.get_full_name }}#}
+{#                                </span>#}
+{#                                        <span class="meta-item">#}
+{#                                    <i class="bi bi-calendar-event"></i> {{ post.publish | date:"d M Y" }}#}
+{#                                </span>#}
+{#                                    </div>#}
+{##}
+{#                                    <a href="{{ post.get_absolute_url }}"#}
+{#                                       class="btn btn-primary btn-modern align-self-start">#}
+{#                                        مشاهده <i class="bi bi-arrow-left"></i>#}
+{#                                    </a>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        {% endif %}#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </section>#}
+{##}
+{#    <!-- Latest Posts Section -->#}
+{#    <section class="latest-posts-section py-5">#}
+{#        <div class="container">#}
+{#            <div class="text-center mb-5">#}
+{#                <h2 class="section-title">{{ text7.s_description }}</h2>#}
+{#                <div class="title-line"></div>#}
+{#            </div>#}
+{##}
+{#            <div class="row g-4">#}
+{#                {% latest_posts %}#}
+{#            </div>#}
+{##}
+{#            <!-- View All Button -->#}
+{#            <div class="text-center mt-5">#}
+{#                <a href="{% url 'blog:post_list' %}" class="btn btn-primary btn-lg btn-modern">#}
+{#                    {{ text8.s_description }}#}
+{#                </a>#}
+{#            </div>#}
+{#        </div>#}
+{#    </section>#}
+{##}
+{#    <!-- CTA Section -->#}
+{#    <section class="cta-section py-5">#}
+{#        <div class="container">#}
+{#            <div class="cta-card text-center">#}
+{#                <h2 class="mb-3">{{ text9.s_description }}</h2>#}
+{#                <p class="mb-4">{{ text10.s_description }}</p>#}
+{#                {% if user.is_authenticated %}#}
+{#                    <a href="{% url 'blog:new_post_view' %}" class="btn btn-light btn-lg btn-modern">#}
+{#                        <i class="bi bi-pen"></i> {{ text11.s_description }}#}
+{#                    </a>#}
+{#                {% else %}#}
+{#                    <a href="{% url 'blog:login' %}" class="btn btn-light btn-lg btn-modern">#}
+{#                        <i class="bi bi-box-arrow-in-right"></i> ورود به حساب#}
+{#                    </a>#}
+{#                {% endif %}#}
+{#            </div>#}
+{#        </div>#}
+{#    </section>#}
+{##}
+{#{% endblock %}#}
+{#{% if request.user.is_authenticated %}#}
+{#    {% head_color request.user as color_ %}#}
+{#{% else %}#}
+{#    {% head_color as color_ %}#}
+{#{% endif %}#}
+{#{% block head %}#}
+{#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">#}
+{#    <link rel="stylesheet" href="{% static 'icons/bootstrap-icons.css' %}">#}
+{#    <style>#}
+{#        :root {#}
+{#            --primary-color: #7c5cff;#}
+{#            --primary-hover: #6a4df0;#}
+{#            --secondary-color: #22c55e;#}
+{#            --accent-color: #ffb84d;#}
+{##}
+{#            --dark-bg: #0b1220;#}
+{#            --dark-bg-secondary: #111827;#}
+{#            --card-bg: rgba(17, 24, 39, 0.88);#}
+{#            --card-bg-soft: rgba(255, 255, 255, 0.04);#}
+{##}
+{#            --text-primary: #f8fafc;#}
+{#            --text-secondary: #cbd5e1;#}
+{#            --text-muted: #94a3b8;#}
+{##}
+{#            --border-color: rgba(255, 255, 255, 0.08);#}
+{#            --border-hover: rgba(124, 92, 255, 0.45);#}
+{##}
+{#            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.25);#}
+{#            --shadow-hover: 0 18px 40px rgba(124, 92, 255, 0.18);#}
+{##}
+{#            --transition: all 0.3s ease;#}
+{#        }#}
+{##}
+{#        * {#}
+{#            margin: 0;#}
+{#            padding: 0;#}
+{#            box-sizing: border-box;#}
+{#        }#}
+{##}
+{#        body {#}
+{#            background: #6a6aff;#}
+{#            color: var(--text-primary);#}
+{#            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;#}
+{#            line-height: 1.8;#}
+{#        }#}
+{##}
+{#        a {#}
+{#            text-decoration: none;#}
+{#        }#}
+{##}
+{#        .hero-section {#}
+{#            background: linear-gradient(135deg, #0b1220 0%, #111827 45%, #1f2937 100%);#}
+{#            position: relative;#}
+{#            overflow: hidden;#}
+{#        }#}
+{##}
+{#        .hero-section::before {#}
+{#            content: '';#}
+{#            position: absolute;#}
+{#            inset: 0;#}
+{#            background: radial-gradient(circle at 15% 20%, rgba(124, 92, 255, 0.18) 0%, transparent 35%),#}
+{#            radial-gradient(circle at 85% 80%, rgba(34, 197, 94, 0.12) 0%, transparent 35%),#}
+{#            radial-gradient(circle at 50% 50%, rgba(255, 184, 77, 0.08) 0%, transparent 45%);#}
+{#            z-index: 0;#}
+{#        }#}
+{##}
+{#        .hero-content {#}
+{#            position: relative;#}
+{#            z-index: 1;#}
+{#            animation: fadeInUp 0.8s ease-out;#}
+{#        }#}
+{##}
+{#        .gradient-text {#}
+{#            background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 50%, #34d399 100%);#}
+{#            -webkit-background-clip: text;#}
+{#            -webkit-text-fill-color: transparent;#}
+{#            background-clip: text;#}
+{#        }#}
+{##}
+{#        .stats-row {#}
+{#            display: grid;#}
+{#            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));#}
+{#            gap: 18px;#}
+{#            margin-top: 50px;#}
+{#        }#}
+{##}
+{#        .stat-card {#}
+{#            background: var(--card-bg-soft);#}
+{#            border: 1px solid var(--border-color);#}
+{#            padding: 24px;#}
+{#            border-radius: 16px;#}
+{#            backdrop-filter: blur(12px);#}
+{#            transition: var(--transition);#}
+{#            box-shadow: var(--shadow-soft);#}
+{#        }#}
+{##}
+{#        .stat-card:hover {#}
+{#            background: rgba(255, 255, 255, 0.07);#}
+{#            border-color: var(--border-hover);#}
+{#            transform: translateY(-6px);#}
+{#            box-shadow: var(--shadow-hover);#}
+{#        }#}
+{##}
+{#        .stat-number {#}
+{#            font-size: 30px;#}
+{#            font-weight: 800;#}
+{#            color: #ffffff;#}
+{#            margin-bottom: 8px;#}
+{#        }#}
+{##}
+{#        .stat-label {#}
+{#            font-size: 14px;#}
+{#            color: var(--text-secondary);#}
+{#            margin: 0;#}
+{#        }#}
+{##}
+{#        .btn-modern {#}
+{#            font-weight: 700;#}
+{#            border-radius: 12px;#}
+{#            padding: 12px 28px;#}
+{#            transition: var(--transition);#}
+{#            display: inline-flex;#}
+{#            align-items: center;#}
+{#            gap: 8px;#}
+{#            position: relative;#}
+{#            overflow: hidden;#}
+{#        }#}
+{##}
+{#        .btn-primary {#}
+{#            background: linear-gradient(135deg, var(--primary-color) 0%, #4f46e5 100%);#}
+{#            border: none;#}
+{#            color: #fff;#}
+{#        }#}
+{##}
+{#        .btn-primary:hover {#}
+{#            background: linear-gradient(135deg, var(--primary-hover) 0%, #4338ca 100%);#}
+{#            transform: translateY(-2px);#}
+{#            box-shadow: 0 12px 24px rgba(124, 92, 255, 0.28);#}
+{#            color: #fff;#}
+{#        }#}
+{##}
+{#        .btn-outline-light {#}
+{#            border: 2px solid rgba(255, 255, 255, 0.85);#}
+{#            color: #ffffff;#}
+{#            background: transparent;#}
+{#        }#}
+{##}
+{#        .btn-outline-light:hover {#}
+{#            background: #ffffff;#}
+{#            color: #0b1220;#}
+{#            transform: translateY(-2px);#}
+{#        }#}
+{##}
+{#        .featured-section,#}
+{#        .latest-posts-section {#}
+{#            background: linear-gradient(180deg, #111827 0%, #0f172a 100%);#}
+{#        }#}
+{##}
+{#        .section-title {#}
+{#            font-size: 34px;#}
+{#            font-weight: 800;#}
+{#            color: #ffffff;#}
+{#            margin-bottom: 15px;#}
+{#        }#}
+{##}
+{#        .title-line {#}
+{#            width: 70px;#}
+{#            height: 4px;#}
+{#            background: linear-gradient(135deg, #7c5cff 0%, #22c55e 100%);#}
+{#            margin: 0 auto;#}
+{#            border-radius: 999px;#}
+{#        }#}
+{##}
+{#        .featured-card {#}
+{#            background: linear-gradient(135deg, rgba(124, 92, 255, 0.08) 0%, rgba(34, 197, 94, 0.05) 100%);#}
+{#            border: 1px solid var(--border-color);#}
+{#            border-radius: 18px;#}
+{#            padding: 40px;#}
+{#            position: relative;#}
+{#            overflow: hidden;#}
+{#            backdrop-filter: blur(12px);#}
+{#            transition: var(--transition);#}
+{#            box-shadow: var(--shadow-soft);#}
+{#        }#}
+{##}
+{#        .featured-card:hover {#}
+{#            border-color: var(--border-hover);#}
+{#            box-shadow: var(--shadow-hover);#}
+{#            transform: translateY(-5px);#}
+{#        }#}
+{##}
+{#        .featured-badge {#}
+{#            position: absolute;#}
+{#            top: 20px;#}
+{#            right: 20px;#}
+{#            background: linear-gradient(135deg, #ef4444, #f97316);#}
+{#            color: white;#}
+{#            padding: 7px 14px;#}
+{#            border-radius: 999px;#}
+{#            font-size: 12px;#}
+{#            font-weight: 700;#}
+{#            z-index: 1;#}
+{#        }#}
+{##}
+{#        .featured-image-wrapper {#}
+{#            position: relative;#}
+{#            border-radius: 14px;#}
+{#            overflow: hidden;#}
+{#            height: 100%;#}
+{#            min-height: 300px;#}
+{#            box-shadow: var(--shadow-soft);#}
+{#        }#}
+{##}
+{#        .featured-image {#}
+{#            width: 100%;#}
+{#            height: 100%;#}
+{#            object-fit: cover;#}
+{#            transition: var(--transition);#}
+{#        }#}
+{##}
+{#        .featured-image-wrapper:hover .featured-image {#}
+{#            transform: scale(1.05);#}
+{#        }#}
+{##}
+{#        .category-badge {#}
+{#            display: inline-block;#}
+{#            background: linear-gradient(135deg, #7c5cff, #60a5fa);#}
+{#            color: #fff;#}
+{#            padding: 6px 14px;#}
+{#            border-radius: 999px;#}
+{#            font-size: 12px;#}
+{#            font-weight: 700;#}
+{#            margin-bottom: 15px;#}
+{#            width: fit-content;#}
+{#        }#}
+{##}
+{#        .featured-title {#}
+{#            font-size: 30px;#}
+{#            font-weight: 800;#}
+{#            margin-bottom: 15px;#}
+{#            line-height: 1.35;#}
+{#            color: #ffffff;#}
+{#        }#}
+{##}
+{#        .featured-description {#}
+{#            color: var(--text-secondary);#}
+{#            font-size: 16px;#}
+{#            line-height: 1.9;#}
+{#            margin-bottom: 20px;#}
+{#        }#}
+{##}
+{#        .featured-meta {#}
+{#            display: flex;#}
+{#            gap: 20px;#}
+{#            flex-wrap: wrap;#}
+{#            font-size: 14px;#}
+{#        }#}
+{##}
+{#        .meta-item {#}
+{#            display: flex;#}
+{#            align-items: center;#}
+{#            gap: 8px;#}
+{#            color: var(--text-secondary);#}
+{#        }#}
+{##}
+{#        .post-card {#}
+{#            background: linear-gradient(135deg, rgba(124, 92, 255, 0.06) 0%, rgba(34, 197, 94, 0.04) 100%);#}
+{#            border: 1px solid var(--border-color);#}
+{#            border-radius: 14px;#}
+{#            overflow: hidden;#}
+{#            transition: var(--transition);#}
+{#            display: flex;#}
+{#            flex-direction: column;#}
+{#            height: 100%;#}
+{#            box-shadow: var(--shadow-soft);#}
+{#        }#}
+{##}
+{#        .post-card:hover {#}
+{#            border-color: var(--border-hover);#}
+{#            box-shadow: var(--shadow-hover);#}
+{#            transform: translateY(-8px);#}
+{#        }#}
+{##}
+{#        /* فقط این بخش تغییر کرده */#}
+{#        .post-image-wrapper {#}
+{#            width: 100%;#}
+{#            height: 200px;#}
+{#            overflow: hidden;#}
+{#            border-radius: 14px 14px 0 0;#}
+{#            display: flex;#}
+{#        }#}
+{##}
+{#        .post-image {#}
+{#            width: 100%;#}
+{#            height: 100%;#}
+{#            object-fit: cover;#}
+{#            transition: var(--transition);#}
+{#            display: block;#}
+{#        }#}
+{##}
+{#        .post-card:hover .post-image {#}
+{#            transform: scale(1.08);#}
+{#        }#}
+{##}
+{#        .post-content {#}
+{#            padding: 24px;#}
+{#            display: flex;#}
+{#            flex-direction: column;#}
+{#            flex: 1;#}
+{#        }#}
+{##}
+{#        .post-category {#}
+{#            display: inline-block;#}
+{#            background: linear-gradient(135deg, #22c55e, #16a34a);#}
+{#            color: #ffffff;#}
+{#            padding: 5px 12px;#}
+{#            border-radius: 999px;#}
+{#            font-size: 11px;#}
+{#            font-weight: 700;#}
+{#            margin-bottom: 12px;#}
+{#            width: fit-content;#}
+{#        }#}
+{##}
+{#        .post-title {#}
+{#            font-size: 18px;#}
+{#            font-weight: 700;#}
+{#            margin-bottom: 12px;#}
+{#            line-height: 1.5;#}
+{#            color: #ffffff;#}
+{#        }#}
+{##}
+{#        .post-excerpt {#}
+{#            color: var(--text-secondary);#}
+{#            font-size: 14px;#}
+{#            margin-bottom: 15px;#}
+{#            flex: 1;#}
+{#            line-height: 1.8;#}
+{#        }#}
+{##}
+{#        .post-footer {#}
+{#            display: flex;#}
+{#            justify-content: space-between;#}
+{#            align-items: center;#}
+{#            padding-top: 15px;#}
+{#            border-top: 1px solid var(--border-color);#}
+{#        }#}
+{##}
+{#        .post-author,#}
+{#        .post-date {#}
+{#            font-size: 12px;#}
+{#            color: var(--text-muted);#}
+{#        }#}
+{##}
+{#        .cta-section {#}
+{#            background: linear-gradient(135deg, #6d28d9 0%, #2563eb 100%);#}
+{#        }#}
+{##}
+{#        .cta-card {#}
+{#            padding: 60px 40px;#}
+{#            border-radius: 18px;#}
+{#            background: rgba(0, 0, 0, 0.18);#}
+{#            backdrop-filter: blur(12px);#}
+{#            border: 1px solid rgba(255, 255, 255, 0.12);#}
+{#            box-shadow: var(--shadow-soft);#}
+{#        }#}
+{##}
+{#        .cta-card h2 {#}
+{#            font-size: 32px;#}
+{#            font-weight: 800;#}
+{#            color: #ffffff;#}
+{#        }#}
+{##}
+{#        .cta-card p {#}
+{#            font-size: 18px;#}
+{#            color: rgba(255, 255, 255, 0.9);#}
+{#        }#}
+{##}
+{#        @keyframes fadeInUp {#}
+{#            from {#}
+{#                opacity: 0;#}
+{#                transform: translateY(30px);#}
+{#            }#}
+{#            to {#}
+{#                opacity: 1;#}
+{#                transform: translateY(0);#}
+{#            }#}
+{#        }#}
+{##}
+{#        @media (max-width: 1068px) {#}
+{#            .hero-section {#}
+{#                min-height: auto;#}
+{#                padding: 40px 0;#}
+{#            }#}
+{##}
+{#            .stats-row {#}
+{#                grid-template-columns: 1fr;#}
+{#                gap: 15px;#}
+{#            }#}
+{##}
+{#            .featured-card {#}
+{#                padding: 22px;#}
+{#            }#}
+{##}
+{#            .featured-title {#}
+{#                font-size: 22px;#}
+{#            }#}
+{##}
+{#            .section-title {#}
+{#                font-size: 24px;#}
+{#            }#}
+{##}
+{#            .btn-modern {#}
+{#                padding: 10px 20px;#}
+{#                font-size: 14px;#}
+{#            }#}
+{##}
+{#            .cta-card {#}
+{#                padding: 30px 20px;#}
+{#            }#}
+{##}
+{#            .cta-card h2 {#}
+{#                font-size: 24px;#}
+{#            }#}
+{##}
+{#            .cta-card p {#}
+{#                font-size: 16px;#}
+{#            }#}
+{#        }#}
+{##}
+{#        @media (max-width: 480px) {#}
+{#            .hero-section {#}
+{#                padding: 20px 0;#}
+{#            }#}
+{##}
+{#            .hero-actions {#}
+{#                flex-direction: column;#}
+{#                gap: 10px;#}
+{#            }#}
+{##}
+{#            .btn-modern {#}
+{#                width: 100%;#}
+{#                justify-content: center;#}
+{#            }#}
+{##}
+{#            .featured-meta {#}
+{#                flex-direction: column;#}
+{#                gap: 10px;#}
+{#            }#}
+{##}
+{#            .post-footer {#}
+{#                flex-direction: column;#}
+{#                gap: 10px;#}
+{#            }#}
+{#        }#}
+{##}
+{#        .notification-text {#}
+{#            display: block;#}
+{#            width: 100%;#}
+{#            margin-top: 10px;#}
+{#            padding: 12px 14px;#}
+{#            color: #e5e7eb;#}
+{#            font-size: 14px;#}
+{#            font-weight: 400;#}
+{#            line-height: 1.9;#}
+{#            background: rgba(255, 255, 255, .04);#}
+{#            border: 1px solid rgba(255, 255, 255, .06);#}
+{#            border-radius: 14px;#}
+{#            direction: rtl;#}
+{#            unicode-bidi: plaintext;#}
+{#            white-space: pre-wrap;#}
+{#            word-break: break-word;#}
+{#            overflow-wrap: anywhere;#}
+{#            backdrop-filter: blur(10px);#}
+{#            -webkit-backdrop-filter: blur(10px);#}
+{#            transition: .25s ease;#}
+{#            text-align: center;#}
+{#        }#}
+{##}
+{#        .notification-text:hover {#}
+{#            border-color: rgba(139, 92, 246, .35);#}
+{#            background: rgba(139, 92, 246, .06);#}
+{#        }#}
+{#    </style>#}
+{#{% endblock %}#}
+{##}
+{#{% block scripts %}#}
+{#    <script>#}
+{#        function lighten(hex, percent) {#}
+{#            let num = parseInt(hex.replace("#", ""), 16);#}
+{##}
+{#            let r = (num >> 16);#}
+{#            let g = (num >> 8) & 255;#}
+{#            let b = num & 255;#}
+{##}
+{#            r += (255 - r) * percent;#}
+{#            g += (255 - g) * percent;#}
+{#            b += (255 - b) * percent;#}
+{##}
+{#            return "#" +#}
+{#                Math.round(r).toString(16).padStart(2, "0") +#}
+{#                Math.round(g).toString(16).padStart(2, "0") +#}
+{#                Math.round(b).toString(16).padStart(2, "0");#}
+{#        }#}
+{##}
+{#        function darken(hex, percent) {#}
+{#            let num = parseInt(hex.replace("#", ""), 16);#}
+{##}
+{#            let r = (num >> 16);#}
+{#            let g = (num >> 8) & 255;#}
+{#            let b = num & 255;#}
+{##}
+{#            r *= (1 - percent);#}
+{#            g *= (1 - percent);#}
+{#            b *= (1 - percent);#}
+{##}
+{#            return "#" +#}
+{#                Math.round(r).toString(16).padStart(2, "0") +#}
+{#                Math.round(g).toString(16).padStart(2, "0") +#}
+{#                Math.round(b).toString(16).padStart(2, "0");#}
+{#        }#}
+{#    </script>#}
+{#{% endblock %}#}
+
+
 {% extends 'parent/base.html' %}
 {% load blog_tags %}
 {% load static %}
-
 {% block title %}صفحه اصلی{% endblock %}
 
 {% block content %}
+
+    <div class="dynamic-background">
+        <div class="bg-blob blob-one"></div>
+        <div class="bg-blob blob-two"></div>
+        <div class="bg-blob blob-three"></div>
+        <div class="bg-blob blob-four"></div>
+        <div class="glass-particles">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero-section">
         {% if notif.s_description|length > 3 %}
             <span class="notification-text">
-        {{ notif.s_description }}
-        </span>
+                {{ notif.s_description }}
+            </span>
         {% endif %}
         <div class="container">
             <div class="row align-items-center min-vh-100">
@@ -126,7 +821,6 @@
                         <p style="color:#5c7fa5;">
                             {{ text3.s_description }}
                         </p>
-
                         <!-- Action Buttons -->
                         <div class="d-flex gap-3 justify-content-center flex-wrap mb-5">
                             <a href="{% url 'blog:post_list' %}" class="btn btn-lg btn-primary btn-modern">
@@ -136,7 +830,6 @@
                                 <i class="bi bi-info-circle"></i> {{ text5.s_description }}
                             </a>
                         </div>
-
                         <!-- Stats -->
                         <div class="stats-row">
                             <div class="stat-card">
@@ -152,6 +845,10 @@
                                 <h3 class="stat-number">{{ last_p | date:" Y/m/d" }}</h3>
                                 <p class="stat-label">آخرین فعالیت</p>
                             </div>
+                            <div class="stat-card">
+                                <h3 class="stat-number">{{ posts_views }}</h3>
+                                <p class="stat-label">کل بازدیدها</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -166,7 +863,6 @@
                 <h2 class="section-title">{{ text6.s_description }}</h2>
                 <div class="title-line"></div>
             </div>
-
             <div class="row">
                 <div class="col-lg-10 mx-auto">
                     <div class="featured-card">
@@ -175,30 +871,31 @@
                             <div class="row g-4">
                                 <div class="col-md-6">
                                     <div class="featured-image-wrapper">
-                                        <img src="{{ post.images.first.image_file.url }}"
-                                             alt="{{ post.title }}" class="featured-image">
+                                        {% if post.images.first.image_file %}
+                                            <img src="{{ post.images.first.image_file.url }}"
+                                                 alt="{{ post.title }}" class="featured-image">
+                                        {% else %}
+                                            <div class="no-image-placeholder">no image</div>
+                                        {% endif %}
                                     </div>
                                 </div>
-
                                 <div class="col-md-6 d-flex flex-column justify-content-center">
                                     <span class="category-badge">{{ post.get_category_display }}</span>
                                     <h3 class="featured-title">{{ post.title }}</h3>
                                     <p class="featured-description">
                                         {{ post.description | truncatewords:30 }}
                                     </p>
-
                                     <div class="featured-meta mb-4">
-                                <span class="meta-item">
-                                    <i class="bi bi-person-circle"></i> {{ post.author.get_full_name }}
-                                </span>
                                         <span class="meta-item">
-                                    <i class="bi bi-calendar-event"></i> {{ post.publish | date:"d M Y" }}
-                                </span>
+                                            <i class="bi bi-person-circle"></i> {{ post.author.get_full_name }}
+                                        </span>
+                                        <span class="meta-item">
+                                            <i class="bi bi-calendar-event"></i> {{ post.publish | date:"d M Y" }}
+                                        </span>
                                     </div>
-
                                     <a href="{{ post.get_absolute_url }}"
                                        class="btn btn-primary btn-modern align-self-start">
-                                        مطالعه مقاله <i class="bi bi-arrow-left"></i>
+                                        مشاهده <i class="bi bi-arrow-left"></i>
                                     </a>
                                 </div>
                             </div>
@@ -216,11 +913,9 @@
                 <h2 class="section-title">{{ text7.s_description }}</h2>
                 <div class="title-line"></div>
             </div>
-
             <div class="row g-4">
                 {% latest_posts %}
             </div>
-
             <!-- View All Button -->
             <div class="text-center mt-5">
                 <a href="{% url 'blog:post_list' %}" class="btn btn-primary btn-lg btn-modern">
@@ -230,56 +925,69 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section py-5">
+    <!-- Active Users Section -->
+    <section class="users-section py-5">
         <div class="container">
-            <div class="cta-card text-center">
-                <h2 class="mb-3">{{ text9.s_description }}</h2>
-                <p class="mb-4">{{ text10.s_description }}</p>
-                {% if user.is_authenticated %}
-                    <a href="{% url 'blog:new_post_view' %}" class="btn btn-light btn-lg btn-modern">
-                        <i class="bi bi-pen"></i> {{ text11.s_description }}
-                    </a>
-                {% else %}
-                    <a href="{% url 'blog:login' %}" class="btn btn-light btn-lg btn-modern">
-                        <i class="bi bi-box-arrow-in-right"></i> ورود به حساب
-                    </a>
-                {% endif %}
+            <div class="text-center mb-5">
+                <h2 class="section-title">{{ text13.s_description }}</h2>
+                <div class="title-line"></div>
             </div>
+            {% if users != 'empty page' %}
+                <div class="row g-4">
+                    {% for u in users %}
+                        <div class="col-6 col-md-3">
+                            <a href="{% url 'blog:user_detail' u.username %}" class="user-card-link">
+                                <div class="user-card text-center">
+                                    {% if u.verify %}
+                                        <span class="verify-badge"><i class="bi bi-patch-check-fill"></i></span>
+                                    {% endif %}
+                                    <div class="user-avatar">
+                                        {% if u.photo %}
+                                            <img src="{{ u.photo.url }}" alt="{{ u.username }}">
+                                        {% else %}
+                                            <span>{{ u.username|slice:":1"|upper }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <h4 class="user-name">{{ u.username }}</h4>
+                                    {% if u.main_skill %}
+                                        <span class="user-skill">{{ u.main_skill }}</span>
+                                    {% endif %}
+                                    <span class="user-level">{{ u.get_level_display }}</span>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
     </section>
-
 {% endblock %}
+
 {% if request.user.is_authenticated %}
     {% head_color request.user as color_ %}
 {% else %}
     {% head_color as color_ %}
 {% endif %}
+
 {% block head %}
-{#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">#}
     <link rel="stylesheet" href="{% static 'icons/bootstrap-icons.css' %}">
     <style>
         :root {
-            --primary-color: #7c5cff;
-            --primary-hover: #6a4df0;
+            --primary-color: rgba(124, 92, 255, 0.12);
+            --primary-hover: rgba(106, 77, 240, 0.27);
             --secondary-color: #22c55e;
             --accent-color: #ffb84d;
-
             --dark-bg: #0b1220;
             --dark-bg-secondary: #111827;
             --card-bg: rgba(17, 24, 39, 0.88);
-            --card-bg-soft: rgba(255, 255, 255, 0.04);
-
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
+            --card-bg-soft: rgba(106, 106, 255, 0.18);
+            --text-primary: #6a6aff;
+            --text-secondary: #ffffff;
             --text-muted: #94a3b8;
-
             --border-color: rgba(255, 255, 255, 0.08);
             --border-hover: rgba(124, 92, 255, 0.45);
-
             --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.25);
             --shadow-hover: 0 18px 40px rgba(124, 92, 255, 0.18);
-
             --transition: all 0.3s ease;
         }
 
@@ -287,21 +995,98 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            color: white;
         }
 
         body {
-            background: #6a6aff;
+            background: var(--dark-bg);
             color: var(--text-primary);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.8;
+            position: relative;
         }
 
         a {
             text-decoration: none;
         }
 
-        .hero-section {
-            background: linear-gradient(135deg, #0b1220 0%, #111827 45%, #1f2937 100%);
+        /* ===== Animated Background ===== */
+        .animated-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.32;
+            will-change: transform;
+        }
+
+        .blob-1 {
+            width: 520px;
+            height: 520px;
+            background: radial-gradient(circle, #7c5cff 0%, transparent 70%);
+            top: -140px;
+            left: -120px;
+            animation: floatBlob1 24s ease-in-out infinite alternate;
+        }
+
+        .blob-2 {
+            width: 620px;
+            height: 620px;
+            background: radial-gradient(circle, #22c55e 0%, transparent 70%);
+            bottom: -180px;
+            right: -140px;
+            animation: floatBlob2 28s ease-in-out infinite alternate;
+        }
+
+        .blob-3 {
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, #ffb84d 0%, transparent 70%);
+            top: 45%;
+            left: 55%;
+            animation: floatBlob3 19s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatBlob1 {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(140px, 90px) scale(1.15);
+            }
+        }
+
+        @keyframes floatBlob2 {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(-120px, -70px) scale(1.1);
+            }
+        }
+
+        @keyframes floatBlob3 {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                transform: translate(calc(-50% + 70px), calc(-50% - 100px)) scale(1.2);
+            }
+        }
+
+        /* Sections stay transparent so the animated background is visible everywhere */
+        .hero-section,
+        .featured-section,
+        .latest-posts-section,
+        .users-section {
+            background: transparent;
             position: relative;
             overflow: hidden;
         }
@@ -310,9 +1095,8 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 15% 20%, rgba(124, 92, 255, 0.18) 0%, transparent 35%),
-            radial-gradient(circle at 85% 80%, rgba(34, 197, 94, 0.12) 0%, transparent 35%),
-            radial-gradient(circle at 50% 50%, rgba(255, 184, 77, 0.08) 0%, transparent 45%);
+            background: radial-gradient(circle at 15% 20%, rgba(124, 92, 255, 0.14) 0%, transparent 35%),
+            radial-gradient(circle at 85% 80%, rgba(34, 197, 94, 0.10) 0%, transparent 35%);
             z-index: 0;
         }
 
@@ -342,6 +1126,7 @@
             padding: 24px;
             border-radius: 16px;
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             transition: var(--transition);
             box-shadow: var(--shadow-soft);
         }
@@ -403,11 +1188,6 @@
             transform: translateY(-2px);
         }
 
-        .featured-section,
-        .latest-posts-section {
-            background: linear-gradient(180deg, #111827 0%, #0f172a 100%);
-        }
-
         .section-title {
             font-size: 34px;
             font-weight: 800;
@@ -431,6 +1211,7 @@
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             transition: var(--transition);
             box-shadow: var(--shadow-soft);
         }
@@ -461,6 +1242,19 @@
             height: 100%;
             min-height: 300px;
             box-shadow: var(--shadow-soft);
+        }
+
+        .no-image-placeholder {
+            background: linear-gradient(135deg, #1f1b40, rgba(168, 85, 247, 0.21), #3f162a);
+            width: 100%;
+            height: 100%;
+            min-height: 300px;
+            align-items: center;
+            text-align: center;
+            justify-content: center;
+            display: flex;
+            font-size: 21px;
+            font-weight: bold;
         }
 
         .featured-image {
@@ -495,7 +1289,7 @@
         }
 
         .featured-description {
-            color: var(--text-secondary);
+            color: white;
             font-size: 16px;
             line-height: 1.9;
             margin-bottom: 20px;
@@ -525,6 +1319,8 @@
             flex-direction: column;
             height: 100%;
             box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .post-card:hover {
@@ -533,12 +1329,12 @@
             transform: translateY(-8px);
         }
 
-        /* فقط این بخش تغییر کرده */
         .post-image-wrapper {
             width: 100%;
             height: 200px;
             overflow: hidden;
             border-radius: 14px 14px 0 0;
+            display: flex;
         }
 
         .post-image {
@@ -602,28 +1398,88 @@
             color: var(--text-muted);
         }
 
-        .cta-section {
-            background: linear-gradient(135deg, #6d28d9 0%, #2563eb 100%);
+        /* ===== Active Users Section ===== */
+        .user-card-link {
+            display: block;
+            height: 100%;
         }
 
-        .cta-card {
-            padding: 60px 40px;
-            border-radius: 18px;
-            background: rgba(0, 0, 0, 0.18);
+        .user-card {
+            position: relative;
+            background: var(--card-bg-soft);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 26px 16px;
+            height: 100%;
+            transition: var(--transition);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            -webkit-backdrop-filter: blur(12px);
             box-shadow: var(--shadow-soft);
         }
 
-        .cta-card h2 {
-            font-size: 32px;
-            font-weight: 800;
-            color: #ffffff;
+        .user-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-6px);
+            background: rgba(255, 255, 255, 0.06);
         }
 
-        .cta-card p {
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.9);
+        .verify-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            color: #60a5fa;
+            font-size: 16px;
+        }
+
+        .user-avatar {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 800;
+            color: #fff;
+            border: 2px solid var(--border-color);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-skill {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .user-level {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            color: #a78bfa;
+            background: rgba(124, 92, 255, 0.12);
+            border: 1px solid rgba(124, 92, 255, 0.25);
+            padding: 3px 10px;
+            border-radius: 999px;
         }
 
         @keyframes fadeInUp {
@@ -665,16 +1521,8 @@
                 font-size: 14px;
             }
 
-            .cta-card {
-                padding: 30px 20px;
-            }
-
-            .cta-card h2 {
-                font-size: 24px;
-            }
-
-            .cta-card p {
-                font-size: 16px;
+            .blob {
+                filter: blur(60px);
             }
         }
 
@@ -701,6 +1549,12 @@
             .post-footer {
                 flex-direction: column;
                 gap: 10px;
+            }
+
+            .user-avatar {
+                width: 56px;
+                height: 56px;
+                font-size: 20px;
             }
         }
 
@@ -731,43 +1585,146 @@
             border-color: rgba(139, 92, 246, .35);
             background: rgba(139, 92, 246, .06);
         }
+
+        .dynamic-background {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -10;
+            background: radial-gradient(circle at top left, #312e81 0%, transparent 35%),
+            radial-gradient(circle at bottom right, #065f46 0%, transparent 35%),
+            #020617;
+        }
+
+        /* حباب های بزرگ شیشه ای */
+        .bg-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: .45;
+            animation: moveBlob 22s infinite alternate ease-in-out;
+        }
+
+        .blob-one {
+            width: 500px;
+            height: 500px;
+            background: #6366f1;
+            top: -150px;
+            left: -100px;
+        }
+
+        .blob-two {
+            width: 450px;
+            height: 450px;
+            background: #22d3ee;
+            right: -120px;
+            top: 150px;
+            animation-delay: -5s;
+        }
+
+        .blob-three {
+            width: 550px;
+            height: 550px;
+            background: #a855f7;
+            bottom: -200px;
+            left: 30%;
+            animation-delay: -10s;
+        }
+
+        .blob-four {
+            width: 300px;
+            height: 300px;
+            background: #10b981;
+            bottom: 20%;
+            right: 25%;
+            animation-delay: -15s;
+        }
+
+        @keyframes moveBlob {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            50% {
+                transform: translate(80px, -60px) scale(1.15);
+            }
+            100% {
+                transform: translate(-40px, 50px) scale(.95);
+            }
+        }
+
+        /* ذرات شیشه */
+        .glass-particles span {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, .7);
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+            animation: floatParticle 15s infinite linear;
+        }
+
+        .glass-particles span:nth-child(1) {
+            left: 10%;
+            top: 80%;
+        }
+
+        .glass-particles span:nth-child(2) {
+            left: 25%;
+            top: 40%;
+            animation-delay: 2s;
+        }
+
+        .glass-particles span:nth-child(3) {
+            left: 50%;
+            top: 70%;
+            animation-delay: 5s;
+        }
+
+        .glass-particles span:nth-child(4) {
+            left: 70%;
+            top: 30%;
+            animation-delay: 7s;
+        }
+
+        .glass-particles span:nth-child(5) {
+            left: 85%;
+            top: 80%;
+            animation-delay: 10s;
+        }
+
+        .glass-particles span:nth-child(6) {
+            left: 60%;
+            top: 15%;
+            animation-delay: 12s;
+        }
+
+        @keyframes floatParticle {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            30% {
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-700px);
+                opacity: 0;
+            }
+        }
+
+        /* لایه شیشه روی کل صفحه */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(
+                    120deg,
+                    rgba(255, 255, 255, .04),
+                    transparent
+            );
+            backdrop-filter: blur(2px);
+            pointer-events: none;
+            z-index: -5;
+        }
     </style>
-{% endblock %}
-
-{% block scripts %}
-    <script>
-        function lighten(hex, percent) {
-            let num = parseInt(hex.replace("#", ""), 16);
-
-            let r = (num >> 16);
-            let g = (num >> 8) & 255;
-            let b = num & 255;
-
-            r += (255 - r) * percent;
-            g += (255 - g) * percent;
-            b += (255 - b) * percent;
-
-            return "#" +
-                Math.round(r).toString(16).padStart(2, "0") +
-                Math.round(g).toString(16).padStart(2, "0") +
-                Math.round(b).toString(16).padStart(2, "0");
-        }
-
-        function darken(hex, percent) {
-            let num = parseInt(hex.replace("#", ""), 16);
-
-            let r = (num >> 16);
-            let g = (num >> 8) & 255;
-            let b = num & 255;
-
-            r *= (1 - percent);
-            g *= (1 - percent);
-            b *= (1 - percent);
-
-            return "#" +
-                Math.round(r).toString(16).padStart(2, "0") +
-                Math.round(g).toString(16).padStart(2, "0") +
-                Math.round(b).toString(16).padStart(2, "0");
-        }
-    </script>
 {% endblock %}

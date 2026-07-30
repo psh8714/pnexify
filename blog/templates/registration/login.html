@@ -118,172 +118,450 @@
 {#        }#}
 {#    </style>#}
 {#{% endblock %}#}
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ورود</title>
-    <style>
-        body {
-            font-family: 'Tahoma', sans-serif; /* فونت فارسی خواناتر */
-            background-color: #eef2f7; /* رنگ پس‌زمینه روشن و ملایم */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            color: #333;
-        }
+    {% block head %}
+        <style>
+            /* ===========================
+       RESET
+    =========================== */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-        .login-wrapper { /* یه کانتینر کلی برای وسط چین کردن */
-            width: 100%;
-            max-width: 400px; /* حداکثر عرض فرم */
-            padding: 30px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            text-align: center;
-            margin: 20px; /* کمی فاصله از لبه‌های صفحه */
-        }
+            body {
+                font-family: Vazirmatn, sans-serif;
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                overflow: hidden;
+                background: #f8fbff;
+            }
 
-        h1 {
-            color: #2c3e50; /* رنگ آبی تیره برای عنوان */
-            margin-bottom: 15px;
-            font-size: 28px;
-            font-weight: 600;
-        }
+            /* ===========================
+               Liquid Background
+            =========================== */
+            .liquid-bg {
+                position: fixed;
+                inset: 0;
+                overflow: hidden;
+                z-index: -3;
+            }
 
-        p {
-            color: #555;
-            margin-bottom: 35px;
-            font-size: 16px;
-            line-height: 1.6;
-        }
+            .blob {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(90px);
+                opacity: .55;
+                animation: float 20s infinite ease-in-out;
+            }
 
-        /* استایل برای فرم */
-        .post-container {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch; /* عرض کامل برای آیتم‌ها */
-        }
+            .blob1 {
+                width: 450px;
+                height: 450px;
+                background: #8ec5ff;
+                left: -120px;
+                top: -120px;
+            }
 
-        /* استایل برای هر فیلد فرم (که توسط form.as_p ایجاد میشه) */
-        .post-container p {
-            margin-bottom: 25px; /* فاصله بین فیلدها */
-            text-align: right; /* راست‌چین کردن لیبل و فیلد */
-            display: flex;
-            flex-direction: column; /* لیبل بالای اینپوت */
-            align-items: flex-end; /* راست‌چین کردن خود پاراگراف */
-        }
+            .blob2 {
+                width: 380px;
+                height: 380px;
+                background: #c8b6ff;
+                right: -80px;
+                top: 80px;
+                animation-duration: 26s;
+            }
 
-        .post-container label {
-            display: block; /* اطمینان از اینکه لیبل در خط خودش قرار می‌گیره */
-            margin-bottom: 10px;
-            color: #34495e;
-            font-weight: 500;
-            font-size: 15px;
-            width: 100%; /* لیبل هم عرض کامل */
-        }
+            .blob3 {
+                width: 420px;
+                height: 420px;
+                background: #99f6e4;
+                bottom: -120px;
+                left: 20%;
+            }
 
-        .post-container input[type="text"],
-        .post-container input[type="password"],
-        .post-container input[type="email"] {
-            width: 100%;
-            padding: 14px 15px;
-            border: 1px solid #bdc3c7; /* حاشیه خاکستری ملایم */
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 16px;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            text-align: right; /* متن ورودی راست‌چین باشه */
-        }
+            .blob4 {
+                width: 320px;
+                height: 320px;
+                background: #bfdbfe;
+                bottom: 40px;
+                right: 15%;
+            }
 
-        .post-container input:focus {
-            border-color: #3498db; /* آبی روشن برای فوکوس */
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); /* سایه ملایم هنگام فوکوس */
-            outline: none;
-        }
+            .blob5 {
+                width: 250px;
+                height: 250px;
+                background: #ddd6fe;
+                left: 45%;
+                top: 35%;
+            }
 
-        /* استایل برای دکمه ورود */
-        .post-container input[type="submit"] {
-            background-color: #2980b9; /* رنگ آبی تیره و جذاب */
-            color: white;
-            padding: 15px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            width: 100%;
-            margin-top: 15px; /* کمی فاصله بالاتر از بقیه */
-        }
+            /* ===========================
+               Floating particles
+            =========================== */
+            .glass-particles {
+                position: fixed;
+                inset: 0;
+                z-index: -2;
+                pointer-events: none;
+            }
 
-        .post-container input[type="submit"]:hover {
-            background-color: #1f618d; /* تیره‌تر در هاور */
-            transform: translateY(-2px); /* کمی بالا آمدن */
-        }
+            .glass-particles span {
+                position: absolute;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, .6);
+                backdrop-filter: blur(8px);
+                animation: particle 18s linear infinite;
+            }
 
-        /* استایل برای لینک فراموشی رمز عبور */
-        .forget-password-link {
-            display: block; /* تا در خط خودش باشه */
-            margin-top: 25px;
-            color: #2980b9;
-            font-size: 14px;
-            transition: color 0.3s ease;
-        }
+            .glass-particles span:nth-child(1) {
+                left: 10%;
+                top: 20%;
+            }
 
-        .forget-password-link:hover {
-            color: #1f618d;
-            text-decoration: underline;
-        }
+            .glass-particles span:nth-child(2) {
+                left: 25%;
+                top: 70%;
+            }
 
-        /* استایل برای نمایش خطاها */
-        .post-container .errorlist {
-            list-style: none;
-            padding: 0;
-            margin-top: 8px;
-            color: #e74c3c; /* رنگ قرمز برای خطا */
-            font-size: 13px;
-            text-align: right; /* خطاها هم راست‌چین */
-            width: 100%;
-        }
+            .glass-particles span:nth-child(3) {
+                left: 40%;
+                top: 40%;
+            }
 
-        .post-container .errorlist li {
-            margin-bottom: 4px;
-        }
+            .glass-particles span:nth-child(4) {
+                left: 55%;
+                top: 80%;
+            }
 
-        /* اگر form.as_p() خطاهای کلی فرم رو هم در تگ <p> قرار بده */
-        .post-container p .errorlist {
-            margin-top: 5px;
-        }
+            .glass-particles span:nth-child(5) {
+                left: 70%;
+                top: 30%;
+            }
 
-    </style>
+            .glass-particles span:nth-child(6) {
+                left: 80%;
+                top: 60%;
+            }
+
+            .glass-particles span:nth-child(7) {
+                left: 15%;
+                top: 90%;
+            }
+
+            .glass-particles span:nth-child(8) {
+                left: 92%;
+                top: 18%;
+            }
+
+            .glass-particles span:nth-child(9) {
+                left: 63%;
+                top: 8%;
+            }
+
+            .glass-particles span:nth-child(10) {
+                left: 48%;
+                top: 55%;
+            }
+
+            /* ===========================
+               Login Box
+            =========================== */
+            .login-wrapper {
+                width: 470px;
+                padding: 45px;
+                border-radius: 35px;
+                background: rgba(255, 255, 255, .45);
+                backdrop-filter: blur(25px) saturate(180%);
+                -webkit-backdrop-filter: blur(25px);
+                border: 1px solid rgba(255, 255, 255, .55);
+                box-shadow: 0 25px 60px rgba(15, 23, 42, .10),
+                inset 0 0 20px rgba(255, 255, 255, .35);
+            }
+
+            /* ===========================
+               Logo
+            =========================== */
+            .logo-circle {
+                width: 80px;
+                height: 80px;
+                margin: auto;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: #2563eb;
+                background: rgba(255, 255, 255, .55);
+                backdrop-filter: blur(12px);
+                margin-bottom: 20px;
+            }
+
+            /* ===========================
+               Title
+            =========================== */
+            h1 {
+                text-align: center;
+                color: #0f172a;
+                font-size: 34px;
+                margin-bottom: 10px;
+            }
+
+            .subtitle {
+                text-align: center;
+                color: #64748b;
+                margin-bottom: 35px;
+            }
+
+            /* ===========================
+               Form
+            =========================== */
+            .post-container p {
+                margin-bottom: 20px;
+            }
+
+            .post-container label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 700;
+                color: #334155;
+            }
+
+            .post-container input {
+                width: 100%;
+                padding: 14px 18px;
+                border-radius: 16px;
+                border: 1px solid rgba(255, 255, 255, .55);
+                background: rgba(255, 255, 255, .55);
+                backdrop-filter: blur(12px);
+                font-size: 15px;
+                transition: .3s;
+            }
+
+            .post-container input:focus {
+                outline: none;
+                border-color: #60a5fa;
+                background: white;
+                box-shadow: 0 0 0 5px rgba(96, 165, 250, .18);
+            }
+
+            /* ===========================
+               Button
+            =========================== */
+            .login-btn {
+                width: 100%;
+                padding: 15px;
+                border: none;
+                border-radius: 18px;
+                background: linear-gradient(135deg, #60a5fa, #2563eb);
+                color: white;
+                font-size: 16px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: .35s;
+                box-shadow: 0 15px 35px rgba(37, 99, 235, .25);
+            }
+
+            .login-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 20px 45px rgba(37, 99, 235, .35);
+            }
+
+            /* ===========================
+               Links
+            =========================== */
+            .login-links {
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                margin-top: 25px;
+            }
+
+            .login-links a {
+                color: #2563eb;
+                text-decoration: none;
+                transition: .3s;
+            }
+
+            .login-links a:hover {
+                color: #1d4ed8;
+            }
+
+            /* ===========================
+               Errors
+            =========================== */
+            .errorlist {
+                list-style: none;
+                margin-top: 8px;
+                color: #dc2626;
+                font-size: 13px;
+            }
+
+            /* ===========================
+               Animations
+            =========================== */
+            @keyframes float {
+                0% {
+                    transform: translate(0, 0);
+                }
+                50% {
+                    transform: translate(60px, -40px);
+                }
+                100% {
+                    transform: translate(0, 0);
+                }
+            }
+
+            @keyframes particle {
+                from {
+                    transform: translateY(0);
+                }
+                to {
+                    transform: translateY(-60px);
+                }
+            }
+
+            /* ===========================
+               Responsive
+            =========================== */
+            @media (max-width: 600px) {
+                .login-wrapper {
+                    width: 92%;
+                    padding: 28px;
+                    border-radius: 25px;
+                }
+            }
+
+            #liquidCanvas {
+                position: fixed;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -5;
+            }
+        </style>
+    {% endblock %}
 </head>
 <body>
-
+<!-- بک گراند مایع -->
+<div class="liquid-bg">
+    <span class="blob blob1"></span>
+    <span class="blob blob2"></span>
+    <span class="blob blob3"></span>
+    <span class="blob blob4"></span>
+    <span class="blob blob5"></span>
+</div>
+<!-- ذرات شیشه -->
+<div class="glass-particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+<canvas id="liquidCanvas"></canvas>
 <div class="login-wrapper">
-    <h1>ورود</h1>
-    <p>لطفا اطلاعات خود را وارد کنید:</p>
-
+    <!-- لوگوی ساده -->
+    <div class="logo-circle">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="42"
+             height="42"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2">
+            <circle cx="21" cy="21" r="18"></circle>
+            <path d="M13 21h16"></path>
+            <path d="M21 13v16"></path>
+        </svg>
+    </div>
+    <h1>خوش برگشتی 👋</h1>
+    <p class="subtitle">
+        برای ادامه وارد حساب کاربری خود شوید
+    </p>
     <form method="post" class="post-container">
         {% csrf_token %}
-
         {{ form.as_p }}
-        <!-- توجه: اگر خروجی form.as_p خطاها را در جای دیگری قرار می دهد،
-             ممکن است نیاز به تنظیم CSS برای .post-container.errorlist باشد.
-             اما معمولا خطاها در همان تگ <p> مربوط به فیلد قرار می گیرند.
-        -->
-
-        {#        <input type="hidden" name="next" value="{{ next }}">#}
-
-        <input type="submit" value="ورود">
+        <button type="submit" class="login-btn">
+            ورود
+        </button>
     </form>
-
-    <a href='{% url 'blog:reset_password' %}' class="forget-password-link">رمز عبور خود را فراموش کرده‌اید؟</a>
-    <a href='{% url 'blog:user_register' %}' class="forget-password-link">ساخت حساب</a>
+    <div class="login-links">
+        <a href="{% url 'blog:reset_password' %}">
+            رمز عبور را فراموش کرده‌ام
+        </a>
+        <span>•</span>
+        <a href="{% url 'blog:user_register' %}">
+            ساخت حساب جدید
+        </a>
+    </div>
 </div>
+{% block scripts %}
+    <script>
+        const canvas = document.getElementById("liquidCanvas");
+        const ctx = canvas.getContext("2d");
 
+        function resize() {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+        }
+
+        resize();
+        window.addEventListener("resize", resize);
+        const blobs = [];
+        for (let i = 0; i < 6; i++) {
+            blobs.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: 180 + Math.random() * 120,
+                dx: (Math.random() - .5) * 0.35,
+                dy: (Math.random() - .5) * 0.35,
+                color: [
+                    "rgba(96,165,250,.25)",
+                    "rgba(168,85,247,.20)",
+                    "rgba(45,212,191,.18)",
+                    "rgba(255,255,255,.20)"
+                ][Math.floor(Math.random() * 4)]
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            blobs.forEach(b => {
+                b.x += b.dx;
+                b.y += b.dy;
+                if (b.x < -b.r || b.x > canvas.width + b.r) b.dx *= -1;
+                if (b.y < -b.r || b.y > canvas.height + b.r) b.dy *= -1;
+                const g = ctx.createRadialGradient(
+                    b.x, b.y, 0,
+                    b.x, b.y, b.r
+                );
+                g.addColorStop(0, b.color);
+                g.addColorStop(1, "rgba(255,255,255,0)");
+                ctx.fillStyle = g;
+                ctx.beginPath();
+                ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+{% endblock %}
 </body>
 </html>

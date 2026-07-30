@@ -1,83 +1,206 @@
 {% extends 'parent/base.html' %}
 
-{% block title %}search post{% endblock %}
+{% block title %}
+    Search Post
+{% endblock %}
+{% block head %}
+    <style>
+        .search-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .search-header {
+            background: rgba(255, 255, 255, .65);
+            backdrop-filter: blur(15px);
+            border-radius: 22px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, .7);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+        }
+
+        .search-header h2 {
+            margin: 0 0 8px;
+            color: #222;
+        }
+
+        .query {
+            color: #6366f1;
+            font-weight: bold;
+        }
+
+        /* -------------------------- */
+        .result-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            background: rgba(255, 255, 255, .55);
+            backdrop-filter: blur(18px);
+            border-radius: 20px;
+            padding: 22px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, .8);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
+            transition: .3s;
+        }
+
+        .result-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(99, 102, 241, .2);
+        }
+
+        /* -------------------------- */
+        .result-image {
+            flex-shrink: 0;
+        }
+
+        .result-image img {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            object-fit: cover;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        /* -------------------------- */
+        .result-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-title {
+            display: block;
+            color: #222;
+            font-size: 22px;
+            font-weight: 700;
+            text-decoration: none;
+            margin-bottom: 10px;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .post-title:hover {
+            color: #6366f1;
+        }
+
+        .description {
+            color: #555;
+            line-height: 1.9;
+            margin: 8px 0;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .skill {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 7px 14px;
+            border-radius: 30px;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* -------------------------- */
+        .empty-box {
+            text-align: center;
+            padding: 60px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, .6);
+            backdrop-filter: blur(15px);
+            font-size: 20px;
+        }
+
+        /* -------------------------- */
+        @media (max-width: 650px) {
+            .result-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .result-content {
+                width: 100%;
+            }
+
+            .post-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+{% endblock %}
 {% block content %}
-    <div class="search-info">
-        <span>{{ results.count }} result{{ results.count|pluralize }} for {{ query }}</span>
-    </div>
-    <div class="search-results">
-        {% for post in results %}
-            <div class="search-card">
-                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-                <p>{{ post.description | truncatewords:30 }}</p>
+    <div class="search-container">
+        <div class="search-header">
+            <h2>
+                نتایج جستجو 🔍
+            </h2>
+            <p>
+                {{ results.count }}
+                نتیجه برای
+                <span class="query">
+                {{ query }}
+            </span>
+            </p>
+        </div>
+        {% for result in results %}
+            <div class="result-card">
+                {% if result.title %}
+                    <div class="result-content">
+                        <a href="{{ result.get_absolute_url }}"
+                           class="post-title">
+                            {{ result.title }}
+                        </a>
+                        <p class="description">
+                            {{ result.description|truncatewords:30 }}
+                        </p>
+                    </div>
+                {% else %}
+                    <div class="result-image">
+                        {% if result.photo %}
+                            <img src="{{ result.photo.url }}"
+                                 alt="{{ result.username }}">
+                        {% else %}
+                            <div class="avatar">
+                                {{ result.username|first|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="result-content">
+                        <a href="{{ result.get_absolute_url }}"
+                           class="post-title">
+                            {{ result.username }}
+                        </a>
+                        <p class="description">
+                            {{ result.bio|truncatewords:30 }}
+                        </p>
+                        {% if result.main_skill %}
+                            <span class="skill">
+                            {{ result.main_skill }} Developer
+                        </span>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
         {% empty %}
-            <div class="empty-result">
+            <div class="empty-box">
                 هیچ نتیجه‌ای پیدا نشد 😕
             </div>
         {% endfor %}
     </div>
-{% endblock %}
-
-{% block head %}
-    <style>
-        .search-info {
-            margin-bottom: 20px;
-            color: #cbd5f5;
-            font-size: 14px;
-        }
-
-        .search-info span {
-            color: #60a5fa;
-            font-weight: 600;
-        }
-
-        .search-results {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .search-card {
-            background: #020617;
-            border: 1px solid #1e293b;
-            border-radius: 14px;
-            padding: 18px;
-            transition: 0.3s;
-        }
-
-        .search-card:hover {
-            border-color: #2563eb;
-            transform: translateY(-2px);
-        }
-
-        .search-card a {
-            font-size: 18px;
-            color: #93c5fd;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .search-card a:hover {
-            color: #3b82f6;
-        }
-
-        .search-card p {
-            margin-top: 8px;
-            color: #94a3b8;
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        .empty-result {
-            margin-top: 30px;
-            padding: 20px;
-            text-align: center;
-            background: #020617;
-            border: 1px dashed #334155;
-            border-radius: 14px;
-            color: #f87171;
-            font-size: 15px;
-        }
-    </style>
 {% endblock %}

@@ -1,22 +1,28 @@
 {% for post in posts %}
-<div class="col-lg-4 col-md-6">
-    <div class="post-card">
-        {% with img=post.images.first %}
-            <div class="post-image-wrapper">
-                <img src="{{ img.image_file.url }}"
-                     alt="{{ post.title }}" class="post-image">
-            </div>
-        {% endwith %}
+    <div class="col-lg-4 col-md-6">
+        <div class="post-card">
+            {% with img=post.images.first %}
+                <div class="post-image-wrapper">
+                    {% if img %}
+                        <img src="{{ img.image_file.url }}"
+                             alt="{{ post.title }}" class="post-image">
+                    {% else %}
+                        <div style="background: linear-gradient(135deg, #362e70, rgba(168,85,247,0.51), #631f40); width: 500px; height: 500px; align-items: center; text-align:center; justify-content: center; display: flex; font-size: 21px; font-weight: bold">
+                            no image
+                        </div>
+                    {% endif %}
+                </div>
+            {% endwith %}
 
-        <div class="post-content">
-            <span class="post-category">{{ post.get_category_display }}</span>
-            <h3 class="post-title">{{ post.title }}</h3>
-            <p class="post-excerpt">{{ post.description|truncatewords:15 }}</p>
-            <div class="post-footer mt-auto">
-                <span class="post-author">{{ post.author.get_full_name }}</span>
-                <span class="post-date">{{ post.publish|date:"d M Y" }}</span>
+            <div class="post-content">
+                <span class="post-category">{{ post.get_category_display }}</span>
+                <h3 class="post-title">{{ post.title }}</h3>
+                <p class="post-excerpt">{{ post.description|truncatewords:15 }}</p>
+                <div class="post-footer mt-auto">
+                    <span class="post-author">{{ post.author.get_full_name }}</span>
+                    <span class="post-date">{{ post.publish|date:"d M Y" }}</span>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endfor %}

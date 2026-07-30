@@ -138,10 +138,10 @@ LOGIN_REDIRECT_URL = '/blog/index/profile'
 LOGIN_URL = '/blog/login/'
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'parham.nadim7777@gmail.com'
+EMAIL_HOST_USER = 'parham.sh.8721@gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_PASSWORD = "yqsqsziyaelfsusr"
+EMAIL_HOST_PASSWORD = "xdqvhpwyuhyymtca"
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # django-resize

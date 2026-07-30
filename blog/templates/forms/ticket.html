@@ -1,4 +1,5 @@
 {% extends 'parent/base.html' %}
+{% load static %}
 
 {% block title %}Ticket Form{% endblock %}
 
@@ -40,8 +41,12 @@
     {% if form.non_field_errors %}
         {{ form.non_field_errors }}
     {% endif %}
+
+    <script src="{% static 'js/tom-select.complete.min.js' %}"></script>
 {% endblock %}
 {% block head %}
+
+    <link rel="stylesheet" href="{% static 'css/tom-select.css' %}">
     <style>
         body {
             background: linear-gradient(135deg, #0f172a, #111827);
@@ -95,6 +100,9 @@
         .post-container input[type="tel"],
         .post-container textarea,
         .post-container select {
+            direction: rtl;
+            unicode-bidi: plaintext;
+            text-align: right;
             width: 100%;
             padding: 13px 15px;
             border-radius: 14px;
@@ -105,6 +113,8 @@
             transition: all 0.25s ease;
             font-size: 15px;
         }
+
+
 
         .post-container input::placeholder,
         .post-container textarea::placeholder {
@@ -192,5 +202,157 @@
                 padding: 12px 14px;
             }
         }
+
+        .ts-wrapper {
+            width: 100%;
+            font-family: inherit;
+            position: relative;
+        }
+
+        /* قسمت بسته */
+        .ts-wrapper.single .ts-control,
+        .ts-wrapper.multi .ts-control {
+            background: rgb(26, 33, 48) !important;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgb(129, 140, 248) !important;
+            border-radius: 18px !important;
+            color: #1f2937 !important;
+            min-height: 56px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, .08),
+            0 2px 8px rgba(0, 0, 0, .05);
+            transition: .35s ease;
+        }
+
+        /* هنگام فوکوس */
+        .ts-wrapper.focus .ts-control {
+            border-color: #2e45ad !important;
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, .18),
+            0 12px 35px rgba(37, 99, 235, .12);
+        }
+
+        /* متن سرچ */
+        .ts-control input {
+            color: #111827 !important;
+            font-size: 15px;
+        }
+
+        /* placeholder */
+        .ts-control input::placeholder {
+            color: #94a3b8;
+        }
+
+        /* فلش */
+        .ts-wrapper.single .ts-control::after,
+        .ts-wrapper.multi .ts-control::after {
+            border-color: #64748b transparent transparent transparent !important;
+            right: 16px;
+        }
+
+        /* لیست */
+        .ts-dropdown {
+            margin-top: 10px;
+            background: rgba(255, 255, 255, .88) !important;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, .6) !important;
+            border-radius: 18px !important;
+            overflow: hidden;
+            box-shadow: 0 20px 45px rgba(37, 99, 235, .12),
+            0 8px 18px rgba(0, 0, 0, .05);
+            z-index: 99999 !important;
+        }
+
+        /* گزینه */
+        .ts-dropdown .option {
+            background: #1a2130;
+            padding: 14px 18px;
+            color: #ffffff;
+            font-size: 14px;
+            transition: .25s;
+        }
+
+        /* هاور */
+        .ts-dropdown .option:hover {
+            background: linear-gradient(
+                    135deg,
+                    #60a5fa,
+                    #3b82f6
+            );
+            color: #1a2130;
+        }
+
+        /* گزینه فعال */
+        .ts-dropdown .active {
+            background: #855df5 !important;
+            color: #1a2130 !important;
+        }
+
+        /* اسکرول */
+        .ts-dropdown-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .ts-dropdown-content::-webkit-scrollbar-track {
+            background: #1a2130;
+        }
+
+        .ts-dropdown-content::-webkit-scrollbar-thumb {
+            background: #93c5fd;
+            border-radius: 50px;
+        }
+
+        .ts-dropdown-content::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+
+        /* تگ انتخاب شده */
+        .ts-control .item {
+            background: linear-gradient(
+                    135deg,
+                    #dbeafe,
+                    #bfdbfe
+            ) !important;
+            color: #1e3a8a !important;
+            border-radius: 999px;
+            padding: 6px 12px;
+            margin: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid rgba(96, 165, 250, .25);
+            transition: .25s;
+        }
+
+        /* آخرین تگ */
+        .ts-control .item.last-active {
+            border: 1px solid #60a5fa;
+        }
+
+        /* تگ فعال */
+        .ts-control .item.active {
+            background: linear-gradient(
+                    135deg,
+                    #60a5fa,
+                    #2563eb
+            ) !important;
+            color: #fff !important;
+            box-shadow: 0 0 15px rgba(37, 99, 235, .22);
+        }
+
+        /* هاور روی تگ */
+        .ts-control .item:hover {
+            transform: translateY(-2px);
+        }
     </style>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            new TomSelect("#subject_select", {});
+        });
+    </script>
 {% endblock %}

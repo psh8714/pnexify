@@ -329,7 +329,7 @@
         }
 
         .search-box input:focus {
-            color: #989898;
+            color: #ffffff;
             background: {{ color_.color4 }};
         }
 
@@ -436,7 +436,7 @@
          height="30"
          viewBox="0 0 24 24"
          fill="none"
-         stroke="currentColor"
+         stroke="white"
          stroke-width="2.5"
          stroke-linecap="round">
         <path d="M4 7h16"></path>
@@ -507,6 +507,9 @@
                     {% if request.user.is_staff %}
                         <li class="nav-item me-lg-1">
                             <a class="nav-link" href="{% url 'blog:local_tickets_admin' %}">پیام کاربر ها</a>
+                        </li>
+                        <li class="nav-item me-lg-1">
+                            <a class="nav-link" href="{% url 'blog:site_check' %}">سیفی</a>
                         </li>
                     {% endif %}
                 </ul>

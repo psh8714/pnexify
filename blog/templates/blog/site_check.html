@@ -1,0 +1,211 @@
+{% extends 'parent/base.html' %}
+
+{% block head %}
+    <style>
+        body {
+            background: linear-gradient(135deg, #111827, #1e3a8a);
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            padding: 30px;
+        }
+
+        .dashboard-title {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .section-title {
+            color: #dbeafe;
+            margin: 35px 0 15px;
+            font-size: 22px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            color: white;
+            transition: .3s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
+        }
+
+        .card:hover {
+            transform: translateY(-7px);
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .card h3 {
+            font-size: 16px;
+            color: #bfdbfe;
+            margin-bottom: 15px;
+        }
+
+        .number {
+            font-size: 21px;
+            font-weight: 500;
+        }
+
+        .danger {
+            border-left: 5px solid #ef4444;
+        }
+
+        .success {
+            border-left: 5px solid #22c55e;
+        }
+        .golden {
+            border-left: 5px solid #c9ba12;
+        }
+
+        .info {
+            border-left: 5px solid #38bdf8;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="dashboard">
+        <div class="dashboard-title">
+            📊 Site Analytics Dashboard
+        </div>
+        <div class="section-title">
+            محتوا
+        </div>
+        <div class="cards">
+            <div class="card info">
+                <h3>تعداد کل پست‌ها</h3>
+                <div class="number">{{ all_posts_count }}</div>
+            </div>
+            <div class="card danger">
+                <h3>پست‌های مشکل‌دار</h3>
+                <div class="number">{{ all_bad_posts_count }}</div>
+            </div>
+            <div class="card info">
+                <h3>تعداد سوال‌ها</h3>
+                <div class="number">{{ question_count }}</div>
+            </div>
+            <div class="card success">
+                <h3>پروژه‌ها</h3>
+                <div class="number">{{ project_count }}</div>
+            </div>
+            <div class="card success">
+                <h3>ایده‌ها و آموزش‌ها</h3>
+                <div class="number">{{ idea_and_lessons_count }}</div>
+            </div>
+            <div class="card info">
+                <h3>تیم‌سازی‌ها</h3>
+                <div class="number">{{ team_up_count }}</div>
+            </div>
+
+            <div class="card success">
+                <h3>کل اعضا</h3>
+                <div class="number">{{ member_count }}</div>
+            </div>
+            <div class="card info">
+                <h3>پروفایل کامل</h3>
+                <div class="number">{{ complete_profiles_count }}</div>
+            </div>
+        </div>
+
+        <div class="section-title">
+            کامنت‌ها
+        </div>
+        <div class="cards">
+            <div class="card info">
+                <h3>کل کامنت‌ها</h3>
+                <div class="number">{{ comments_count }}</div>
+            </div>
+            <div class="card success">
+                <h3>کامنت مفید</h3>
+                <div class="number">{{ helpful_comments_count }}</div>
+            </div>
+            <div class="card danger">
+                <h3>کامنت بد</h3>
+                <div class="number">{{ bad_comments_count }}</div>
+            </div>
+            <div class="card danger">
+                <h3>تعداد کاربران نویسنده کامنت بد</h3>
+                <div class="number">{{ bad_comments_writers_count }}</div>
+            </div>
+        </div>
+        <div class="section-title">
+            بازدید
+        </div>
+        <div class="cards">
+            <div class="card success">
+                <h3>کل بازدید پست‌ها</h3>
+                <div class="number">{{ all_post_views }}</div>
+            </div>
+        </div>
+
+        <div class="section-title">
+            کاربران
+        </div>
+        <div class="cards">
+            <div class="card danger">
+                <h3>کاربران نویسنده کامنت بد</h3>
+                {% for user in bad_comments_writers.all %}
+                    <div class="number">{{ user }}</div>
+                {% endfor %}
+            </div>
+            <div class="card success">
+                <h3>کاربران تایید شده</h3>
+                {% for user in verified_users.all %}
+                    <div class="number">{{ user }}</div>
+                {% endfor %}
+            </div>
+            <div class="card golden">
+                <h3>کاربران این هفته</h3>
+                {% for user in this_week_users.all %}
+                    <div class="number">{{ user }}</div>
+                {% endfor %}
+            </div>
+            <div class="card golden">
+                <h3>کاربران امروز</h3>
+                {% for user in this_day_users.all %}
+                    <div class="number">{{ user }}</div>
+                {% endfor %}
+            </div>
+            <div class="card info">
+                <h3>کاربران جونیور</h3>
+                {% for user in junior_users.all %}
+                    <div class="number">{{ user }}</div>
+                {% endfor %}
+            </div>
+            <div class="card info">
+                <h3>کاربران متوسط</h3>
+                {% for user in mid_level_users.all %}
+                    <div class="number">{{ user }}</div>
+                {% endfor %}
+            </div>
+            <div class="card golden">
+                <h3>کاربران سینیور</h3>
+                {% for user in senior_users.all %}
+                    <div class="number">{{ user }}</div>
+                {% endfor %}
+            </div>
+            <div class="card success">
+                <h3>کاربران با پروفایل کامل</h3>
+                {% for user in complete_profiles %}
+                    <div class="number">{{ user }}</div>
+                {% endfor %}
+            </div>
+            <div class="card danger">
+                <h3>کاربران با پست مشکل دار</h3>
+                {% for user in all_bad_posts_writers.all %}
+                    <div class="number">{{ user }}</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

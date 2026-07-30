@@ -15,7 +15,7 @@ class TicketForm(forms.Form):
     name = forms.CharField(required=True)
     email = forms.EmailField()
     phone = forms.CharField(required=True)
-    subject = forms.ChoiceField(choices=SUBJECT_CHOICES)
+    subject = forms.ChoiceField(choices=SUBJECT_CHOICES, widget=forms.Select(attrs={"id":"subject_select"}))
 
     def clean_phone(self):
         phone = self.cleaned_data['phone']
@@ -107,8 +107,8 @@ class ProjectDetailForm(forms.ModelForm):
 
 
 class TwitForm(forms.ModelForm):
-    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'title'}))
-    description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'your great think'}))
+    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'موضوع'}))
+    description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'فکر بزرگ تو'}))
 
     class Meta:
         model = TwitModel
@@ -183,7 +183,7 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'photo', 'ostan', 'city', 'github_id', 'bio',
-                  'tel_id', 'main_skill', 'date_of_birth']
+                  'tel_id', 'main_skill', 'date_of_birth', 'level']
 
         widgets = {
             "ostan": forms.Select(
@@ -194,16 +194,19 @@ class UserForm(forms.ModelForm):
             ),
 
             "tel_id": forms.TextInput(
-                attrs={'placeholder': 'example: parham_sh_87'}
+                attrs={'placeholder': 'example: parham_sh8721'}
             ),
             "username": forms.TextInput(
                 attrs={'placeholder': 'your unique nickname'}
             ),
             "github_id": forms.TextInput(
-                attrs={'placeholder': 'example: https://.../psh8714'}
+                attrs={'placeholder': 'example: psh8714'}
             ),
             "main_skill": forms.TextInput(
                 attrs={'placeholder': 'a programing language(english name)'}
+            ),
+            "level": forms.Select(
+                attrs={'placeholder': 'your level', 'id':'user_level_select'}
             ),
         }
 

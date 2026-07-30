@@ -1,190 +1,218 @@
 {% extends 'parent/base.html' %}
-
+{% load static %}
 {% block title %}
-    delete_post
+    delete_twit
 {% endblock %}
 
 {% block content %}
+    <div class="animated-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
 
-    <form method="post" class="post-container">
-        {% csrf_token %}
-        <p class="title">are you sure?</p><br>
-        <a href="{% url 'blog:profile_view' %}" class="a">no</a><br>
-        <input type="submit" value="yes">
-    </form>
+    <div class="confirm-wrapper">
+        <form method="post" class="post-container">
+            {% csrf_token %}
+            <div class="warn-icon">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <p class="title">مطمئنی؟</p>
+            <p class="subtitle">این پست برای همیشه حذف میشه و قابل بازگشت نیست.</p>
+            <div class="actions">
+                <a href="{% url 'blog:profile_view' %}" class="btn-cancel">انصراف</a>
+                <input type="submit" value="حذف کن" class="btn-delete">
+            </div>
+        </form>
+    </div>
 {% endblock %}
 
 {% block head %}
+    <link rel="stylesheet" href="{% static 'icons/bootstrap-icons.css' %}">
     <style>
-        .post-redemption {
-            max-height: 70vh;
+        :root {
+            --primary-color: #7c5cff;
+            --danger-color: #ef4444;
+            --dark-bg: #0b1220;
+            --card-bg-soft: rgba(255, 255, 255, 0.33);
+            --text-primary: #ffa7e2;
+            --text-secondary: #ffffff;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(239, 68, 68, 0.4);
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+        }
+
+        /* ===== Animated Background ===== */
+        .animated-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.3;
+            will-change: transform;
+        }
+
+        .blob-1 {
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, #ef4444 0%, transparent 70%);
+            top: -120px;
+            left: -100px;
+            animation: floatBlob1 22s ease-in-out infinite alternate;
+        }
+
+        .blob-2 {
+            width: 520px;
+            height: 520px;
+            background: radial-gradient(circle, #7c5cff 0%, transparent 70%);
+            bottom: -150px;
+            right: -120px;
+            animation: floatBlob2 26s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatBlob1 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(110px, 80px) scale(1.15); }
+        }
+
+        @keyframes floatBlob2 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-100px, -60px) scale(1.1); }
+        }
+
+        /* ===== Confirm Card ===== */
+        .confirm-wrapper {
+            min-height: 80vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            color: #fff;
-            text-align: center;
             padding: 40px 20px;
-
         }
 
         .post-container {
-            max-width: 120px;
-            margin: 60px auto;
-            padding: 35px;
-            background: #141414;
-            border-radius: 50px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.75);
-        }
-
-        /* عنوان */
-        .post-container .title {
+            max-width: 380px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 32px;
             text-align: center;
+            background: var(--card-bg-soft);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-soft);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .warn-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 30px;
-            color: #f2f2f2;
-            letter-spacing: 0.5px;
+            color: var(--danger-color);
         }
 
-        /* پاراگراف‌های فرم Django */
-        .post-container form p {
-            margin-bottom: 15px;
-        }
-
-        .post-container .a {
-            width: 100%;
-            margin-top: 25px;
-            padding: 12px;
-            background: linear-gradient(90deg, #2a2a2a, #3a3a3a);
-            border: none;
-            border-radius: 10px;
-            color: #ffffff;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s ease;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
-        }
-
-        /* لیبل‌ها */
-        .post-container label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 14px;
-            color: #cfcfcf;
-        }
-
-        /* ورودی‌ها */
-        .post-container input[type="text"],
-        .post-container input[type="email"],
-        .post-container input[type="password"],
-        .post-container input[type="number"],
-        .post-container textarea,
-        .post-container select {
-            width: 100%;
-            padding: 10px 12px;
-            background: #1b1b1b;
-            border: 1px solid #333;
-            border-radius: 8px;
-            color: #f0f0f0;
-            font-size: 14px;
-            transition: border 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        /* فوکوس */
-        .post-container input:focus,
-        .post-container textarea:focus,
-        .post-container select:focus {
-            outline: none;
-            border-color: #666;
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.08);
-        }
-
-        /* textarea */
-        .post-container textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        /* دکمه ارسال */
-        .post-container input[type="submit"] {
-            width: 100%;
-            margin-top: 25px;
-            padding: 12px;
-            background: linear-gradient(90deg, #2a2a2a, #3a3a3a);
-            border: none;
-            border-radius: 10px;
-            color: #ffffff;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s ease;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
-        }
-
-        /* هاور دکمه */
-        .post-container input[type="submit"]:hover {
-            background: linear-gradient(90deg, #3a3a3a, #4a4a4a);
-        }
-
-        /* پیام خطا */
-        .post-container .errorlist {
-            margin: 6px 0 0;
-            padding: 0;
-            list-style: none;
-            color: #ffffff;
-            font-size: 13px;
-        }
-
-        .post-container .errorlist li {
-            background: #2a2a2a;
-            padding: 6px 10px;
-            border-radius: 6px;
-            margin-top: 6px;
-        }
-
-        /* help text */
-        .post-container .helptext {
-            font-size: 12px;
-            color: #9a9a9a;
-        }
-
-        .form-errors {
-            background-color: #1e1e1e;
-            border: 1px solid #ff4d4d;
-            border-radius: 16px;
-            padding: 15px 20px;
-            margin: 20px auto; /* وسط‌چین افقی */
-            max-width: 600px; /* عرض منطقی */
-            width: 100%;
-            color: #fff;
-            font-size: 14px;
-        }
-
-
-        .error-title {
-            color: #ff4d4d;
-            font-weight: bold;
+        .post-container .title {
+            font-size: 22px;
+            font-weight: 800;
             margin-bottom: 10px;
+            color: #4d4d4d;
         }
 
-        .error-item {
-            background-color: #2a2a2a;
-            border-left: 4px solid #ff4d4d;
-            padding: 8px 12px;
-            margin-bottom: 6px;
-            border-radius: 4px;
+        .subtitle {
+            font-size: 14px;
+            color: black;
+            line-height: 1.8;
+            margin-bottom: 28px;
         }
 
-        .error-field {
-            color: #ffa07a;
-            font-weight: bold;
-            margin-right: 5px;
+        .actions {
+            display: flex;
+            gap: 12px;
         }
 
-        .error-message {
-            color: #f5f5f5;
+        .btn-cancel,
+        .btn-delete {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: 0.25s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(201, 6, 6, 0.2);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, var(--danger-color), #b91c1c);
+            color: #ffffff;
+            box-shadow: 0 10px 22px rgba(239, 68, 68, 0.25);
+        }
+
+        .btn-delete:hover {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 26px rgba(239, 68, 68, 0.32);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .post-container {
+                padding: 32px 22px;
+                border-radius: 20px;
+            }
+
+            .blob {
+                filter: blur(60px);
+            }
         }
     </style>
 {% endblock %}

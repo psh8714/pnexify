@@ -65,7 +65,7 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=13, verbose_name='phone', null=True, blank=True)
     bio = models.TextField(max_length=250, verbose_name='bio', null=True, blank=True)
     tel_id = models.CharField(max_length=50, verbose_name='telegram_id', null=True, blank=True)
-    github_id = models.URLField(max_length=500, verbose_name='github_id', null=True, blank=True)
+    github_id = models.CharField(max_length=500, verbose_name='github_id', null=True, blank=True)
     main_skill = models.CharField(max_length=40, verbose_name='main_skill', null=True, blank=True)
     date_of_birth = models.DateField(verbose_name='birth_day', null=True, blank=True)
     followings = models.ManyToManyField('self', related_name='followers', symmetrical=False)
@@ -73,6 +73,7 @@ class User(AbstractUser):
     notif = models.CharField(blank=True)
     verify = models.BooleanField(default=False)
     level = models.CharField(choices=LEVEL_CHOICES, verbose_name='سطح', default='beginner')
+    created = models.DateTimeField(auto_now_add=True)
 
 
 
@@ -146,6 +147,7 @@ class Post(models.Model):
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
     total_likes = models.PositiveIntegerField(default=0)
     total_saves = models.PositiveIntegerField(default=0)
+    total_views = models.PositiveIntegerField(default=0)
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
     reading_time = models.PositiveIntegerField(default=0)
 

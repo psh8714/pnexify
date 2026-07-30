@@ -27,7 +27,7 @@
     {% if request.user.is_staff %}
         <a href="{% url 'blog:local_tickets_admin' %}" style="text-decoration: none;align-items: center;display: flex;justify-content: center;color: black">ticket list</a>
     {% else %}
-        <a href="{% url 'blog:index' %}">home</a>
+        <a href="{% url 'blog:index' %}" class="send-btn" style="text-decoration: none; background: #3434cd">home</a>
     {% endif %}
 {% endblock %}
 
@@ -97,6 +97,9 @@
         .chat-form textarea,
         .chat-form input[type="text"],
         .chat-form input[type="email"] {
+            direction: rtl;
+            unicode-bidi: plaintext;
+            text-align: right;
             width: 100%;
             border: 1px solid #ccc;
             border-radius: 12px;

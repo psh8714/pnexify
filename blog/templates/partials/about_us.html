@@ -1,228 +1,638 @@
-{#{% extends 'parent/base.html' %}#}
-{#{% block title %}#}
-{#    <div class="title">about us:</div>{% endblock %}#}
-{#{% block content %}#}
-{#<h3>#}
-{#creator: parham shafaghati#}
-{##}
-{#</h3>#}
-{#{% endblock %}#}
-{##}
-{#{% block head %}#}
-{#    <style>#}
-{#        .title {#}
-{#            font-size: 10px;#}
-{#            background: #7ab9ff;#}
-{#            color: #040303;#}
-{#        }#}
-{#    </style>#}
-{#{% endblock %}#}
+{% extends 'parent/base.html' %}
+{% load static %}
 
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Power Of Code</title>
+{% block title %}
+    About Me
+{% endblock %}
+{% block head %}
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <style>
         * {
-            margin: 0;
             box-sizing: border-box;
-        }
-
-        :root {
-            --bg: #020617;
-            --c1: #38bdf8;
-            --c2: #a855f7;
-            --c3: #22c55e;
-            --noise: rgba(255, 255, 255, 0.05);
+            color: black;
         }
 
         body {
-            font-family: system-ui, sans-serif;
-            background: radial-gradient(circle at 20% 10%, #1e293b, transparent 60%),
-            radial-gradient(circle at 80% 90%, #020617, transparent 70%), var(--bg);
-            color: white;
-            overflow-x: hidden;
+            background: #050816;
+            color: #e5e7eb;
+            font-family: "JetBrains Mono", "Vazirmatn", monospace;
         }
 
-        /* grain */
-        body::after {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: repeating-radial-gradient(
-                    circle,
-                    var(--noise) 0 1px,
-                    transparent 1px 2px
-            );
-            mix-blend-mode: overlay;
-            pointer-events: none;
-            opacity: 0.35;
-            animation: grain 0.25s steps(2) infinite;
-        }
-
-        @keyframes grain {
-            to {
-                transform: translate(2px, -2px);
-            }
-        }
-
-        /* layout */
-        section {
+        /* background grid */
+        .about-page {
             min-height: 100vh;
-            display: grid;
-            place-items: center;
-            padding: 5rem 2rem;
-            perspective: 1000px;
+            padding: 60px 20px;
+            background: radial-gradient(
+                    circle at top,
+                    #1e3a8a,
+                    transparent 40%
+            ),
+            linear-gradient(
+                    #ffffff08 1px,
+                    transparent 1px
+            ),
+            linear-gradient(
+                    90deg,
+                    #ffffff08 1px,
+                    transparent 1px
+            );
+            background-size: auto,
+            40px 40px,
+            40px 40px;
         }
 
-        /* glitch title */
-        .glitch {
-            position: relative;
-            font-size: clamp(3rem, 9vw, 6rem);
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        /* glass cards */
+        .terminal-card {
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .15);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px #00000055;
+            transition: .3s;
+        }
+
+        .terminal-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* terminal title */
+        .command {
+            color: #1ab0ef;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .cursor {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* hero */
+        .hero-name {
+            font-size: 45px;
             font-weight: 900;
-            letter-spacing: 0.08em;
-            margin-bottom: 4rem;
         }
 
-        .glitch::before,
-        .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            inset: 0;
-            opacity: 0.8;
+        .role {
+            color: #ffffff;
+            font-size: 22px;
+            margin-top: 10px;
         }
 
-        .glitch::before {
-            color: var(--c1);
-            transform: translate(3px, -2px);
-            mix-blend-mode: screen;
-            animation: glitch 2s infinite alternate;
+        .buttons {
+            margin-top: 30px;
         }
 
-        .glitch::after {
-            color: var(--c2);
-            transform: translate(-3px, 2px);
-            mix-blend-mode: screen;
-            animation: glitch 1.5s infinite alternate-reverse;
-        }
-
-        @keyframes glitch {
-            0% {
-                clip-path: inset(0 0 70% 0);
-            }
-            25% {
-                clip-path: inset(20% 0 40% 0);
-            }
-            50% {
-                clip-path: inset(40% 0 20% 0);
-            }
-            75% {
-                clip-path: inset(10% 0 60% 0);
-            }
-            100% {
-                clip-path: inset(0 0 0 0);
-            }
-        }
-
-        /* holographic card */
-        .card {
-            width: min(420px, 90vw);
-            padding: 2.5rem;
-            border-radius: 28px;
-            background: linear-gradient(
-                    120deg,
-                    rgba(255, 255, 255, 0.08),
-                    rgba(255, 255, 255, 0.02)
-            );
-            backdrop-filter: blur(16px);
-            box-shadow: 0 0 50px rgba(56, 189, 248, 0.35),
-            inset 0 0 35px rgba(255, 255, 255, 0.15);
-            transform-style: preserve-3d;
-            animation: float 6s ease-in-out infinite;
-            position: relative;
-        }
-
-        .card::before {
-            content: "";
-            position: absolute;
-            inset: -2px;
-            background: linear-gradient(
-                    120deg,
-                    transparent 20%,
-                    var(--c1),
-                    var(--c2),
-                    var(--c3),
-                    transparent 80%
-            );
-            filter: blur(25px);
-            opacity: 0.4;
-            z-index: -1;
-            animation: holo 4s linear infinite;
-            background-size: 400% 100%;
-        }
-
-        @keyframes holo {
-            to {
-                background-position: 400% 0;
-            }
-        }
-
-        @keyframes float {
-            0%,
-            100% {
-                transform: rotateX(12deg) rotateY(-10deg) translateY(0);
-            }
-            50% {
-                transform: rotateX(18deg) rotateY(12deg) translateY(-25px);
-            }
-        }
-
-        .card h2 {
-            font-size: 1.7rem;
-            margin-bottom: 1rem;
-        }
-
-        .card p {
-            line-height: 1.6;
-            opacity: 0.85;
-        }
-
-        /* holographic button */
         .btn {
             display: inline-block;
-            margin-top: 2rem;
-            padding: 0.9rem 1.8rem;
-            border-radius: 999px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
+            padding: 12px 25px;
+            border-radius: 12px;
+            border: 1px solid #38bdf8;
             color: white;
             text-decoration: none;
-            background: linear-gradient(90deg, var(--c1), var(--c2), var(--c3));
-            background-size: 300% 100%;
-            animation: holo 3s linear infinite;
-            box-shadow: 0 0 25px rgba(168, 85, 247, 0.6);
+            margin-right: 10px;
+            transition: .3s;
         }
 
-    </style>
-</head>
-<body>
-<section>
-    <div>
-        <h1 class="glitch" data-text="CODE FUTURE">CODE FUTURE</h1>
+        .btn:hover {
+            background: #38bdf8;
+            color: #020617;
+        }
 
-        <div class="card">
-            <h2>you want it?</h2>
-            <p>
-               new things in the best way
-                with parham academy
-            </p>
-            <a class="btn" href="#">EXPLORE</a>
+        /* profile */
+        .line {
+            margin: 12px 0;
+        }
+
+        .key {
+            color: #474d59;
+        }
+
+        .value {
+            color: #f8fafc;
+        }
+
+        /* skills */
+        .skill {
+            margin: 25px 0;
+        }
+
+        .skill-name {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bar {
+            height: 10px;
+            background: #ffffff20;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0;
+            background: #38bdf8;
+            border-radius: 20px;
+            animation: load 2s forwards;
+        }
+
+        .python {
+            --size: 90%;
+        }
+
+        .django {
+            --size: 85%;
+        }
+
+        .database {
+            --size: 75%;
+        }
+
+        .css {
+            --size: 65%;
+        }
+
+        .html {
+            --size: 70%;
+        }
+
+        .javascript {
+            --size: 50%;
+        }
+
+        @keyframes load {
+            to {
+                width: var(--size);
+            }
+        }
+
+        /* project */
+        .tree {
+            color: #939393;
+            line-height: 2;
+        }
+
+        .highlight {
+            color: #22c55e;
+        }
+
+        /* responsive */
+        @media (max-width: 600px) {
+            .hero-name {
+                font-size: 32px;
+            }
+        }
+
+        .contact-container {
+
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-top: 25px;
+        }
+
+        .contact-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            padding: 18px 22px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .08);
+            transition: .35s;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-4px);
+            border-color: #38bdf8;
+            box-shadow: 0 0 25px rgba(56, 189, 248, .35);
+        }
+
+        .left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .left i {
+            font-size: 30px;
+            width: 42px;
+            text-align: center;
+            color: #38bdf8;
+        }
+
+        .left h4 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .left span {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .arrow {
+            color: #38bdf8;
+            transition: .3s;
+            text-decoration: none;
+        }
+
+        .contact-item:hover .arrow {
+            transform: translateX(8px);
+        }
+
+        .copy-btn {
+            background: #38bdf8;
+            color: #02111f;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: .3s;
+        }
+
+        .copy-btn:hover {
+            background: white;
+        }
+
+        .status-box {
+            margin-top: 35px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #22c55e;
+            font-size: 15px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, .6);
+            }
+            100% {
+                box-shadow: 0 0 0 14px rgba(34, 197, 94, 0);
+            }
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="about-page">
+        <div class="container">
+            <!-- HERO -->
+            <div class="terminal-card">
+                <div class="command">
+                    > <span id="typing"></span><span class="cursor">_</span>
+                </div>
+                <div class="hero-name">
+                    Parham Shafaghati
+                </div>
+                <span class="role" id="typing2">
+                </span><span class="cursor">_</span>
+                <div class="buttons">
+                    <a class="btn" href="#projects">
+                        ./projects
+                    </a>
+                    <a class="btn" href="#contact">
+                        ./contact
+                    </a>
+                </div>
+            </div>
+            <!-- PROFILE -->
+            <div class="terminal-card">
+                <div class="command">
+                    > cat profile.txt
+                </div>
+                <div class="line">
+<span class="key">
+Name:
+</span>
+                    <span class="value">
+Parham
+</span>
+                </div>
+                <div class="line">
+<span class="key">
+Role:
+</span>
+                    Backend Developer
+                </div>
+                <div class="line">
+<span class="key">
+Focus:
+</span>
+                    Building scalable web systems
+                </div>
+                <div class="line">
+<span class="key">
+Main Stack:
+</span>
+                    Python / Django / PostgreSQL
+                </div>
+            </div>
+            <!-- SKILLS -->
+            <div class="terminal-card">
+                <div class="command">
+                    > skills.json
+                </div>
+                <div class="skill">
+                    <div class="skill-name">
+<span>
+Python
+</span>
+                        <span>
+90%
+</span>
+                    </div>
+                    <div class="bar">
+                        <div class="progress python"></div>
+                    </div>
+                </div>
+                <div class="skill">
+                    <div class="skill-name">
+<span>
+Django
+</span>
+                        <span>
+85%
+</span>
+                    </div>
+                    <div class="bar">
+                        <div class="progress django"></div>
+                    </div>
+                </div>
+                <div class="skill">
+                    <div class="skill-name">
+<span>
+Database
+</span>
+                        <span>
+75%
+</span>
+                    </div>
+                    <div class="bar">
+                        <div class="progress database"></div>
+                    </div>
+                </div>
+                <div class="skill">
+                    <div class="skill-name">
+<span>
+Css
+</span>
+                        <span>
+65%
+</span>
+                    </div>
+                    <div class="bar">
+                        <div class="progress css"></div>
+                    </div>
+                </div>
+                <div class="skill">
+                    <div class="skill-name">
+<span>
+Html
+</span>
+                        <span>
+70%
+</span>
+                    </div>
+                    <div class="bar">
+                        <div class="progress html"></div>
+                    </div>
+                </div>
+                <div class="skill">
+                    <div class="skill-name">
+<span>
+Javascript
+</span>
+                        <span>
+50%
+</span>
+                    </div>
+                    <div class="bar">
+                        <div class="progress javascript"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJECT -->
+            <div class="terminal-card" id="projects">
+                <div class="command">
+                    > ls projects/
+                </div>
+                <div class="tree">
+                    developer_platform/
+                    <br>
+                    ├── Authentication System
+                    <br>
+                    ├── Posts & Comments
+                    <br>
+                    ├── Team Building
+                    <br>
+                    ├── Admin Dashboard
+                    <br>
+                    ├── Analytics System
+                    <br>
+                    └── User Profiles
+                </div>
+                <p>
+<span class="highlight">
+Built with:
+</span>
+                    Django - PostgreSQL - HTMX - JavaScript - HTMX - Css
+                </p>
+            </div>
+            <!-- MISSION -->
+            <div class="terminal-card">
+                <div class="command">
+                    > cat mission.txt
+                </div>
+                <p>
+                    I don't just write code.
+                    <br>
+                    I build systems that solve real problems.
+                </p>
+            </div>
+            <!-- RULES -->
+            <div class="terminal-card">
+                <div class="command">
+                    > cat rules.md
+                </div>
+                <div>
+                    01. Respect creators
+                    <br>
+                    02. Share knowledge
+                    <br>
+                    03. Build together
+                    <br>
+                    04. Quality over quantity
+                </div>
+            </div>
+
+            <!-- CONTACT CARD -->
+
+            <div class="terminal-card" id="contact">
+                <div class="command">
+                    > social_links<span class="cursor">_</span>
+                </div>
+                <div class="contact-container">
+                    <div class="contact-item">
+                        <div class="left">
+                            <i class="fa-brands fa-github"></i>
+                            <div>
+                                <h4>GitHub</h4>
+                                <span>View my repositories</span>
+                            </div>
+                        </div>
+                        <a href="https://github.com/psh8714" target="_blank" class="arrow">Open →</a>
+                    </div>
+                    <div class="contact-item">
+                        <div class="left">
+                            <i class="fa-brands fa-linkedin"></i>
+                            <div>
+                                <h4>LinkedIn</h4>
+                                <span>Professional profile</span>
+                            </div>
+                        </div>
+                        <a onclick="showHint('بزودی')" target="_blank" class="arrow">Connect →</a>
+                    </div>
+                    <div class="contact-item">
+                        <div class="left">
+                            <i class="fa-brands fa-telegram"></i>
+                            <div>
+                                <h4>Telegram</h4>
+                                <span>@parham_sh_8721</span>
+                            </div>
+                        </div>
+                        <a href="https://t.me/parham_sh8721" target="_blank" class="arrow">Message →</a>
+                    </div>
+                    <div class="contact-item">
+                        <div class="left">
+                            <i class="fa-solid fa-envelope"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <span>parham.sh.8721@gmail.com</span>
+                            </div>
+                        </div>
+                        <a href="mailto:parham.sh.8721@gmail.com" class="arrow">Send →</a>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="left">
+                            <i class="fa-brands fa-telegram"></i>
+                            <div>
+                                <h4>Pnexify Realm</h4>
+                                <span>@pnexify</span>
+                            </div>
+                        </div>
+                        <a href="https://t.me/pnexify" target="_blank" class="arrow">Message →</a>
+                    </div>
+
+                    <div class="contact-item phone-card">
+                        <div class="left">
+                            <i class="fa-solid fa-phone"></i>
+                            <div>
+                                <h4>Phone</h4>
+                                <span id="phone-number">
+                        +98 911 499 52 87
+                    </span>
+                            </div>
+                        </div>
+                        <button onclick="copyPhone()" class="copy-btn">
+                            Copy
+                        </button>
+                    </div>
+
+                </div>
+                <div class="status-box">
+                    <span class="status-dot"></span>
+                    Available for collaboration
+                </div>
+            </div>
         </div>
     </div>
-</section>
-</body>
-</html>
+    <script>
+        const text = "who am i ?";
+        let index = 0;
+
+        function typeWriter() {
+            if (index < text.length) {
+                document.getElementById("typing").innerHTML += text[index];
+                index++;
+                setTimeout(typeWriter, 450);
+            }
+        }
+
+        typeWriter();
+
+        const text2 = "Founder & Developer";
+        let index2 = 0;
+
+        function typeWriter2() {
+            if (index2 < text2.length) {
+                document.getElementById("typing2").innerHTML += text2[index2];
+                index2++;
+                setTimeout(typeWriter2, 250);
+            }
+        }
+
+        typeWriter2();
+
+        function copyPhone() {
+
+            const phone =
+                document.getElementById("phone-number").innerText;
+            navigator.clipboard.writeText(phone);
+            alert("Phone number copied.");
+        }
+
+        function showHint(msg) {
+            const toast = document.createElement("div");
+            toast.textContent = msg;
+            toast.style.cssText = `
+        position:fixed;
+        bottom:30px;
+        left:50%;
+        transform:translateX(-50%);
+        background:#222;
+        color:white;
+        padding:10px 18px;
+        border-radius:12px;
+        z-index:99999;
+        opacity:0;
+        transition:.3s;
+    `;
+            document.body.appendChild(toast);
+            requestAnimationFrame(() => toast.style.opacity = 1);
+            setTimeout(() => {
+                toast.style.opacity = 0;
+                setTimeout(() => toast.remove(), 300);
+            }, 1800);
+        }
+    </script>
+{% endblock %}

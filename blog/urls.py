@@ -51,6 +51,7 @@ urlpatterns = [
     path('download/image/<int:pk>/', views.download_image, name='image_download'),
     path('header/color', views.header_color, name='header_color'),
     path('theme/apply/', views.header_color_success, name='header_color_success'),
-    path('team/request', views.ticket_view, name='team_make')
+    path('team/request', views.ticket_view, name='team_make'),
+    path('admins/seifi', views.site_checker, name='site_check')
 
 ]

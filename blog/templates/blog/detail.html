@@ -1089,12 +1089,18 @@
 
         /* عنوان */
         .similar-title {
+            direction: rtl;
+            unicode-bidi: plaintext;
+            text-align: right;
             font-size: 18px;
             margin-bottom: 10px;
         }
 
         /* توضیح */
         .similar-desc {
+            direction: rtl;
+            unicode-bidi: plaintext;
+            text-align: right;
             color: #ffffff;
             line-height: 1.7;
             font-size: 14px;
@@ -1154,7 +1160,11 @@
         }
 
         .form_field_glass {
+
             background: rgba(255, 255, 255, 0.42);
+            direction: rtl;
+            unicode-bidi: plaintext;
+            text-align: right;
         }
 
     </style>
@@ -1258,7 +1268,8 @@
                             </button>
                         {% endif %}
 
-                        <button onclick="sharePost()" class="glass" style="border-radius: 21px;border: rgba(255,255,255,0.34);padding: 10px; background: rgba(255,255,255,0.13)">
+                        <button onclick="sharePost()" class="glass"
+                                style="border-radius: 21px;border: rgba(255,255,255,0.34);padding: 10px; background: rgba(255,255,255,0.13)">
                             <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
                                  stroke-linejoin="round">
@@ -1348,7 +1359,8 @@
                                 {% endif %}
                             {% else %}
                                 {% if post.author.tel_id %}
-                                    <div class="caption-text" onclick="showHint('دنبال کردن کاربر راه ارتباط است')">telegram id: <span
+                                    <div class="caption-text" onclick="showHint('دنبال کردن کاربر راه ارتباط است')">
+                                        telegram id: <span
                                             class="blur-text">{{ post.author.tel_id }}</span></div>
                                 {% endif %}
                                 {% if post.author.phone_number %}
@@ -1385,16 +1397,21 @@
                                          style="width: 38px; height: 38px; border-radius: 14px; background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(59,130,246,0.2));">
                                         {{ comment.name|slice:":1"|upper }}
                                     </div>
-                                    <div class="fw-semibold text-dark">
+                                    <div class="fw-semibold text-dark" style="direction: rtl;
+            unicode-bidi: plaintext;
+            text-align: right;">
                                         {{ comment.name }}
                                     </div>
                                 </div>
-                                <div class="text-secondary lh-lg">
+                                <div class="text-secondary lh-lg" style="direction: rtl;
+            unicode-bidi: plaintext;
+            text-align: right;">
                                     {{ comment.body|linebreaks }}
                                 </div>
                             </div>
                         {% empty %}
-                            <div class="text-center py-5 text-secondary rounded-4" style="background:rgba(255, 255, 255, 0.4);">
+                            <div class="text-center py-5 text-secondary rounded-4"
+                                 style="background:rgba(255, 255, 255, 0.4);">
                                 هنوز نظری ثبت نشده است.
                             </div>
                         {% endfor %}
@@ -1428,7 +1445,8 @@
                 <!-- Back Button -->
                 <div class="mt-4 d-flex justify-content-center">
                     <a href="{{ request.META.HTTP_REFERER|default:'/' }}"
-                       class="btn btn-light border rounded-4 px-4 py-3 fw-semibold" style="background: rgba(255,255,255,0.17)">
+                       class="btn btn-light border rounded-4 px-4 py-3 fw-semibold"
+                       style="background: rgba(255,255,255,0.17)">
                         ← بازگشت
                     </a>
                 </div>
@@ -1592,6 +1610,8 @@
                     },
                     success: function (response) {
                         $('#comments-list').prepend(response.comment_html)
+                        $('#id_name').val('');
+                        $('#id_body').val('');
                         if (response.next_url) {
                             window.location.href = response.next_url;
                         }

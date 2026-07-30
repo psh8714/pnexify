@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-    <canvas id="network-bg"></canvas>
+    <canvas id="network-bg" style="background: rgba(211,225,249,0.28)"></canvas>
     <div class="container py-4">
 
         <h3 class="mb-4">Verified Users ⭐</h3>
@@ -10,7 +10,7 @@
             {% for user in users %}
                 {% if user.verify %}
                     <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card border-0 shadow-lg rounded-4 bg-primary text-white">
+                        <div class="card border-0 shadow-lg rounded-4 text-white"  style="background: rgba(13,110,252,0.19); backdrop-filter: blur(7px)">
                             <div class="card-body text-center">
                                 {% if user.photo %}
                                     <img src="{{ user.photo.url }}"
@@ -86,7 +86,8 @@
 {% endblock %}
 
 {% block head %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+{#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">#}
+    <link rel="stylesheet" href="{% static 'icons/bootstrap-icons.css' %}">
     <style>
         #network-bg {
             position: fixed;

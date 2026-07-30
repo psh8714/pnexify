@@ -1,13 +1,15 @@
 import random
 import time
 import uuid
+from datetime import timedelta
+from django.utils import timezone
 from http.client import responses
 from idlelib.debugger_r import idb_adap_oid
 from itertools import count
 from tabnanny import check
 
-from django.db.models import Q
-from django.db.models.aggregates import Count
+from django.db.models import Q, F
+from django.db.models.aggregates import Count, Sum
 from django.db.models.expressions import result
 from django.db.models.fields import return_None
 from django.shortcuts import render, redirect
@@ -52,6 +54,14 @@ def index(request):
     text11, created11 = Text.objects.get_or_create(text_name='index_write_button')
     text12, created12 = Text.objects.get_or_create(text_name='index_newpost_tag')
     notif, created13 = Text.objects.get_or_create(text_name='index_NOTIFICATION')
+    text13, created14 = Text.objects.get_or_create(text_name='index_random_users')
+    posts_views = Post.objects.aggregate(total=Sum('total_views'))['total']
+    if User.objects.exists():
+        verified_users = random.sample(list(User.objects.filter(verify=True)),4)
+        normal_users = random.sample(list(User.objects.filter(verify=False)),4)
+        users = normal_users + verified_users
+    else:
+        users = 'empty page'
     context = {
         'post': post,
         'text1': text1,
@@ -66,7 +76,10 @@ def index(request):
         'text10': text10,
         'text11': text11,
         'text12': text12,
+        'text13': text13,
         'notif': notif,
+        'users': users,
+        'posts_views':posts_views
     }
     return render(request, "blog/index.html", context)
 
@@ -80,7 +93,7 @@ def post_list(request, category=None):
         posts = Post.published.filter(category=category).order_by('-total_likes', '-total_saves', '-publish')
     else:
         posts = Post.published.all().order_by('-total_likes', '-total_saves', '-publish')
-    paginator = Paginator(posts, 1)
+    paginator = Paginator(posts, 5)
     page_number = request.GET.get('page', 1)
     try:
         posts = paginator.page(page_number)
@@ -110,7 +123,7 @@ def post_list(request, category=None):
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug, status=Post.Status.PUBLISHED)
-    comments = post.comments.filter(active=True).order_by('helpful')
+    comments = post.comments.filter(active=True).order_by('-helpful','-created')
     form = CommentForm()
 
     similar_posts = Post.published.exclude(pk=post.pk).annotate(
@@ -124,6 +137,8 @@ def post_detail(request, slug):
         'form': form,
         'similar_posts': similar_posts,
     }
+    post.total_views = F('total_views') + 1
+    post.save()
     return render(request, "blog/detail.html", context)
 
 
@@ -141,8 +156,8 @@ def ticket_view(request):
         if form.is_valid():
             cd = form.cleaned_data
             message = f"you have a message of:\n{cd['name']}\nmessage:\n{cd['message']}\nphone_number:{cd['phone']}"
-            send_mail(cd['subject'], message, "parham.nadim7777@gmail.com", ["parham.nadim777@gmail.com"])
-            messages.success(request, 'با موفقیت ارسال شد')
+            send_mail(cd['subject'], message, "parham.sh.8721@gmail.com", ["parham.sh.8721@gmail.com"])
+            return redirect('blog:index')
     else:
         form = TicketForm()
     return render(request, 'forms/ticket.html', {'form': form})
@@ -196,7 +211,8 @@ def search_view(request):
         form = SearchForm(data=request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
-            results = Post.published.annotate(search=SearchVector('title', 'description')).filter(search=query)
+            results = Post.published.annotate(search=SearchVector('title', 'description')).filter(
+                search=query) or User.objects.annotate(search=SearchVector('username')).filter(search=query)
     context = {
         'query': query,
         'results': results,
@@ -211,8 +227,8 @@ def profile_view(request):
     posts_qs = Post.objects.filter(author=request.user)
     comments_qs = CommentModel.objects.filter(post__author=request.user)
 
-    post_paginator = Paginator(posts_qs, 3)
-    comment_paginator = Paginator(comments_qs, 7)
+    post_paginator = Paginator(posts_qs, 10)
+    comment_paginator = Paginator(comments_qs, 10)
 
     post_page_number = request.GET.get('post_page', 1)
     comment_page_number = request.GET.get('comment_page', 1)
@@ -318,7 +334,7 @@ def new_post_view(request):
 
 def edit_post(request, post_slug):
     post_obj = get_object_or_404(Post, slug=post_slug, author=request.user)
-    detail_obj = get_object_or_404(ProjectDetail, post = post_obj)
+    detail_obj = get_object_or_404(ProjectDetail, post=post_obj)
     if request.method == "POST":
         form = NewPost(request.POST, request.FILES, instance=post_obj)
         detail_form = ProjectDetailForm(request.POST, instance=detail_obj)
@@ -454,7 +470,7 @@ def user_register(request):
 def user_edit(request):
     user = request.user
     if request.method == "POST":
-        user_form = UserForm(request.POST,request.FILES, instance=user)
+        user_form = UserForm(request.POST, request.FILES, instance=user)
         formset = SkillFormSet(
             request.POST,
             queryset=Skill.objects.filter(user=user)
@@ -657,12 +673,16 @@ def user_list(request, user_id=None, is_follow=None):
         t_user = get_object_or_404(User, id=user_id)
         if is_follow == 'follower':
             users = t_user.followers.annotate(post_count=Count('post'),
-                                              comment_count=Count('comments', filter=Q(comments__helpful=True))).order_by('-verify', '-post_count',
-                                                                                        '-comment_count')
+                                              comment_count=Count('comments',
+                                                                  filter=Q(comments__helpful=True))).order_by('-verify',
+                                                                                                              '-post_count',
+                                                                                                              '-comment_count')
             return render(request, 'user/user_list.html', {'users': users})
         if is_follow == 'following':
             users = t_user.followings.annotate(post_count=Count('post'),
-                                               comment_count=Count('comments', filter=Q(comments__helpful=True))).order_by('-verify',
+                                               comment_count=Count('comments',
+                                                                   filter=Q(comments__helpful=True))).order_by(
+                '-verify',
                 '-post_count',
                 '-comment_count')
             return render(request, 'user/user_list.html', {'users': users})
@@ -670,8 +690,10 @@ def user_list(request, user_id=None, is_follow=None):
 
     else:
         users = User.objects.filter(is_active=True).annotate(post_count=Count('post'),
-                                                             comment_count=Count('comments', filter=Q(comments__helpful=True))).order_by('-verify',
-                                                                                                       '-comment_count','-post_count')
+                                                             comment_count=Count('comments', filter=Q(
+                                                                 comments__helpful=True))).order_by('-verify',
+                                                                                                    '-comment_count',
+                                                                                                    '-post_count')
         return render(request, 'user/user_list.html', {'users': users})
 
 
@@ -725,10 +747,14 @@ def download_image(request, pk):
     image = get_object_or_404(ImagePost, pk=pk)
     return FileResponse(image.image_file.open(), as_attachment=True)
 
+
 def header_color(request):
     return render(request, 'forms/header_changer.html')
 
+
 import json
+
+
 @login_required
 def header_color_success(request):
     data = json.loads(request.body)
@@ -742,12 +768,12 @@ def header_color_success(request):
     Theme.objects.update_or_create(
         user=request.user,
         defaults={
-            'color1' : color1,
-            'color2' : color2,
-            'color3' : color3,
-            'color4' : color4,
-            'color5' : color5,
-            'color6' : color6,
+            'color1': color1,
+            'color2': color2,
+            'color3': color3,
+            'color4': color4,
+            'color5': color5,
+            'color6': color6,
         }
     )
 
@@ -755,6 +781,69 @@ def header_color_success(request):
         "success": True
     })
 
+
 def team_maker(request):
     pass
 
+
+def site_checker(request):
+    all_posts_count = Post.objects.count()
+    all_bad_posts_count = Post.objects.filter(status='RJ').count()
+    all_bad_posts_writers = User.objects.filter(post__status='RJ')
+    member_count = User.objects.count()
+    question_count = Post.objects.filter(category="IHQ").count()
+    project_count = Post.objects.filter(category="WIC").count()
+    idea_and_lessons_count = Post.objects.filter(category="WIL").count()
+    team_up_count = Post.objects.filter(category="SFT").count()
+    complete_profiles = []
+    for user in User.objects.all():
+        check_ = 1
+        for field in user._meta.fields:
+            if not getattr(user, field.name):
+                check_ = 0
+        if check_ == 1:
+            complete_profiles.append(user.username)
+    complete_profiles_count = len(complete_profiles)
+    comments_count = CommentModel.objects.count()
+    helpful_comments_count = CommentModel.objects.filter(helpful=True).count()
+    bad_comments_count = CommentModel.objects.filter(active=False).count()
+    bad_comments_writers = User.objects.filter(comments__active=False).distinct()
+    bad_comments_writers_count = User.objects.filter(comments__active=False).distinct().count()
+    verified_users = User.objects.filter(verify=True)
+    senior_users = User.objects.filter(level='professional')
+    junior_users = User.objects.filter(level='beginner')
+    mid_level_users = User.objects.filter(level='middle')
+    one_week_ago = timezone.now() - timedelta(days=7)
+    this_week_users = User.objects.filter(created__gt=one_week_ago)
+    one_day_ago = timezone.now() - timedelta(hours=24)
+    this_day_users = User.objects.filter(created__gte=one_day_ago)
+    all_post_views = Post.objects.aggregate(total=Sum('total_views'))['total']
+
+    context = {
+        'all_posts_count': all_posts_count,
+        'all_bad_posts_count': all_bad_posts_count,
+        'all_bad_posts_writers': all_bad_posts_writers,
+        'member_count': member_count,
+        'question_count': question_count,
+        'project_count': project_count,
+        'idea_and_lessons_count': idea_and_lessons_count,
+        'team_up_count': team_up_count,
+        'complete_profiles': complete_profiles,
+        'complete_profiles_count': complete_profiles_count,
+        'comments_count': comments_count,
+        'helpful_comments_count': helpful_comments_count,
+        'bad_comments_count': bad_comments_count,
+        'bad_comments_writers': bad_comments_writers,
+        'bad_comments_writers_count': bad_comments_writers_count,
+        'verified_users': verified_users,
+        'senior_users': senior_users,
+        'junior_users': junior_users,
+        'mid_level_users': mid_level_users,
+        'one_week_ago': one_week_ago,
+        'this_week_users': this_week_users,
+        'one_day_ago': one_day_ago,
+        'this_day_users': this_day_users,
+        'all_post_views': all_post_views,
+    }
+
+    return render(request, 'blog/site_check.html', context=context)

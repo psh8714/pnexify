@@ -1,9 +1,500 @@
 {% extends 'parent/base.html' %}
 
-{% block title %}sign in{% endblock %}
-
+{% block title %}Sign In Complete{% endblock %}
 {% block content %}
-    <h1>sign in complete</h1>
-<p>dear{{ user }} now you are one of us :)</p>
-    <a href="{% url 'index' %}">welcome</a>
+    <canvas id="liquidCanvas"></canvas>
+    <div class="glass-particles">
+        {% for i in "1234567891011121314151617181920" %}
+            <span></span>
+        {% endfor %}
+    </div>
+    <div class="success-wrapper">
+        <div class="success-glow"></div>
+        <div class="success-card">
+            <div class="success-icon">
+                <svg width="90"
+                     height="90"
+                     viewBox="0 0 100 100"
+                     fill="none">
+                    <circle
+                            cx="50"
+                            cy="50"
+                            r="42"
+                            class="circle-bg"></circle>
+                    <path
+                            class="check-path"
+                            d="M30 50 L45 65 L72 38"></path>
+                </svg>
+            </div>
+            <h1 class="success-title">
+                Sign In Complete
+            </h1>
+            <p class="success-text">
+                خوش اومدی
+                <strong>{{ user.username }}</strong>
+                <br><br>
+                از این لحظه تو هم عضوی از جامعه‌ی
+                <span class="brand-name">
+                Pnexify
+            </span>
+                هستی 🚀
+            </p>
+            <div class="button-group">
+                <a href="{% url 'index' %}" class="glass-button">
+                <span>
+                    ورود به صفحه اصلی
+                </span>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block head %}
+    <style>
+        /* =========================
+       Background
+    ========================= */
+        body {
+            margin: 0;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: Vazirmatn, sans-serif;
+            background: #eef6ff;
+        }
+
+        #liquidCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -5;
+        }
+
+        .glass-particles {
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            pointer-events: none;
+        }
+
+        .glass-particles span {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .65);
+            backdrop-filter: blur(10px);
+            animation: floatParticle linear infinite;
+        }
+
+        .glass-particles span:nth-child(odd) {
+            animation-duration: 18s;
+        }
+
+        .glass-particles span:nth-child(even) {
+            animation-duration: 24s;
+        }
+
+        .glass-particles span:nth-child(1) {
+            left: 5%;
+            top: 80%;
+        }
+
+        .glass-particles span:nth-child(2) {
+            left: 18%;
+            top: 65%;
+        }
+
+        .glass-particles span:nth-child(3) {
+            left: 30%;
+            top: 90%;
+        }
+
+        .glass-particles span:nth-child(4) {
+            left: 42%;
+            top: 70%;
+        }
+
+        .glass-particles span:nth-child(5) {
+            left: 56%;
+            top: 84%;
+        }
+
+        .glass-particles span:nth-child(6) {
+            left: 70%;
+            top: 92%;
+        }
+
+        .glass-particles span:nth-child(7) {
+            left: 82%;
+            top: 76%;
+        }
+
+        .glass-particles span:nth-child(8) {
+            left: 90%;
+            top: 60%;
+        }
+
+        .glass-particles span:nth-child(9) {
+            left: 12%;
+            top: 25%;
+        }
+
+        .glass-particles span:nth-child(10) {
+            left: 24%;
+            top: 35%;
+        }
+
+        .glass-particles span:nth-child(11) {
+            left: 36%;
+            top: 15%;
+        }
+
+        .glass-particles span:nth-child(12) {
+            left: 48%;
+            top: 30%;
+        }
+
+        .glass-particles span:nth-child(13) {
+            left: 60%;
+            top: 18%;
+        }
+
+        .glass-particles span:nth-child(14) {
+            left: 72%;
+            top: 12%;
+        }
+
+        .glass-particles span:nth-child(15) {
+            left: 84%;
+            top: 28%;
+        }
+
+        .glass-particles span:nth-child(16) {
+            left: 94%;
+            top: 18%;
+        }
+
+        .glass-particles span:nth-child(17) {
+            left: 8%;
+            top: 45%;
+        }
+
+        .glass-particles span:nth-child(18) {
+            left: 52%;
+            top: 52%;
+        }
+
+        .glass-particles span:nth-child(19) {
+            left: 76%;
+            top: 48%;
+        }
+
+        .glass-particles span:nth-child(20) {
+            left: 96%;
+            top: 88%;
+        }
+
+        /* =========================
+           Layout
+        ========================= */
+        .success-wrapper {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            position: relative;
+        }
+
+        /* =========================
+           Glow
+        ========================= */
+        .success-glow {
+            position: absolute;
+            width: 520px;
+            height: 520px;
+            border-radius: 50%;
+            background: radial-gradient(circle,
+            rgba(96, 165, 250, .28),
+            transparent 70%);
+            filter: blur(45px);
+            animation: pulse 6s infinite;
+        }
+
+        /* =========================
+           Card
+        ========================= */
+        .success-card {
+            position: relative;
+            z-index: 5;
+            width: 520px;
+            padding: 45px;
+            text-align: center;
+            border-radius: 34px;
+            background: rgba(255, 255, 255, .42);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, .65);
+            box-shadow: 0 25px 60px rgba(15, 23, 42, .10),
+            inset 0 1px 0 rgba(255, 255, 255, .9);
+            animation: cardIn .9s ease;
+        }
+
+        /* =========================
+           Icon
+        ========================= */
+        .success-icon {
+            width: 110px;
+            height: 110px;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .55);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 40px rgba(37, 99, 235, .15);
+        }
+
+        .circle-bg {
+            fill: none;
+            stroke: #60a5fa;
+            stroke-width: 6;
+        }
+
+        .check-path {
+            fill: none;
+            stroke: #22c55e;
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: draw 1s forwards .5s;
+        }
+
+        /* =========================
+           Text
+        ========================= */
+        .success-title {
+            margin-top: 28px;
+            font-size: 38px;
+            color: #0f172a;
+            font-weight: 800;
+        }
+
+        .success-text {
+            margin-top: 18px;
+            color: #64748b;
+            line-height: 2;
+            font-size: 17px;
+        }
+
+        .brand-name {
+            color: #2563eb;
+            font-weight: 800;
+        }
+
+        /* =========================
+           Button
+        ========================= */
+        .button-group {
+            margin-top: 40px;
+        }
+
+        .glass-button {
+            position: relative;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 240px;
+            height: 58px;
+            border-radius: 18px;
+            overflow: hidden;
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(135deg, #60a5fa, #2563eb);
+            box-shadow: 0 15px 35px rgba(37, 99, 235, .25);
+            transition: .35s;
+        }
+
+        .glass-button span {
+            position: relative;
+            z-index: 2;
+            font-weight: 700;
+        }
+
+        .glass-button::before {
+            content: "";
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            background: rgba(255, 255, 255, .45);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%) scale(0);
+            transition: .45s;
+        }
+
+        .glass-button:hover::before {
+            transform: translateY(-50%) scale(2.4);
+        }
+
+        .glass-button:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 22px 45px rgba(37, 99, 235, .35);
+        }
+
+        /* =========================
+           Animations
+        ========================= */
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(60px) scale(.9);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        @keyframes pulse {
+            50% {
+                transform: scale(1.15);
+                opacity: .7;
+            }
+        }
+
+        @keyframes floatParticle {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-120vh);
+            }
+        }
+
+        /* =========================
+           Mobile
+        ========================= */
+        @media (max-width: 650px) {
+            .success-card {
+                width: 100%;
+                padding: 30px;
+            }
+
+            .success-title {
+                font-size: 30px;
+            }
+
+            .success-text {
+                font-size: 15px;
+            }
+
+            .glass-button {
+                width: 100%;
+            }
+        }
+    </style>
+{% endblock %}
+{% block scripts %}
+    <script>
+        document.querySelector(".glass-button").addEventListener("mousemove", e => {
+            const btn = e.currentTarget;
+            const rect = btn.getBoundingClientRect();
+            btn.style.setProperty(
+                "--x",
+                (e.clientX - rect.left) + "px"
+            );
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+            /* ===========================
+               Button Light Effect
+            =========================== */
+            const button = document.querySelector(".glass-button");
+            if (button) {
+                button.addEventListener("mousemove", e => {
+                    const rect = button.getBoundingClientRect();
+                    button.style.setProperty(
+                        "--x",
+                        (e.clientX - rect.left) + "px"
+                    );
+                });
+            }
+            /* ===========================
+               Canvas Liquid Background
+            =========================== */
+            const canvas = document.getElementById("liquidCanvas");
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            resize();
+            window.addEventListener("resize", resize);
+            const blobs = [];
+            const colors = [
+                "rgba(96,165,250,.24)",
+                "rgba(45,212,191,.20)",
+                "rgba(168,85,247,.18)",
+                "rgba(255,255,255,.18)"
+            ];
+            for (let i = 0; i < 6; i++) {
+                blobs.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: 180 + Math.random() * 120,
+                    dx: (Math.random() - .5) * 0.35,
+                    dy: (Math.random() - .5) * 0.35,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                blobs.forEach(blob => {
+                    blob.x += blob.dx;
+                    blob.y += blob.dy;
+                    if (blob.x < -blob.r || blob.x > canvas.width + blob.r)
+                        blob.dx *= -1;
+                    if (blob.y < -blob.r || blob.y > canvas.height + blob.r)
+                        blob.dy *= -1;
+                    const gradient = ctx.createRadialGradient(
+                        blob.x,
+                        blob.y,
+                        0,
+                        blob.x,
+                        blob.y,
+                        blob.r
+                    );
+                    gradient.addColorStop(0, blob.color);
+                    gradient.addColorStop(1, "rgba(255,255,255,0)");
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(
+                        blob.x,
+                        blob.y,
+                        blob.r,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
+                });
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        });
+    </script>
+    </script>
 {% endblock %}
