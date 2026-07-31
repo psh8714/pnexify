@@ -9,10 +9,15 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+from logging import DEBUG
 from pathlib import Path
 
 from django.urls import reverse_lazy
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +26,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k%1ls4ifz*a39jx5x8zyqa5_pdo&4$&=-#-rjnfgya%zov^pce'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
 # Application definition
 
@@ -82,13 +90,35 @@ WSGI_APPLICATION = 'mycodes.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'sahand.liara.cloud',
+#         'USER': 'root',
+#         'PASSWORD': 'XkyBMF7JGna9iRXNgZouitS4',
+#         'PORT': '32135',
+#     }
+# }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'HOST':'127.0.0.1',
+#         'NAME': 'blog',
+#         'USER': 'blog_admin',
+#         'PASSWORD': '8714',
+#         'PORT': '5433',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'blog',
-        'USER': 'blog_admin',
-        'PASSWORD': '12345678',
-        'PORT': '5433',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
     }
 }
 
@@ -125,6 +155,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -153,10 +184,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg"}
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = False
 
-THUMBNAIL_DEBUG = True
+THUMBNAIL_DEBUG = False
 
-AUTH_USER_MODEL='blog.User'
+AUTH_USER_MODEL = 'blog.User'
 
 ABSOLUTE_URL_OVERRIDES = {
     'blog.user': lambda u: reverse_lazy('blog:user_detail', args=[u.username])
 }
+
