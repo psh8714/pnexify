@@ -1552,7 +1552,7 @@
                     type: 'POST',
                     url: '{% url "blog:user_follow" %}',
                     data: {
-                        'user': username,
+                        'user_id': username,
                         'csrfmiddlewaretoken': '{{ csrf_token }}'
                     },
                     success: function (data) {
