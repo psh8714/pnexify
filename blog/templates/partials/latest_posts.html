@@ -16,8 +16,8 @@
 
             <div class="post-content">
                 <span class="post-category">{{ post.get_category_display }}</span>
-                <h3 class="post-title">{{ post.title }}</h3>
-                <p class="post-excerpt">{{ post.description|truncatewords:15 }}</p>
+                <h3 class="post-title" style="direction: rtl;unicode-bidi: plaintext;text-align: right;">{{ post.title }}</h3>
+                <p class="post-excerpt" style="direction: rtl;unicode-bidi: plaintext;text-align: right;">{{ post.description|truncatewords:15 }}</p>
                 <div class="post-footer mt-auto">
                     <span class="post-author">{{ post.author.get_full_name }}</span>
                     <span class="post-date">{{ post.publish|date:"d M Y" }}</span>
