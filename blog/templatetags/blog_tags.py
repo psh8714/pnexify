@@ -44,15 +44,16 @@ def add_class(field, classes):
 
 @register.simple_tag()
 def texts():
-    title = Text.objects.get_or_create(text_name='SITE_TITLE')
-    s_icon = Text.objects.get_or_create(text_name='header_search_icon')
-    text1 = Text.objects.get_or_create(text_name='header_home')
-    text2 = Text.objects.get_or_create(text_name='header_profile')
-    text3 = Text.objects.get_or_create(text_name='header_posts')
-    text4 = Text.objects.get_or_create(text_name='header_twits')
-    text5 = Text.objects.get_or_create(text_name='header_add_post')
-    text6 = Text.objects.get_or_create(text_name='header_about_us')
-    text7 = Text.objects.get_or_create(text_name='header_contact_us')
+    title, created1 = Text.objects.get_or_create(text_name='SITE_TITLE')
+    s_icon, created2 = Text.objects.get_or_create(text_name='header_search_icon')
+    text1, created3 = Text.objects.get_or_create(text_name='header_home')
+    text2, created4 = Text.objects.get_or_create(text_name='header_profile')
+    text3, created5 = Text.objects.get_or_create(text_name='header_posts')
+    text4, created6 = Text.objects.get_or_create(text_name='header_twits')
+    text5, created7 = Text.objects.get_or_create(text_name='header_add_post')
+    text6, created8 = Text.objects.get_or_create(text_name='header_about_us')
+    text7, created9 = Text.objects.get_or_create(text_name='header_contact_us')
+
 
 
     return {
