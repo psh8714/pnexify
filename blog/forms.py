@@ -61,6 +61,7 @@ class NewPost(forms.ModelForm):
                 }
             ),
             "tags": forms.SelectMultiple(),
+            "title": forms.TextInput(attrs={'style':'direction: rtl;unicode-bidi: plaintext;text-align: right;'}),
         }
 
 
