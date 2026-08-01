@@ -178,6 +178,12 @@ class RegisterForm(forms.ModelForm):
             raise ValidationError('password should be longer than 3 character')
         return self.cleaned_data['password2']
 
+    def clean_username(self):
+        if User.objects.get(username=self.cleaned_data['username']):
+            raise ValidationError('this username already exist')
+        else:
+            return self.cleaned_data['username']
+
 
 class UserForm(forms.ModelForm):
     class Meta:
