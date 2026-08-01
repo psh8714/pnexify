@@ -1333,8 +1333,8 @@
                 </div>
                 <br>
 
-                {% if post.author.tel_id or post.author.phone_number %}
                     <div class="glass detail-card">
+                        {% if post.author.tel_id or post.author.phone_number %}
                         <div class="p-4 p-md-5">
                             {% if post.project_detail.project_url %}
                                 <div class="caption-text">address: <a style="text-decoration: none"
@@ -1370,6 +1370,7 @@
                                 {% endif %}
                             {% endif %}
                         </div>
+                        {% endif %}
                         <span style="display: flex; justify-content: center; font-weight: 700;">used technologies:</span>
                         <div class="needed-skills">
                             {% for technology in post.tags.all %}
@@ -1378,7 +1379,6 @@
                         </div>
                         <br>
                     </div>
-                {% endif %}
 
                 <!-- Comments Section -->
                 <div class="glass rounded-4 shadow-sm p-4 p-md-5 mt-4">
