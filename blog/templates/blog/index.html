@@ -881,8 +881,8 @@
                                 </div>
                                 <div class="col-md-6 d-flex flex-column justify-content-center">
                                     <span class="category-badge">{{ post.get_category_display }}</span>
-                                    <h3 class="featured-title">{{ post.title }}</h3>
-                                    <p class="featured-description">
+                                    <h3 class="featured-title" style="direction: rtl;unicode-bidi: plaintext;text-align: right;">{{ post.title }}</h3>
+                                    <p class="featured-description" style="direction: rtl;unicode-bidi: plaintext;text-align: right;">
                                         {{ post.description | truncatewords:30 }}
                                     </p>
                                     <div class="featured-meta mb-4">
