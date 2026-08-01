@@ -180,7 +180,7 @@ class RegisterForm(forms.ModelForm):
         return self.cleaned_data['password2']
 
     def clean_username(self):
-        if User.objects.get(username=self.cleaned_data['username']):
+        if User.objects.filter(username=self.cleaned_data['username']).exists():
             raise ValidationError('this username already exist')
         else:
             return self.cleaned_data['username']
