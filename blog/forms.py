@@ -189,7 +189,7 @@ class RegisterForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'photo', 'ostan', 'city', 'github_id', 'bio',
+        fields = ['username', 'first_name', 'last_name', 'email', 'phone_number', 'photo', 'ostan', 'city', 'github_id', 'bio',
                   'tel_id', 'main_skill', 'date_of_birth', 'level']
 
         widgets = {
@@ -214,6 +214,9 @@ class UserForm(forms.ModelForm):
             ),
             "level": forms.Select(
                 attrs={'placeholder': 'your level', 'id':'user_level_select'}
+            ),
+            "phone_number": forms.TextInput(
+                attrs={'placeholder': 'شماره'}
             ),
         }
 
