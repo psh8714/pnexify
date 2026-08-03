@@ -40,7 +40,7 @@
                 <button class="tool" data-mode="freeze" id="freezeTool">
                     ❄ Freeze
                 </button>
-                {% if request.user.authenticated %}
+                {% if request.user.is_authenticated %}
                     <button class="tool" onclick="applyTheme()">🎨apply to header</button>
                 {% else %}
                     <button class="tool" onclick="showHint('ابتدا وارد حساب کاربری خود شوید')">🎨apply to header</button>
