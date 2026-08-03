@@ -19,9 +19,9 @@
                     <input type="file" id="fileInput" accept="image/*">
                 </div>
                 <button class="tool" data-sample="city">🌃 Flower</button>
-                <button class="tool" data-sample="nature">🌿 Black hole</button>
-                <button class="tool" data-sample="sunset">🌅 Samurai</button>
-                <button class="tool" data-sample="abstract">🎨 Winner</button>
+                <button class="tool" data-sample="nature">🌿 too much purple</button>
+                <button class="tool" data-sample="sunset">🌅 Water</button>
+                <button class="tool" data-sample="abstract">🎨 Dark flower</button>
                 <div style="width:1px;height:20px;background:rgba(255,255,255,.08);margin:0 4px"></div>
                 <button class="tool active" data-mode="blow" id="blowTool">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -40,8 +40,11 @@
                 <button class="tool" data-mode="freeze" id="freezeTool">
                     ❄ Freeze
                 </button>
-                <button class="tool" onclick="applyTheme()">🎨apply to header</button>
-            </div>
+                {% if request.user.authenticated %}
+                    <button class="tool" onclick="applyTheme()">🎨apply to header</button>
+                {% else %}
+                    <button class="tool" onclick="showHint('ابتدا وارد حساب کاربری خود شوید')">🎨apply to header</button>
+                {% endif %}            </div>
         </div>
 
         <div class="bottom">
