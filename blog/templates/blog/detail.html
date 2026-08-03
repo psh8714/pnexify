@@ -1350,7 +1350,7 @@
                                 <br>
                                 <hr>
                             {% endif %}
-                            {% if request.user in post.author.followers %}
+                            {% if request.user in post.author.followers.all %}
                                 {% if post.author.tel_id %}
                                     <div class="caption-text">telegram id: {{ post.author.tel_id }}</div>
                                 {% endif %}
