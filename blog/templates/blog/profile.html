@@ -62,7 +62,7 @@
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td class="post-name"><a href="{{ post.get_absolute_url }}"
-                                                         style="color: white;text-decoration: none;direction: rtl;unicode-bidi: plaintext;text-align: right;">
+                                                         style="color: white;text-decoration: none;direction: rtl;unicode-bidi: isolate;text-align: right;">
                                     {{ post.title }}</a>
                                 </td>
                                 {% if post.images.first.image_file %}
