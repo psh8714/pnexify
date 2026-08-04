@@ -23,7 +23,7 @@
 
             <div class="form-fields">
                 {% for field in form %}
-                    <div class="field-group">
+                    <div class="field-group" dir="auto">
                         {{ field.label_tag }}
                         {{ field }}
                         {{ field.errors }}
@@ -180,7 +180,7 @@
         .post-form textarea,
         .post-form select {
             direction: rtl;
-            unicode-bidi: plaintext;
+            unicode-bidi: isolate;
             text-align: right;
             width: 100%;
             background: var(--input-bg);
