@@ -92,7 +92,7 @@ def post_list(request, category=None):
     if category is not None:
         posts = Post.published.filter(category=category).order_by('-total_likes', '-total_saves', '-publish')
     else:
-        posts = Post.published.all().order_by('-total_likes', '-total_saves', '-publish')
+        posts = Post.published.all().order_by('-publish', '-total_likes', '-total_saves')
     paginator = Paginator(posts, 5)
     page_number = request.GET.get('page', 1)
     try:
