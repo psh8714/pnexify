@@ -784,184 +784,8 @@
 {% extends 'parent/base.html' %}
 {% load blog_tags %}
 {% load static %}
+
 {% block title %}صفحه اصلی{% endblock %}
-
-{% block content %}
-
-    <div class="dynamic-background">
-        <div class="bg-blob blob-one"></div>
-        <div class="bg-blob blob-two"></div>
-        <div class="bg-blob blob-three"></div>
-        <div class="bg-blob blob-four"></div>
-        <div class="glass-particles">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </div>
-
-    <!-- Hero Section -->
-    <section class="hero-section">
-        {% if notif.s_description|length > 3 %}
-            <span class="notification-text">
-                {{ notif.s_description }}
-            </span>
-        {% endif %}
-        <div class="container">
-            <div class="row align-items-center min-vh-100">
-                <div class="col-lg-8 col-md-10 mx-auto text-center">
-                    <div class="hero-content">
-                        <span class="badge bg-primary mb-3">{{ text1.s_description }}</span>
-                        <h1 class="display-3 fw-bold mb-4">
-                            <span class="gradient-text">{{ text2.s_description }}</span>
-                        </h1>
-                        <p style="color:#5c7fa5;">
-                            {{ text3.s_description }}
-                        </p>
-                        <!-- Action Buttons -->
-                        <div class="d-flex gap-3 justify-content-center flex-wrap mb-5">
-                            <a href="{% url 'blog:post_list' %}" class="btn btn-lg btn-primary btn-modern">
-                                <i class="bi bi-arrow-right-circle"></i> {{ text4.s_description }}
-                            </a>
-                            <a href="{% url 'blog:about_us' %}" class="btn btn-lg btn-outline-light btn-modern">
-                                <i class="bi bi-info-circle"></i> {{ text5.s_description }}
-                            </a>
-                        </div>
-                        <!-- Stats -->
-                        <div class="stats-row">
-                            <div class="stat-card">
-                                <h3 class="stat-number">{% post_number %}</h3>
-                                <p class="stat-label">پست منتشر شده</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3 class="stat-number">{% comment_number %}</h3>
-                                <p class="stat-label">کامنت و بحث</p>
-                            </div>
-                            <div class="stat-card">
-                                {% last_post_publish as last_p %}
-                                <h3 class="stat-number">{{ last_p | date:" Y/m/d" }}</h3>
-                                <p class="stat-label">آخرین فعالیت</p>
-                            </div>
-                            <div class="stat-card">
-                                <h3 class="stat-number">{{ posts_views }}</h3>
-                                <p class="stat-label">کل بازدیدها</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Post Section -->
-    <section class="featured-section py-5">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="section-title">{{ text6.s_description }}</h2>
-                <div class="title-line"></div>
-            </div>
-            <div class="row">
-                <div class="col-lg-10 mx-auto">
-                    <div class="featured-card">
-                        <div class="featured-badge">{{ text12.s_description }}</div>
-                        {% if post != 'empty page' %}
-                            <div class="row g-4">
-                                <div class="col-md-6">
-                                    <div class="featured-image-wrapper">
-                                        {% if post.images.first.image_file %}
-                                            <img src="{{ post.images.first.image_file.url }}"
-                                                 alt="{{ post.title }}" class="featured-image">
-                                        {% else %}
-                                            <div class="no-image-placeholder">no image</div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="col-md-6 d-flex flex-column justify-content-center">
-                                    <span class="category-badge">{{ post.get_category_display }}</span>
-                                    <h3 class="featured-title" style="direction: rtl;unicode-bidi: plaintext;text-align: right;">{{ post.title }}</h3>
-                                    <p class="featured-description" style="direction: rtl;unicode-bidi: plaintext;text-align: right;">
-                                        {{ post.description | truncatewords:30 }}
-                                    </p>
-                                    <div class="featured-meta mb-4">
-                                        <span class="meta-item">
-                                            <i class="bi bi-person-circle"></i> {{ post.author.get_full_name }}
-                                        </span>
-                                        <span class="meta-item">
-                                            <i class="bi bi-calendar-event"></i> {{ post.publish | date:"d M Y" }}
-                                        </span>
-                                    </div>
-                                    <a href="{{ post.get_absolute_url }}"
-                                       class="btn btn-primary btn-modern align-self-start">
-                                        مشاهده <i class="bi bi-arrow-left"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Latest Posts Section -->
-    <section class="latest-posts-section py-5">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="section-title">{{ text7.s_description }}</h2>
-                <div class="title-line"></div>
-            </div>
-            <div class="row g-4">
-                {% latest_posts %}
-            </div>
-            <!-- View All Button -->
-            <div class="text-center mt-5">
-                <a href="{% url 'blog:post_list' %}" class="btn btn-primary btn-lg btn-modern">
-                    {{ text8.s_description }}
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Active Users Section -->
-    <section class="users-section py-5">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="section-title">{{ text13.s_description }}</h2>
-                <div class="title-line"></div>
-            </div>
-            {% if users != 'empty page' %}
-                <div class="row g-4">
-                    {% for u in users %}
-                        <div class="col-6 col-md-3">
-                            <a href="{% url 'blog:user_detail' u.username %}" class="user-card-link">
-                                <div class="user-card text-center">
-                                    {% if u.verify %}
-                                        <span class="verify-badge"><i class="bi bi-patch-check-fill"></i></span>
-                                    {% endif %}
-                                    <div class="user-avatar">
-                                        {% if u.photo %}
-                                            <img src="{{ u.photo.url }}" alt="{{ u.username }}">
-                                        {% else %}
-                                            <span>{{ u.username|slice:":1"|upper }}</span>
-                                        {% endif %}
-                                    </div>
-                                    <h4 class="user-name">{{ u.username }}</h4>
-                                    {% if u.main_skill %}
-                                        <span class="user-skill">{{ u.main_skill }}</span>
-                                    {% endif %}
-                                    <span class="user-level">{{ u.get_level_display }}</span>
-                                </div>
-                            </a>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        </div>
-    </section>
-{% endblock %}
 
 {% if request.user.is_authenticated %}
     {% head_color request.user as color_ %}
@@ -971,760 +795,1751 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'icons/bootstrap-icons.css' %}">
+
     <style>
+        /* =========================================================
+           ROOT
+        ========================================================= */
+
         :root {
-            --primary-color: rgba(124, 92, 255, 0.12);
-            --primary-hover: rgba(106, 77, 240, 0.27);
-            --secondary-color: #22c55e;
-            --accent-color: #ffb84d;
-            --dark-bg: #0b1220;
-            --dark-bg-secondary: #111827;
-            --card-bg: rgba(17, 24, 39, 0.88);
-            --card-bg-soft: rgba(106, 106, 255, 0.18);
-            --text-primary: #6a6aff;
-            --text-secondary: #ffffff;
-            --text-muted: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(124, 92, 255, 0.45);
-            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.25);
-            --shadow-hover: 0 18px 40px rgba(124, 92, 255, 0.18);
-            --transition: all 0.3s ease;
+            --primary: #5B5FEF;
+            --primary-dark: #4548D8;
+            --primary-light: #EEF0FF;
+
+            --navy: #111827;
+            --navy-soft: #374151;
+
+            --white: #FFFFFF;
+            --background: #F8FAFC;
+            --surface: #FFFFFF;
+            --surface-soft: #F3F4F8;
+
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --text-light: #9CA3AF;
+
+            --border: #E5E7EB;
+            --border-light: #EEF0F3;
+
+            --success: #10B981;
+            --orange: #F59E0B;
+            --danger: #EF4444;
+
+            --shadow-sm:
+                0 2px 8px rgba(17, 24, 39, 0.04);
+
+            --shadow-md:
+                0 12px 35px rgba(17, 24, 39, 0.08);
+
+            --shadow-lg:
+                0 25px 60px rgba(17, 24, 39, 0.12);
+
+            --radius-sm: 12px;
+            --radius-md: 18px;
+            --radius-lg: 26px;
+
+            --transition: 0.3s cubic-bezier(.2,.8,.2,1);
         }
 
+
+        /* =========================================================
+           RESET
+        ========================================================= */
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
-            color: white;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            background: var(--dark-bg);
-            color: var(--text-primary);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+
+            background: var(--background);
+            color: var(--text);
+
+            font-family:
+                "Vazirmatn",
+                "IRANSans",
+                "Segoe UI",
+                Tahoma,
+                Arial,
+                sans-serif;
+
             line-height: 1.8;
-            position: relative;
         }
 
         a {
             text-decoration: none;
         }
 
-        /* ===== Animated Background ===== */
-        .animated-bg {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
+        img {
+            max-width: 100%;
+        }
+
+
+        /* =========================================================
+           PAGE
+        ========================================================= */
+
+        .home-page {
+            position: relative;
             overflow: hidden;
+        }
+
+
+        /* =========================================================
+           SUBTLE BACKGROUND
+        ========================================================= */
+
+        .home-page::before {
+            content: "";
+            position: absolute;
+
+            width: 600px;
+            height: 600px;
+
+            top: -300px;
+            right: -200px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(91, 95, 239, 0.10) 0%,
+                    rgba(91, 95, 239, 0) 70%
+                );
+
             pointer-events: none;
         }
 
-        .blob {
+        .home-page::after {
+            content: "";
+
             position: absolute;
-            border-radius: 50%;
-            filter: blur(90px);
-            opacity: 0.32;
-            will-change: transform;
+
+            width: 500px;
+            height: 500px;
+
+            top: 850px;
+            left: -250px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(91, 95, 239, 0.06) 0%,
+                    rgba(91, 95, 239, 0) 70%
+                );
+
+            pointer-events: none;
         }
 
-        .blob-1 {
-            width: 520px;
-            height: 520px;
-            background: radial-gradient(circle, #7c5cff 0%, transparent 70%);
-            top: -140px;
-            left: -120px;
-            animation: floatBlob1 24s ease-in-out infinite alternate;
-        }
 
-        .blob-2 {
-            width: 620px;
-            height: 620px;
-            background: radial-gradient(circle, #22c55e 0%, transparent 70%);
-            bottom: -180px;
-            right: -140px;
-            animation: floatBlob2 28s ease-in-out infinite alternate;
-        }
+        /* =========================================================
+           NOTIFICATION
+        ========================================================= */
 
-        .blob-3 {
-            width: 420px;
-            height: 420px;
-            background: radial-gradient(circle, #ffb84d 0%, transparent 70%);
-            top: 45%;
-            left: 55%;
-            animation: floatBlob3 19s ease-in-out infinite alternate;
-        }
+        .home-notification {
+            width: fit-content;
+            max-width: calc(100% - 30px);
 
-        @keyframes floatBlob1 {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            100% {
-                transform: translate(140px, 90px) scale(1.15);
-            }
-        }
+            margin: 25px auto 0;
 
-        @keyframes floatBlob2 {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            100% {
-                transform: translate(-120px, -70px) scale(1.1);
-            }
-        }
+            display: flex;
+            align-items: center;
+            gap: 10px;
 
-        @keyframes floatBlob3 {
-            0% {
-                transform: translate(-50%, -50%) scale(1);
-            }
-            100% {
-                transform: translate(calc(-50% + 70px), calc(-50% - 100px)) scale(1.2);
-            }
-        }
+            padding: 9px 16px;
 
-        /* Sections stay transparent so the animated background is visible everywhere */
-        .hero-section,
-        .featured-section,
-        .latest-posts-section,
-        .users-section {
-            background: transparent;
+            background: var(--white);
+
+            border: 1px solid var(--border);
+
+            border-radius: 999px;
+
+            box-shadow: var(--shadow-sm);
+
+            color: var(--navy);
+
+            font-size: 13px;
+            font-weight: 600;
+
             position: relative;
-            overflow: hidden;
+            z-index: 5;
         }
 
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 15% 20%, rgba(124, 92, 255, 0.14) 0%, transparent 35%),
-            radial-gradient(circle at 85% 80%, rgba(34, 197, 94, 0.10) 0%, transparent 35%);
-            z-index: 0;
+        .home-notification::before {
+            content: "";
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--primary);
+
+            box-shadow:
+                0 0 0 5px rgba(91, 95, 239, 0.10);
+        }
+
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero-section {
+            min-height: 760px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 90px 0 100px;
+
+            position: relative;
+        }
+
+        .hero-section .container {
+            position: relative;
+            z-index: 2;
         }
 
         .hero-content {
-            position: relative;
-            z-index: 1;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 50%, #34d399 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 18px;
-            margin-top: 50px;
-        }
-
-        .stat-card {
-            background: var(--card-bg-soft);
-            border: 1px solid var(--border-color);
-            padding: 24px;
-            border-radius: 16px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: var(--transition);
-            box-shadow: var(--shadow-soft);
-        }
-
-        .stat-card:hover {
-            background: rgba(255, 255, 255, 0.07);
-            border-color: var(--border-hover);
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .stat-number {
-            font-size: 30px;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 8px;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin: 0;
-        }
-
-        .btn-modern {
-            font-weight: 700;
-            border-radius: 12px;
-            padding: 12px 28px;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #4f46e5 100%);
-            border: none;
-            color: #fff;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, var(--primary-hover) 0%, #4338ca 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(124, 92, 255, 0.28);
-            color: #fff;
-        }
-
-        .btn-outline-light {
-            border: 2px solid rgba(255, 255, 255, 0.85);
-            color: #ffffff;
-            background: transparent;
-        }
-
-        .btn-outline-light:hover {
-            background: #ffffff;
-            color: #0b1220;
-            transform: translateY(-2px);
-        }
-
-        .section-title {
-            font-size: 34px;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 15px;
-        }
-
-        .title-line {
-            width: 70px;
-            height: 4px;
-            background: linear-gradient(135deg, #7c5cff 0%, #22c55e 100%);
+            max-width: 900px;
             margin: 0 auto;
-            border-radius: 999px;
-        }
 
-        .featured-card {
-            background: linear-gradient(135deg, rgba(124, 92, 255, 0.08) 0%, rgba(34, 197, 94, 0.05) 100%);
-            border: 1px solid var(--border-color);
-            border-radius: 18px;
-            padding: 40px;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: var(--transition);
-            box-shadow: var(--shadow-soft);
-        }
-
-        .featured-card:hover {
-            border-color: var(--border-hover);
-            box-shadow: var(--shadow-hover);
-            transform: translateY(-5px);
-        }
-
-        .featured-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #ef4444, #f97316);
-            color: white;
-            padding: 7px 14px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 700;
-            z-index: 1;
-        }
-
-        .featured-image-wrapper {
-            position: relative;
-            border-radius: 14px;
-            overflow: hidden;
-            height: 100%;
-            min-height: 300px;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .no-image-placeholder {
-            background: linear-gradient(135deg, #1f1b40, rgba(168, 85, 247, 0.21), #3f162a);
-            width: 100%;
-            height: 100%;
-            min-height: 300px;
-            align-items: center;
             text-align: center;
-            justify-content: center;
-            display: flex;
-            font-size: 21px;
-            font-weight: bold;
+
+            animation: heroEnter .7s ease both;
         }
 
-        .featured-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .featured-image-wrapper:hover .featured-image {
-            transform: scale(1.05);
-        }
-
-        .category-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #7c5cff, #60a5fa);
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            width: fit-content;
-        }
-
-        .featured-title {
-            font-size: 30px;
-            font-weight: 800;
-            margin-bottom: 15px;
-            line-height: 1.35;
-            color: #ffffff;
-        }
-
-        .featured-description {
-            color: white;
-            font-size: 16px;
-            line-height: 1.9;
-            margin-bottom: 20px;
-        }
-
-        .featured-meta {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            font-size: 14px;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-secondary);
-        }
-
-        .post-card {
-            background: linear-gradient(135deg, rgba(124, 92, 255, 0.06) 0%, rgba(34, 197, 94, 0.04) 100%);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            overflow: hidden;
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            box-shadow: var(--shadow-soft);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .post-card:hover {
-            border-color: var(--border-hover);
-            box-shadow: var(--shadow-hover);
-            transform: translateY(-8px);
-        }
-
-        .post-image-wrapper {
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-            border-radius: 14px 14px 0 0;
-            display: flex;
-        }
-
-        .post-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-            display: block;
-        }
-
-        .post-card:hover .post-image {
-            transform: scale(1.08);
-        }
-
-        .post-content {
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        .post-category {
-            display: inline-block;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: #ffffff;
-            padding: 5px 12px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            width: fit-content;
-        }
-
-        .post-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            line-height: 1.5;
-            color: #ffffff;
-        }
-
-        .post-excerpt {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 15px;
-            flex: 1;
-            line-height: 1.8;
-        }
-
-        .post-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 15px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .post-author,
-        .post-date {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        /* ===== Active Users Section ===== */
-        .user-card-link {
-            display: block;
-            height: 100%;
-        }
-
-        .user-card {
-            position: relative;
-            background: var(--card-bg-soft);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 26px 16px;
-            height: 100%;
-            transition: var(--transition);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: var(--shadow-soft);
-        }
-
-        .user-card:hover {
-            border-color: var(--border-hover);
-            box-shadow: var(--shadow-hover);
-            transform: translateY(-6px);
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        .verify-badge {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            color: #60a5fa;
-            font-size: 16px;
-        }
-
-        .user-avatar {
-            width: 72px;
-            height: 72px;
-            margin: 0 auto 14px;
-            border-radius: 50%;
-            overflow: hidden;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            font-weight: 800;
-            color: #fff;
-            border: 2px solid var(--border-color);
-        }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .user-name {
-            font-size: 15px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 8px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .user-skill {
-            display: block;
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-
-        .user-level {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 700;
-            color: #a78bfa;
-            background: rgba(124, 92, 255, 0.12);
-            border: 1px solid rgba(124, 92, 255, 0.25);
-            padding: 3px 10px;
-            border-radius: 999px;
-        }
-
-        @keyframes fadeInUp {
+        @keyframes heroEnter {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(25px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        @media (max-width: 1068px) {
-            .hero-section {
-                min-height: auto;
-                padding: 40px 0;
-            }
 
-            .stats-row {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
+        /* =========================================================
+           HERO BADGE
+        ========================================================= */
 
-            .featured-card {
-                padding: 22px;
-            }
+        .hero-badge {
+            display: inline-flex;
 
-            .featured-title {
-                font-size: 22px;
-            }
+            align-items: center;
+            gap: 8px;
 
-            .section-title {
-                font-size: 24px;
-            }
+            padding: 8px 15px;
 
-            .btn-modern {
-                padding: 10px 20px;
-                font-size: 14px;
-            }
+            background: var(--primary-light);
 
-            .blob {
-                filter: blur(60px);
-            }
+            border: 1px solid rgba(91, 95, 239, 0.12);
+
+            color: var(--primary);
+
+            border-radius: 999px;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            margin-bottom: 25px;
         }
 
-        @media (max-width: 480px) {
-            .hero-section {
-                padding: 20px 0;
-            }
-
-            .hero-actions {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .btn-modern {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .featured-meta {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .post-footer {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .user-avatar {
-                width: 56px;
-                height: 56px;
-                font-size: 20px;
-            }
-        }
-
-        .notification-text {
-            display: block;
-            width: 100%;
-            margin-top: 10px;
-            padding: 12px 14px;
-            color: #e5e7eb;
+        .hero-badge i {
             font-size: 14px;
-            font-weight: 400;
-            line-height: 1.9;
-            background: rgba(255, 255, 255, .04);
-            border: 1px solid rgba(255, 255, 255, .06);
-            border-radius: 14px;
+        }
+
+
+        /* =========================================================
+           HERO TITLE
+        ========================================================= */
+
+        .hero-title {
+            margin: 0 auto 25px;
+
+            max-width: 900px;
+
+            font-size: clamp(42px, 6vw, 76px);
+
+            line-height: 1.15;
+
+            font-weight: 900;
+
+            letter-spacing: -2px;
+
+            color: var(--navy);
+        }
+
+        .hero-title .gradient-text {
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary) 0%,
+                    #7679FF 100%
+                );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            background-clip: text;
+        }
+
+
+        /* =========================================================
+           HERO DESCRIPTION
+        ========================================================= */
+
+        .hero-description {
+            max-width: 680px;
+
+            margin: 0 auto 35px;
+
+            color: var(--text-secondary);
+
+            font-size: 17px;
+
+            line-height: 2;
+
+            font-weight: 450;
+        }
+
+
+        /* =========================================================
+           BUTTONS
+        ========================================================= */
+
+        .hero-actions {
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+
+            margin-bottom: 55px;
+        }
+
+        .modern-btn {
+            min-height: 52px;
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 9px;
+
+            padding: 12px 24px;
+
+            border-radius: 13px;
+
+            font-size: 14px;
+
+            font-weight: 800;
+
+            transition: var(--transition);
+        }
+
+        .modern-btn-primary {
+            color: #fff;
+
+            background: var(--primary);
+
+            box-shadow:
+                0 10px 25px rgba(91, 95, 239, 0.20);
+        }
+
+        .modern-btn-primary:hover {
+            color: #fff;
+
+            background: var(--primary-dark);
+
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 16px 30px rgba(91, 95, 239, 0.28);
+        }
+
+        .modern-btn-secondary {
+            color: var(--navy);
+
+            background: var(--white);
+
+            border: 1px solid var(--border);
+
+            box-shadow: var(--shadow-sm);
+        }
+
+        .modern-btn-secondary:hover {
+            color: var(--primary);
+
+            border-color: rgba(91, 95, 239, 0.25);
+
+            transform: translateY(-3px);
+
+            box-shadow: var(--shadow-md);
+        }
+
+
+        /* =========================================================
+           STATS
+        ========================================================= */
+
+        .stats-row {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            max-width: 850px;
+
+            margin: 0 auto;
+
+            background: var(--white);
+
+            border: 1px solid var(--border);
+
+            border-radius: var(--radius-md);
+
+            box-shadow: var(--shadow-md);
+
+            overflow: hidden;
+        }
+
+        .stat-card {
+            padding: 25px 18px;
+
+            text-align: center;
+
+            position: relative;
+
+            transition: var(--transition);
+        }
+
+        .stat-card:not(:last-child)::after {
+            content: "";
+
+            position: absolute;
+
+            top: 25%;
+            bottom: 25%;
+
+            left: 0;
+
+            width: 1px;
+
+            background: var(--border);
+        }
+
+        .stat-card:hover {
+            background: #FAFAFF;
+        }
+
+        .stat-number {
+            margin: 0 0 5px;
+
+            color: var(--navy);
+
+            font-size: 26px;
+
+            font-weight: 900;
+
+            line-height: 1.3;
+        }
+
+        .stat-label {
+            margin: 0;
+
+            color: var(--text-secondary);
+
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================================================
+           GENERAL SECTION
+        ========================================================= */
+
+        .home-section {
+            position: relative;
+
+            padding: 95px 0;
+        }
+
+        .section-header {
+            text-align: center;
+
+            margin-bottom: 45px;
+        }
+
+        .section-title {
+            margin: 0 0 12px;
+
+            color: var(--navy);
+
+            font-size: clamp(28px, 4vw, 40px);
+
+            line-height: 1.3;
+
+            font-weight: 900;
+
+            letter-spacing: -0.7px;
+        }
+
+        .section-description {
+            max-width: 600px;
+
+            margin: 0 auto;
+
+            color: var(--text-secondary);
+
+            font-size: 14px;
+        }
+
+        .section-line {
+            width: 45px;
+            height: 4px;
+
+            margin: 17px auto 0;
+
+            border-radius: 999px;
+
+            background: var(--primary);
+        }
+
+
+        /* =========================================================
+           FEATURED POST
+        ========================================================= */
+
+        .featured-card {
+            position: relative;
+
+            display: grid;
+
+            grid-template-columns: 1.05fr 1fr;
+
+            gap: 45px;
+
+            padding: 28px;
+
+            background: var(--white);
+
+            border: 1px solid var(--border);
+
+            border-radius: var(--radius-lg);
+
+            box-shadow: var(--shadow-md);
+
+            overflow: hidden;
+
+            transition: var(--transition);
+        }
+
+        .featured-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow: var(--shadow-lg);
+
+            border-color:
+                rgba(91, 95, 239, 0.20);
+        }
+
+        .featured-image-wrapper {
+            min-height: 390px;
+
+            position: relative;
+
+            overflow: hidden;
+
+            border-radius: 20px;
+
+            background: var(--surface-soft);
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 100%;
+
+            display: block;
+
+            object-fit: cover;
+
+            transition:
+                transform .6s cubic-bezier(.2,.8,.2,1);
+        }
+
+        .featured-card:hover .featured-image {
+            transform: scale(1.035);
+        }
+
+        .no-image-placeholder {
+            min-height: 390px;
+
+            width: 100%;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #EEF0FF,
+                    #F8FAFC
+                );
+
+            color: var(--primary);
+
+            font-weight: 800;
+
+            font-size: 18px;
+        }
+
+        .featured-info {
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            padding: 20px 15px;
+
             direction: rtl;
-            unicode-bidi: plaintext;
-            white-space: pre-wrap;
-            word-break: break-word;
-            overflow-wrap: anywhere;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: .25s ease;
+        }
+
+        .featured-badge {
+            position: absolute;
+
+            top: 42px;
+            left: 42px;
+
+            z-index: 3;
+
+            display: inline-flex;
+
+            align-items: center;
+            gap: 6px;
+
+            padding: 7px 13px;
+
+            background: var(--navy);
+
+            color: #fff;
+
+            border-radius: 999px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+        }
+
+        .category-badge {
+            display: inline-flex;
+
+            width: fit-content;
+
+            padding: 7px 13px;
+
+            margin-bottom: 18px;
+
+            background: var(--primary-light);
+
+            color: var(--primary);
+
+            border-radius: 999px;
+
+            font-size: 12px;
+
+            font-weight: 800;
+        }
+
+        .featured-title {
+            margin: 0 0 17px;
+
+            color: var(--navy);
+
+            font-size: clamp(25px, 3vw, 36px);
+
+            line-height: 1.5;
+
+            font-weight: 900;
+        }
+
+        .featured-description {
+            margin: 0 0 23px;
+
+            color: var(--text-secondary);
+
+            font-size: 15px;
+
+            line-height: 2;
+        }
+
+        .featured-meta {
+            display: flex;
+
+            align-items: center;
+
+            gap: 18px;
+
+            flex-wrap: wrap;
+
+            margin-bottom: 25px;
+        }
+
+        .meta-item {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: var(--text-light);
+
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+        .meta-item i {
+            color: var(--primary);
+
+            font-size: 15px;
+        }
+
+        .featured-info .modern-btn {
+            align-self: flex-start;
+        }
+
+
+        /* =========================================================
+           LATEST POSTS
+        ========================================================= */
+
+        .latest-posts-section {
+            background: var(--white);
+
+            border-top:
+                1px solid var(--border-light);
+
+            border-bottom:
+                1px solid var(--border-light);
+        }
+
+
+        /*
+           این کلاس‌ها برای HTML خروجی {% latest_posts %}
+           در نظر گرفته شده‌اند.
+        */
+
+        .post-card {
+            height: 100%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            overflow: hidden;
+
+            background: var(--white);
+
+            border: 1px solid var(--border);
+
+            border-radius: var(--radius-md);
+
+            box-shadow: var(--shadow-sm);
+
+            transition: var(--transition);
+        }
+
+        .post-card:hover {
+            transform: translateY(-7px);
+
+            border-color:
+                rgba(91, 95, 239, 0.22);
+
+            box-shadow: var(--shadow-lg);
+        }
+
+        .post-image-wrapper {
+            height: 220px;
+
+            overflow: hidden;
+
+            position: relative;
+
+            background: var(--surface-soft);
+        }
+
+        .post-image {
+            width: 100%;
+            height: 100%;
+
+            display: block;
+
+            object-fit: cover;
+
+            transition:
+                transform .55s cubic-bezier(.2,.8,.2,1);
+        }
+
+        .post-card:hover .post-image {
+            transform: scale(1.06);
+        }
+
+        .post-content {
+            padding: 22px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            flex: 1;
+
+            direction: rtl;
+        }
+
+        .post-category {
+            width: fit-content;
+
+            padding: 5px 10px;
+
+            margin-bottom: 12px;
+
+            background: var(--primary-light);
+
+            color: var(--primary);
+
+            border-radius: 7px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+        }
+
+        .post-title {
+            margin: 0 0 10px;
+
+            color: var(--navy);
+
+            font-size: 20px;
+
+            line-height: 1.55;
+
+            font-weight: 850;
+        }
+
+        .post-description {
+            color: var(--text-secondary);
+
+            font-size: 13px;
+
+            line-height: 1.9;
+
+            margin-bottom: 18px;
+        }
+
+        .post-footer {
+            margin-top: auto;
+
+            padding-top: 15px;
+
+            border-top:
+                1px solid var(--border-light);
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .post-author {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: var(--text-light);
+
+            font-size: 11px;
+
+            font-weight: 600;
+        }
+
+        .post-author-avatar {
+            width: 28px;
+            height: 28px;
+
+            border-radius: 50%;
+
+            object-fit: cover;
+
+            background: var(--primary-light);
+        }
+
+        .post-read-more {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+            color: var(--primary);
+
+            font-size: 12px;
+
+            font-weight: 800;
+
+            transition: var(--transition);
+        }
+
+        .post-read-more:hover {
+            color: var(--primary-dark);
+
+            gap: 8px;
+        }
+
+
+        /* =========================================================
+           VIEW ALL
+        ========================================================= */
+
+        .view-all-wrapper {
+            margin-top: 45px;
+
             text-align: center;
         }
 
-        .notification-text:hover {
-            border-color: rgba(139, 92, 246, .35);
-            background: rgba(139, 92, 246, .06);
+
+        /* =========================================================
+           USERS / COMMUNITY
+        ========================================================= */
+
+        .users-section {
+            background: var(--background);
         }
 
-        .dynamic-background {
-            position: fixed;
-            inset: 0;
+        .user-card-link {
+            display: block;
+
+            height: 100%;
+        }
+
+        .user-card {
+            height: 100%;
+
+            min-height: 230px;
+
+            position: relative;
+
+            padding: 30px 18px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: var(--white);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: var(--radius-md);
+
+            box-shadow: var(--shadow-sm);
+
+            transition: var(--transition);
+        }
+
+        .user-card:hover {
+            transform: translateY(-7px);
+
+            border-color:
+                rgba(91, 95, 239, 0.22);
+
+            box-shadow: var(--shadow-md);
+        }
+
+        .user-avatar {
+            width: 76px;
+            height: 76px;
+
+            margin-bottom: 15px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
             overflow: hidden;
-            z-index: -10;
-            background: radial-gradient(circle at top left, #312e81 0%, transparent 35%),
-            radial-gradient(circle at bottom right, #065f46 0%, transparent 35%),
-            #020617;
-        }
 
-        /* حباب های بزرگ شیشه ای */
-        .bg-blob {
-            position: absolute;
             border-radius: 50%;
-            filter: blur(90px);
-            opacity: .45;
-            animation: moveBlob 22s infinite alternate ease-in-out;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #8588FF
+                );
+
+            color: white;
+
+            font-size: 27px;
+
+            font-weight: 900;
+
+            border:
+                4px solid #F1F2FF;
         }
 
-        .blob-one {
-            width: 500px;
-            height: 500px;
-            background: #6366f1;
-            top: -150px;
-            left: -100px;
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
         }
 
-        .blob-two {
-            width: 450px;
-            height: 450px;
-            background: #22d3ee;
-            right: -120px;
-            top: 150px;
-            animation-delay: -5s;
+        .user-name {
+            margin: 0 0 5px;
+
+            color: var(--navy);
+
+            font-size: 16px;
+
+            font-weight: 850;
         }
 
-        .blob-three {
-            width: 550px;
-            height: 550px;
-            background: #a855f7;
-            bottom: -200px;
-            left: 30%;
-            animation-delay: -10s;
+        .user-skill {
+            margin-bottom: 7px;
+
+            color: var(--text-secondary);
+
+            font-size: 12px;
+
+            font-weight: 600;
         }
 
-        .blob-four {
-            width: 300px;
-            height: 300px;
-            background: #10b981;
-            bottom: 20%;
-            right: 25%;
-            animation-delay: -15s;
+        .user-level {
+            padding: 4px 9px;
+
+            background: var(--surface-soft);
+
+            color: var(--text-secondary);
+
+            border-radius: 6px;
+
+            font-size: 10px;
+
+            font-weight: 700;
         }
 
-        @keyframes moveBlob {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            50% {
-                transform: translate(80px, -60px) scale(1.15);
-            }
-            100% {
-                transform: translate(-40px, 50px) scale(.95);
-            }
-        }
-
-        /* ذرات شیشه */
-        .glass-particles span {
+        .verify-badge {
             position: absolute;
-            width: 8px;
-            height: 8px;
-            background: rgba(255, 255, 255, .7);
-            border-radius: 50%;
-            backdrop-filter: blur(10px);
-            animation: floatParticle 15s infinite linear;
+
+            top: 18px;
+            right: 18px;
+
+            color: var(--primary);
+
+            font-size: 17px;
         }
 
-        .glass-particles span:nth-child(1) {
-            left: 10%;
-            top: 80%;
+
+        /* =========================================================
+           EMPTY STATE
+        ========================================================= */
+
+        .empty-state {
+            padding: 60px 20px;
+
+            text-align: center;
+
+            background: var(--white);
+
+            border: 1px dashed var(--border);
+
+            border-radius: var(--radius-md);
+
+            color: var(--text-secondary);
         }
 
-        .glass-particles span:nth-child(2) {
-            left: 25%;
-            top: 40%;
-            animation-delay: 2s;
-        }
 
-        .glass-particles span:nth-child(3) {
-            left: 50%;
-            top: 70%;
-            animation-delay: 5s;
-        }
+        /* =========================================================
+           RESPONSIVE - TABLET
+        ========================================================= */
 
-        .glass-particles span:nth-child(4) {
-            left: 70%;
-            top: 30%;
-            animation-delay: 7s;
-        }
+        @media (max-width: 991px) {
 
-        .glass-particles span:nth-child(5) {
-            left: 85%;
-            top: 80%;
-            animation-delay: 10s;
-        }
+            .hero-section {
+                min-height: auto;
 
-        .glass-particles span:nth-child(6) {
-            left: 60%;
-            top: 15%;
-            animation-delay: 12s;
-        }
-
-        @keyframes floatParticle {
-            from {
-                transform: translateY(100px);
-                opacity: 0;
+                padding:
+                    80px 0
+                    70px;
             }
-            30% {
-                opacity: 1;
+
+            .hero-title {
+                letter-spacing: -1px;
             }
-            to {
-                transform: translateY(-700px);
-                opacity: 0;
+
+            .featured-card {
+                grid-template-columns: 1fr;
+
+                gap: 25px;
+            }
+
+            .featured-image-wrapper {
+                min-height: 330px;
+            }
+
+            .featured-info {
+                padding: 10px 5px 15px;
+            }
+
+            .featured-badge {
+                top: 42px;
+                left: 42px;
+            }
+
+            .home-section {
+                padding: 75px 0;
             }
         }
 
-        /* لایه شیشه روی کل صفحه */
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(
-                    120deg,
-                    rgba(255, 255, 255, .04),
-                    transparent
-            );
-            backdrop-filter: blur(2px);
-            pointer-events: none;
-            z-index: -5;
+
+        /* =========================================================
+           RESPONSIVE - MOBILE
+        ========================================================= */
+
+        @media (max-width: 767px) {
+
+            .home-notification {
+                margin-top: 15px;
+
+                font-size: 11px;
+
+                padding:
+                    7px 12px;
+            }
+
+            .hero-section {
+                padding:
+                    60px 0
+                    55px;
+            }
+
+            .hero-badge {
+                margin-bottom: 18px;
+
+                font-size: 11px;
+            }
+
+            .hero-title {
+                font-size: 42px;
+
+                line-height: 1.25;
+
+                letter-spacing: -1.5px;
+
+                margin-bottom: 20px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+
+                line-height: 1.9;
+
+                padding: 0 10px;
+            }
+
+            .hero-actions {
+                margin-bottom: 38px;
+
+                gap: 9px;
+            }
+
+            .modern-btn {
+                width: 100%;
+
+                padding:
+                    11px 18px;
+            }
+
+            .stats-row {
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+                border-radius: 16px;
+            }
+
+            .stat-card {
+                padding: 19px 10px;
+            }
+
+            .stat-card:nth-child(2)::after {
+                display: none;
+            }
+
+            .stat-card:nth-child(-n+2) {
+                border-bottom:
+                    1px solid var(--border);
+            }
+
+            .stat-number {
+                font-size: 21px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .home-section {
+                padding: 60px 0;
+            }
+
+            .section-header {
+                margin-bottom: 30px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .featured-card {
+                padding: 14px;
+
+                border-radius: 20px;
+            }
+
+            .featured-image-wrapper {
+                min-height: 230px;
+
+                border-radius: 15px;
+            }
+
+            .no-image-placeholder {
+                min-height: 230px;
+            }
+
+            .featured-badge {
+                top: 28px;
+                left: 28px;
+            }
+
+            .featured-title {
+                font-size: 24px;
+            }
+
+            .featured-description {
+                font-size: 13px;
+            }
+
+            .featured-meta {
+                gap: 10px;
+            }
+
+            .post-image-wrapper {
+                height: 200px;
+            }
+
+            .user-card {
+                min-height: 205px;
+
+                padding:
+                    25px 12px;
+            }
+
+            .user-avatar {
+                width: 65px;
+                height: 65px;
+
+                font-size: 22px;
+            }
+        }
+
+
+        /* =========================================================
+           SMALL MOBILE
+        ========================================================= */
+
+        @media (max-width: 400px) {
+
+            .hero-title {
+                font-size: 35px;
+            }
+
+            .stats-row {
+                gap: 0;
+            }
+
+            .stat-number {
+                font-size: 18px;
+            }
+
+            .featured-title {
+                font-size: 21px;
+            }
+        }
+
+
+        /* =========================================================
+           ACCESSIBILITY
+        ========================================================= */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+
+                transition-duration: 0.01ms !important;
+
+                scroll-behavior: auto !important;
+            }
         }
     </style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="home-page">
+
+    <!-- =====================================================
+         NOTIFICATION
+    ====================================================== -->
+
+    {% if notif.s_description|length > 3 %}
+
+        <div class="home-notification">
+            {{ notif.s_description }}
+        </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="hero-section">
+
+        <div class="container">
+
+            <div class="hero-content">
+
+                <div class="hero-badge">
+                    <i class="bi bi-stars"></i>
+                    <span>{{ text1.s_description }}</span>
+                </div>
+
+
+                <h1 class="hero-title">
+
+                    <span class="gradient-text">
+                        {{ text2.s_description }}
+                    </span>
+
+                </h1>
+
+
+                <p class="hero-description">
+                    {{ text3.s_description }}
+                </p>
+
+
+                <div class="hero-actions">
+
+                    <a
+                        href="{% url 'blog:post_list' %}"
+                        class="modern-btn modern-btn-primary"
+                    >
+                        <span>{{ text4.s_description }}</span>
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
+
+
+                    <a
+                        href="{% url 'blog:about_us' %}"
+                        class="modern-btn modern-btn-secondary"
+                    >
+                        <span>{{ text5.s_description }}</span>
+                        <i class="bi bi-arrow-left"></i>
+                    </a>
+
+                </div>
+
+
+                <!-- Stats -->
+
+                <div class="stats-row">
+
+                    <div class="stat-card">
+
+                        <h3 class="stat-number">
+                            {% post_number %}
+                        </h3>
+
+                        <p class="stat-label">
+                            پست منتشر شده
+                        </p>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <h3 class="stat-number">
+                            {% comment_number %}
+                        </h3>
+
+                        <p class="stat-label">
+                            کامنت و بحث
+                        </p>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        {% last_post_publish as last_p %}
+
+                        <h3 class="stat-number">
+                            {{ last_p|date:"Y/m/d" }}
+                        </h3>
+
+                        <p class="stat-label">
+                            آخرین فعالیت
+                        </p>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <h3 class="stat-number">
+                            {{ posts_views }}
+                        </h3>
+
+                        <p class="stat-label">
+                            کل بازدیدها
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FEATURED POST
+    ====================================================== -->
+
+    <section class="home-section featured-section">
+
+        <div class="container">
+
+            <div class="section-header">
+
+                <h2 class="section-title">
+                    {{ text6.s_description }}
+                </h2>
+
+                <div class="section-line"></div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-12">
+
+                    {% if post != 'empty page' %}
+
+                        <article class="featured-card">
+
+                            <div class="featured-badge">
+                                <i class="bi bi-lightning-charge-fill"></i>
+                                {{ text12.s_description }}
+                            </div>
+
+
+                            <!-- Image -->
+
+                            <div class="featured-image-wrapper">
+
+                                {% if post.images.first.image_file %}
+
+                                    <img
+                                        src="{{ post.images.first.image_file.url }}"
+                                        alt="{{ post.title }}"
+                                        class="featured-image"
+                                        loading="lazy"
+                                    >
+
+                                {% else %}
+
+                                    <div class="no-image-placeholder">
+                                        بدون تصویر
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- Content -->
+
+                            <div class="featured-info">
+
+                                <span class="category-badge">
+                                    {{ post.get_category_display }}
+                                </span>
+
+
+                                <h3 class="featured-title">
+                                    {{ post.title }}
+                                </h3>
+
+
+                                <p class="featured-description">
+                                    {{ post.description|truncatewords:30 }}
+                                </p>
+
+
+                                <div class="featured-meta">
+
+                                    <span class="meta-item">
+
+                                        <i class="bi bi-person"></i>
+
+                                        {{ post.author.get_full_name }}
+
+                                    </span>
+
+
+                                    <span class="meta-item">
+
+                                        <i class="bi bi-calendar3"></i>
+
+                                        {{ post.publish|date:"d M Y" }}
+
+                                    </span>
+
+                                </div>
+
+
+                                <a
+                                    href="{{ post.get_absolute_url }}"
+                                    class="modern-btn modern-btn-primary"
+                                >
+                                    مشاهده مقاله
+
+                                    <i class="bi bi-arrow-left"></i>
+                                </a>
+
+                            </div>
+
+                        </article>
+
+                    {% else %}
+
+                        <div class="empty-state">
+                            در حال حاضر مقاله‌ای برای نمایش وجود ندارد.
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         LATEST POSTS
+    ====================================================== -->
+
+    <section class="home-section latest-posts-section">
+
+        <div class="container">
+
+            <div class="section-header">
+
+                <h2 class="section-title">
+                    {{ text7.s_description }}
+                </h2>
+
+                <div class="section-line"></div>
+
+            </div>
+
+
+            <div class="row g-4">
+
+                {% latest_posts %}
+
+            </div>
+
+
+            <div class="view-all-wrapper">
+
+                <a
+                    href="{% url 'blog:post_list' %}"
+                    class="modern-btn modern-btn-primary"
+                >
+
+                    {{ text8.s_description }}
+
+                    <i class="bi bi-arrow-left"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ACTIVE USERS
+    ====================================================== -->
+
+    <section class="home-section users-section">
+
+        <div class="container">
+
+            <div class="section-header">
+
+                <h2 class="section-title">
+                    {{ text13.s_description }}
+                </h2>
+
+                <div class="section-line"></div>
+
+            </div>
+
+
+            {% if users != 'empty page' %}
+
+                <div class="row g-4">
+
+                    {% for u in users %}
+
+                        <div class="col-6 col-md-3">
+
+                            <a
+                                href="{% url 'blog:user_detail' u.username %}"
+                                class="user-card-link"
+                            >
+
+                                <div class="user-card">
+
+
+                                    {% if u.verify %}
+
+                                        <span class="verify-badge">
+
+                                            <i class="bi bi-patch-check-fill"></i>
+
+                                        </span>
+
+                                    {% endif %}
+
+
+                                    <div class="user-avatar">
+
+                                        {% if u.photo %}
+
+                                            <img
+                                                src="{{ u.photo.url }}"
+                                                alt="{{ u.username }}"
+                                                loading="lazy"
+                                            >
+
+                                        {% else %}
+
+                                            <span>
+                                                {{ u.username|slice:":1"|upper }}
+                                            </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <h4 class="user-name">
+                                        {{ u.username }}
+                                    </h4>
+
+
+                                    {% if u.main_skill %}
+
+                                        <span class="user-skill">
+                                            {{ u.main_skill }}
+                                        </span>
+
+                                    {% endif %}
+
+
+                                    <span class="user-level">
+                                        {{ u.get_level_display }}
+                                    </span>
+
+                                </div>
+
+                            </a>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+                    کاربری برای نمایش وجود ندارد.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+</div>
+
 {% endblock %}
