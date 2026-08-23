@@ -11,7 +11,7 @@
     },
     {
       "name": "db-sql3",
-      "mountTo": "db.sqlite3"
+      "mountTo": "database"
     }
   ]
 }
