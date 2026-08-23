@@ -8,6 +8,10 @@
     {
       "name": "media",
       "mountTo": "media"
+    },
+    {
+      "name": "db-sql3",
+      "mountTo": "db.sqlite3"
     }
   ]
 }
