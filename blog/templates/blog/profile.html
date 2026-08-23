@@ -1,639 +1,953 @@
 {% extends 'parent/base.html' %}
 {% load thumbnail %}
 {% load static %}
-{% block title %}your activities{% endblock %}
+
+{% block title %}فعالیت‌های شما{% endblock %}
+
+{% block head %}
+
+<style>
+
+:root {
+    --dash-primary: #635BFF;
+    --dash-secondary: #14B8A6;
+
+    --dash-bg: #f7f8fc;
+    --dash-card: #ffffff;
+
+    --dash-text: #111827;
+    --dash-muted: #64748b;
+
+    --dash-border: #e8eaf0;
+
+    --dash-shadow:
+        0 10px 35px rgba(15,23,42,.06);
+}
+
+.activity-page {
+    direction: rtl;
+    min-height: 100vh;
+    background: var(--dash-bg);
+    padding: 35px 0 70px;
+}
+
+.activity-shell {
+    max-width: 1180px;
+    margin: auto;
+}
+
+
+/* ================= HERO ================= */
+
+.activity-hero {
+
+    background: white;
+
+    border: 1px solid var(--dash-border);
+
+    border-radius: 25px;
+
+    padding: 28px;
+
+    box-shadow: var(--dash-shadow);
+
+    margin-bottom: 20px;
+}
+
+.activity-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.activity-title-area {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.dashboard-avatar {
+    width: 75px;
+    height: 75px;
+
+    border-radius: 20px;
+
+    object-fit: cover;
+    object-position: center;
+
+    display: block;
+
+    border: 1px solid var(--dash-border);
+}
+
+.dashboard-avatar-placeholder {
+
+    width: 75px;
+    height: 75px;
+
+    border-radius: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--dash-primary),
+            var(--dash-secondary)
+        );
+
+    color: white;
+    font-size: 30px;
+}
+
+.hero-badge {
+
+    display: inline-flex;
+
+    padding: 6px 11px;
+
+    border-radius: 999px;
+
+    background: rgba(99,91,255,.08);
+
+    color: var(--dash-primary);
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.hero-title {
+
+    color: var(--dash-text);
+
+    font-size: 28px;
+
+    font-weight: 900;
+
+    margin: 7px 0;
+}
+
+.hero-description {
+
+    color: var(--dash-muted);
+
+    font-size: 13px;
+
+    margin: 0;
+}
+
+.hero-actions {
+
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 11px 16px;
+
+    border-radius: 12px;
+
+    background: #fff;
+
+    border: 1px solid var(--dash-border);
+
+    color: var(--dash-text);
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    transition: .25s ease;
+}
+
+.action-btn:hover {
+
+    color: var(--dash-primary);
+
+    border-color: rgba(99,91,255,.25);
+
+    transform: translateY(-2px);
+
+}
+
+.action-btn.danger {
+
+    color: #ef4444;
+
+    background: #fff5f5;
+
+    border-color: #fee2e2;
+
+}
+
+
+/* ================= PANELS ================= */
+
+.glass-panel {
+
+    background: white;
+
+    border: 1px solid var(--dash-border);
+
+    border-radius: 22px;
+
+    padding: 25px;
+
+    box-shadow: var(--dash-shadow);
+
+    margin-bottom: 20px;
+}
+
+.section-head {
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+.section-head h2 {
+
+    color: var(--dash-text);
+
+    font-size: 19px;
+
+    font-weight: 900;
+
+    margin: 0;
+}
+
+.section-line {
+
+    height: 2px;
+
+    flex: 1;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--dash-primary),
+            var(--dash-secondary),
+            transparent
+        );
+
+    border-radius: 99px;
+}
+
+
+/* ================= TABLE ================= */
+
+.table-wrap {
+
+    width: 100%;
+
+    overflow-x: auto;
+
+    border: 1px solid var(--dash-border);
+
+    border-radius: 15px;
+}
+
+.styled-table {
+
+    width: 100%;
+
+    min-width: 720px;
+
+    border-collapse: collapse;
+
+    background: white;
+}
+
+.styled-table th {
+
+    padding: 14px;
+
+    background: #f8f9fc;
+
+    color: var(--dash-text);
+
+    font-size: 12px;
+
+    font-weight: 900;
+
+    border-bottom: 1px solid var(--dash-border);
+
+    text-align: center;
+}
+
+.styled-table td {
+
+    padding: 13px;
+
+    color: var(--dash-muted);
+
+    font-size: 12px;
+
+    text-align: center;
+
+    border-bottom: 1px solid var(--dash-border);
+}
+
+.styled-table tr:last-child td {
+    border-bottom: none;
+}
+
+.styled-table tbody tr {
+    transition: .2s ease;
+}
+
+.styled-table tbody tr:hover {
+    background: #fafaff;
+}
+
+.post-name {
+
+    max-width: 280px;
+
+    text-align: right !important;
+
+    font-weight: 800;
+
+    color: var(--dash-text) !important;
+}
+
+.post-name a {
+
+    color: inherit !important;
+
+    text-decoration: none;
+
+}
+
+.post-thumbnail {
+
+    width: 55px;
+    height: 55px;
+
+    border-radius: 12px;
+
+    display: block;
+
+    object-fit: cover;
+    object-position: center;
+
+    background: #f1f3f8;
+
+    margin: auto;
+}
+
+.status-pill {
+
+    display: inline-flex;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    background: rgba(20,184,166,.08);
+
+    color: #0f9d8d;
+
+    font-size: 10px;
+
+    font-weight: 900;
+}
+
+.table-link {
+
+    display: inline-flex;
+
+    padding: 7px 11px;
+
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+}
+
+.table-link.edit {
+
+    background: rgba(99,91,255,.08);
+
+    color: var(--dash-primary);
+
+}
+
+.table-link.delete {
+
+    background: #fff1f2;
+
+    color: #ef4444;
+
+}
+
+
+/* ================= COMMENTS ================= */
+
+.comments-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(260px,1fr));
+
+    gap: 14px;
+}
+
+.comment-card {
+
+    padding: 18px;
+
+    background: #fafbfe;
+
+    border: 1px solid var(--dash-border);
+
+    border-radius: 17px;
+
+    transition: .25s ease;
+}
+
+.comment-card:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow: var(--dash-shadow);
+
+}
+
+.comment-top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 12px;
+
+}
+
+.comment-name {
+
+    color: var(--dash-text);
+
+    font-weight: 900;
+
+    text-decoration: none;
+
+    font-size: 13px;
+}
+
+.comment-meta {
+
+    color: var(--dash-muted);
+
+    font-size: 10px;
+
+}
+
+.comment-body {
+
+    color: var(--dash-muted);
+
+    line-height: 1.9;
+
+    font-size: 12px;
+}
+
+.empty-state {
+
+    text-align: center;
+
+    padding: 40px 20px;
+
+    color: var(--dash-muted);
+
+}
+
+
+/* ================= MOBILE ================= */
+
+@media(max-width:768px) {
+
+    .activity-page {
+        padding: 15px 8px 40px;
+    }
+
+    .activity-hero,
+    .glass-panel {
+        padding: 16px;
+        border-radius: 18px;
+    }
+
+    .activity-top {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .activity-title-area {
+        align-items: flex-start;
+    }
+
+    .dashboard-avatar,
+    .dashboard-avatar-placeholder {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+    }
+
+    .hero-title {
+        font-size: 22px;
+    }
+
+    .hero-actions {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .action-btn {
+        width: 100%;
+        font-size: 11px;
+    }
+
+    .section-line {
+        display: none;
+    }
+
+    .section-head h2 {
+        font-size: 16px;
+    }
+
+    .table-wrap {
+        margin: 0;
+    }
+
+    .comments-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width:450px) {
+
+    .hero-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .activity-title-area {
+        gap: 12px;
+    }
+
+    .hero-title {
+        font-size: 19px;
+    }
+
+    .hero-description {
+        font-size: 11px;
+    }
+}
+
+</style>
+
+{% endblock %}
+
 
 {% block content %}
-    {% if user.notif %}
-        <br>
-        <div class="glass-card">
-            <span>{{ user.notif }}</span>
-        </div>
-    {% endif %}
-    <div class="activity-page">
-        <div class="activity-shell">
 
-            <div class="activity-hero">
-                <div class="hero-text">
-                    <span class="hero-badge">Dashboard</span>
-                    <h1>{{ text2.s_description }}</h1>
-                    <p>{{ text7.s_description }}</p>
+<div class="activity-page">
+
+<div class="container">
+
+<div class="activity-shell">
+
+
+{% if user.notif %}
+
+<div class="activity-hero">
+
+    <div class="text-center">
+
+        <span style="color:#64748b;font-size:13px;">
+            {{ user.notif }}
+        </span>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
+<!-- HERO -->
+
+<div class="activity-hero">
+
+    <div class="activity-top">
+
+        <div class="activity-title-area">
+
+            {% if user.photo %}
+
+                <img
+                    src="{% thumbnail user.photo 150x150 crop quality=85 %}"
+                    alt="{{ user.username }}"
+                    class="dashboard-avatar">
+
+            {% else %}
+
+                <div class="dashboard-avatar-placeholder">
+                    <i class="bi bi-person"></i>
                 </div>
-                <a href="{% url 'blog:follow_list' user.id 'follower' %}" class="action-btn">{{ user.followers.count }}
-                    {{ text3.s_description }}{{ user.followers.count | pluralize }}</a>
-                <a href="{% url 'blog:follow_list' user.id 'following' %}"
-                   class="action-btn">{{ user.followings.count }}
-                    {{ text4.s_description }}{{ user.followings.count | pluralize }}</a>
-                {% if user.photo %}
-                    <a href="{{ user.photo.url }}"><img src="{% thumbnail user.photo 100x100 crop quality=50 %}"
-                                                        alt="{{ request.user.username }}"
-                                                        style="width:100px;border-radius: 100%;"></a>
-                {% else %}
-                    <img src="{% static 'images/profile_image/avatar.png' %}"
-                         style="height: 100px;width: 100px; border-radius: 100%;">
-                {% endif %}
-                <div class="profile-actions">
-                    <a href="{% url 'blog:logout' %}" class="action-btn danger">Logout</a>
-                    <a href="{% url 'blog:change_password' %}" class="action-btn">Change Password</a>
-                    <a href="{% url 'blog:user_edit' %}" class="action-btn" style="box-shadow: 0 10px 30px rgba(185,147,43,0.29) ">تکمیل رزومه</a>
-                </div>
+
+            {% endif %}
+
+
+            <div>
+
+                <span class="hero-badge">
+                    Dashboard
+                </span>
+
+                <h1 class="hero-title">
+                    {{ text2.s_description }}
+                </h1>
+
+                <p class="hero-description">
+                    {{ text7.s_description }}
+                </p>
+
             </div>
 
-            <section class="glass-panel">
-                <div class="section-head">
-                    <h2>{{ text5.s_description }}</h2>
-                    <span class="section-line"></span>
-                </div>
+        </div>
 
-                <div class="table-wrap">
-                    <table class="styled-table">
-                        <thead>
-                        <tr>
-                            <th>شمارنده</th>
-                            <th>نام پست</th>
-                            <th>تصویر</th>
-                            <th>وضعیت</th>
-                            <th>ویرایش</th>
-                            <th>حذف</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for post in posts %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td class="post-name"><a href="{{ post.get_absolute_url }}"
-                                                         style="color: white;text-decoration: none;direction: rtl;unicode-bidi: isolate;text-align: right;">
-                                    {{ post.title }}</a>
-                                </td>
-                                {% if post.images.first.image_file %}
-                                    <td><img src="{{ post.images.first.image_file.url }}" alt="{{ post.title }}"
-                                             style="width: 50px;height: 50px;border-radius: 25%"></td>
-                                {% else %}
-                                    <td><img src="{% static 'images/profile_image/avatar.png' %}" alt="-"
-                                             style="width: 50px;height: 50px;border-radius: 25%"></td>
-                                {% endif %}
-                                <td>
-                                    <span class="status-pill">{{ post.get_status_display }}</span>
-                                </td>
-                                <td>
-                                    <a href="{% url 'blog:edit_post_view' post.slug %}"
-                                       class="table-link edit">ویرایش</a>
-                                </td>
-                                <td>
-                                    <a href="{% url 'blog:delete_post_view' post.slug %}"
-                                       class="table-link delete">حذف</a>
-                                </td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="6">
-                                    <div class="empty-state">پستی وجود ندارد</div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
 
-                <div class="pagination-box">
-                    {% include 'partials/pagination.html' with page=posts page_param='post_page' %}
-                </div>
-            </section>
+        <div class="hero-actions">
 
-            <section class="glass-panel">
-                <div class="section-head">
-                    <h2>{{ text6.s_description }}</h2>
-                    <span class="section-line"></span>
-                </div>
+            <a
+                href="{% url 'blog:follow_list' user.id 'follower' %}"
+                class="action-btn">
 
-                <div class="comments-grid">
-                    {% for comment in comments %}
-                        <div class="comment-card">
-                            <div class="comment-top">
-                                <a class="comment-name"
-                                   href="{% url 'blog:user_detail' comment.user %}">{{ comment.name }}</a>
-                                <span class="comment-meta" style="direction: rtl;unicode-bidi: plaintext;text-align: right;">on {{ comment.post }}</span>
-                            </div>
-                            <div class="comment-body" style="direction: rtl;unicode-bidi: plaintext;text-align: right;">
-                                {{ comment.body|truncatechars:80 }}</div>
-                        </div>
-                    {% empty %}
-                        <div class="empty-state">کامنتی وجود ندارد</div>
-                    {% endfor %}
-                </div>
+                <i class="bi bi-people"></i>
 
-                <div class="pagination-box">
-                    {% include 'partials/pagination.html' with page=comments page_param='comment_page' %}
-                </div>
-            </section>
+                {{ user.followers.count }}
+
+                {{ text3.s_description }}
+
+            </a>
+
+
+            <a
+                href="{% url 'blog:follow_list' user.id 'following' %}"
+                class="action-btn">
+
+                <i class="bi bi-person-check"></i>
+
+                {{ user.followings.count }}
+
+                {{ text4.s_description }}
+
+            </a>
+
+
+            <a
+                href="{% url 'blog:user_edit' %}"
+                class="action-btn">
+
+                <i class="bi bi-person-lines-fill"></i>
+
+                تکمیل رزومه
+
+            </a>
+
+
+            <a
+                href="{% url 'blog:change_password' %}"
+                class="action-btn">
+
+                <i class="bi bi-shield-lock"></i>
+
+                تغییر رمز
+
+            </a>
+
+
+            <a
+                href="{% url 'blog:logout' %}"
+                class="action-btn danger">
+
+                <i class="bi bi-box-arrow-right"></i>
+
+                خروج
+
+            </a>
 
         </div>
+
     </div>
-{% endblock %}
-{% block head %}
-    <style>
-        body {
-            min-height: 100vh;
-            margin: 0;
-            background: radial-gradient(circle at 20% 20%, rgba(255, 0, 128, 0.20), transparent 24%),
-            radial-gradient(circle at 80% 15%, rgba(0, 200, 255, 0.20), transparent 22%),
-            radial-gradient(circle at 70% 80%, rgba(120, 80, 255, 0.18), transparent 26%),
-            radial-gradient(circle at 25% 85%, rgba(0, 255, 170, 0.12), transparent 24%),
-            linear-gradient(135deg, #050816, #0b1023);
-            background-size: 160% 160%;
-            animation: bodyGlowMove 28s ease-in-out infinite alternate;
-            overflow-x: hidden;
-        }
-
-        .glass-card {
-            background: rgba(25, 25, 30, 0.27);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border: 1px solid rgba(255, 255, 255, .08);
-            border-radius: 22px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.29),
-            inset 0 1px 0 rgba(255, 255, 255, .08);
-            transition: .3s ease;
-        }
-
-        .glass-card span {
-            color: white;
-            direction: rtl;
-            unicode-bidi: plaintext;
-            text-align: right;
-            align-items: center;
-            justify-content: center;
-            display: flex;
-        }
-
-        .glass-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(139, 92, 246, .45);
-            box-shadow: 0 20px 45px rgba(0, 0, 0, .45),
-            0 0 25px rgba(139, 92, 246, .15);
-        }
-
-        @keyframes bodyGlowMove {
-            0% {
-                background-position: 0% 0%,
-                100% 0%,
-                50% 100%,
-                0% 100%,
-                center;
-            }
-            100% {
-                background-position: 18% 12%,
-                82% 18%,
-                58% 82%,
-                12% 68%,
-                center;
-            }
-        }
-
-        .activity-page {
-            padding: 24px 14px 48px;
-        }
-
-        .activity-shell {
-            max-width: 1180px;
-            margin: 0 auto;
-            display: grid;
-            gap: 20px;
-        }
-
-        .activity-hero,
-        .glass-panel {
-            background: rgba(16, 23, 42, 0.72);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(16px);
-        }
-
-        .activity-hero {
-            padding: 22px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .hero-text {
-            min-width: 0;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            padding: 6px 12px;
-            border-radius: 999px;
-            background: rgba(139, 92, 246, 0.14);
-            color: #c4b5fd;
-            font-size: 12px;
-            font-weight: 700;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-        }
-
-        .hero-text h1 {
-            margin: 10px 0 8px;
-            font-size: clamp(24px, 4vw, 38px);
-            font-weight: 900;
-            color: #f8fafc;
-            line-height: 1.2;
-        }
-
-        .hero-text p {
-            margin: 0;
-            color: #94a3b8;
-            font-size: 14px;
-            line-height: 1.9;
-        }
-
-        .profile-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .action-btn {
-            padding: 10px 15px;
-            border-radius: 999px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 13px;
-            color: #e2e8f0;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: 0.25s ease;
-            white-space: nowrap;
-        }
-
-        .action-btn:hover {
-            transform: translateY(-2px);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .action-btn.danger {
-            background: rgba(239, 68, 68, 0.12);
-            color: #fecaca;
-            border-color: rgba(239, 68, 68, 0.18);
-        }
-
-        .glass-panel {
-            padding: 22px;
-        }
-
-        .section-head {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .section-head h2 {
-            margin: 0;
-            font-size: 19px;
-            font-weight: 800;
-            color: #f8fafc;
-        }
-
-        .section-line {
-            height: 1px;
-            flex: 1;
-            background: linear-gradient(90deg, rgba(139, 92, 246, 0.8), rgba(34, 197, 94, 0.4), transparent);
-        }
-
-        .table-wrap {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            border-radius: 18px;
-        }
-
-        .styled-table {
-            width: 100%;
-            min-width: 760px;
-            border-collapse: collapse;
-            color: #e2e8f0;
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .styled-table thead th {
-            padding: 15px 12px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 800;
-            color: #f8fafc;
-            background: rgba(255, 255, 255, 0.06);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .styled-table tbody td {
-            padding: 15px 12px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            color: #cbd5e1;
-        }
-
-        .styled-table tbody tr:hover {
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .post-name {
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .status-pill {
-            display: inline-flex;
-            padding: 6px 11px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 700;
-            background: rgba(34, 197, 94, 0.12);
-            color: #86efac;
-            border: 1px solid rgba(34, 197, 94, 0.16);
-        }
-
-        .table-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px 12px;
-            border-radius: 999px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 12px;
-            transition: 0.25s ease;
-            min-width: 70px;
-            white-space: nowrap;
-        }
-
-        .table-link.edit {
-            background: rgba(59, 130, 246, 0.14);
-            color: #93c5fd;
-        }
-
-        .table-link.delete {
-            background: rgba(239, 68, 68, 0.14);
-            color: #fca5a5;
-        }
-
-        .comments-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 14px;
-        }
-
-        .comment-card,
-        .empty-state {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 18px;
-            padding: 16px;
-            color: #e2e8f0;
-        }
-
-        .comment-top {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-        }
-
-        .comment-name {
-            text-decoration: none;
-            font-weight: 800;
-            color: #fff;
-        }
-
-        .comment-meta,
-        .comment-body {
-            color: #94a3b8;
-            line-height: 1.8;
-            font-size: 14px;
-        }
-
-        .empty-state {
-            text-align: center;
-        }
-
-        .pagination-box {
-            margin-top: 18px;
-            display: flex;
-            justify-content: center;
-        }
-
-        @media (max-width: 768px) {
-            html, body {
-                max-width: 100%;
-                overflow-x: hidden;
-                width: 100%;
-            }
-
-            * {
-                box-sizing: border-box;
-            }
-
-            .activity-page {
-                padding: 12px 6px 24px;
-                width: 100%;
-                overflow: hidden;
-            }
-
-            .activity-shell {
-                gap: 12px;
-                width: 100%;
-            }
-
-            .activity-hero {
-                padding: 12px;
-                border-radius: 16px;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 12px;
-                width: 100%;
-            }
-
-            .hero-text h1 {
-                font-size: 22px;
-            }
-
-            .hero-text p {
-                font-size: 12px;
-            }
-
-            .profile-actions {
-                width: 100%;
-                gap: 6px;
-            }
-
-            .action-btn {
-                flex: 1;
-                padding: 10px 8px;
-                font-size: 12px;
-                min-width: auto;
-            }
-
-            .glass-panel {
-                padding: 12px;
-                border-radius: 16px;
-                width: 100%;
-                overflow: hidden;
-            }
-
-            .section-head h2 {
-                font-size: 16px;
-            }
-
-            .section-line {
-                display: none;
-            }
-
-            /* ✅ جدول در موبایل */
-            .table-wrap {
-                width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                border-radius: 12px;
-                margin-bottom: 8px;
-            }
-
-            .styled-table {
-                width: 100%;
-                min-width: 100%;
-                font-size: 11px;
-            }
-
-            .styled-table thead th,
-            .styled-table tbody td {
-                padding: 10px 6px;
-                font-size: 11px;
-            }
-
-            .styled-table thead th {
-                white-space: nowrap;
-            }
-
-            .styled-table tbody td {
-                word-break: break-word;
-            }
-
-            .post-name {
-                max-width: 120px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            .status-pill {
-                padding: 4px 8px;
-                font-size: 10px;
-            }
-
-            .table-link {
-                min-width: 50px;
-                padding: 6px 8px;
-                font-size: 10px;
-            }
-
-            /* ✅ کامنت‌ها */
-            .comments-grid {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            .comment-card,
-            .empty-state {
-                padding: 12px;
-                border-radius: 14px;
-            }
-
-            .comment-name {
-                font-size: 13px;
-            }
-
-            .comment-body {
-                font-size: 12px;
-            }
-
-            .pagination-box {
-                margin-top: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .activity-page {
-                padding: 10px 4px 20px;
-            }
-
-            .activity-hero,
-            .glass-panel {
-                padding: 10px;
-                border-radius: 14px;
-            }
-
-            .hero-text h1 {
-                font-size: 20px;
-                margin: 8px 0 6px;
-            }
-
-            .hero-badge {
-                font-size: 11px;
-                padding: 5px 10px;
-            }
-
-            .hero-text p {
-                font-size: 11px;
-            }
-
-            .action-btn {
-                padding: 9px 6px;
-                font-size: 11px;
-            }
-
-            .section-head h2 {
-                font-size: 15px;
-            }
-
-            .styled-table {
-                font-size: 10px;
-            }
-
-            .styled-table thead th,
-            .styled-table tbody td {
-                padding: 8px 4px;
-                font-size: 10px;
-            }
-
-            .table-link {
-                min-width: 45px;
-                padding: 5px 6px;
-                font-size: 9px;
-            }
-
-            .post-name {
-                max-width: 100px;
-            }
-
-            .comment-card,
-            .empty-state {
-                padding: 10px;
-            }
-
-            .comment-name {
-                font-size: 12px;
-            }
-
-            .comment-body {
-                font-size: 11px;
-            }
-
-            .comment-meta {
-                font-size: 10px;
-            }
-        }
-    </style>
+
+</div>
+
+
+<!-- POSTS -->
+
+<section class="glass-panel">
+
+    <div class="section-head">
+
+        <h2>
+            {{ text5.s_description }}
+        </h2>
+
+        <span class="section-line"></span>
+
+    </div>
+
+
+    <div class="table-wrap">
+
+        <table class="styled-table">
+
+            <thead>
+
+            <tr>
+
+                <th>شمارنده</th>
+
+                <th>نام پست</th>
+
+                <th>تصویر</th>
+
+                <th>وضعیت</th>
+
+                <th>ویرایش</th>
+
+                <th>حذف</th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            {% for post in posts %}
+
+                <tr>
+
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+
+
+                    <td class="post-name">
+
+                        <a href="{{ post.get_absolute_url }}">
+
+                            {{ post.title }}
+
+                        </a>
+
+                    </td>
+
+
+                    <td>
+
+                        {% if post.images.first.image_file %}
+
+                            <img
+                                src="{{ post.images.first.image_file.url }}"
+                                alt="{{ post.title }}"
+                                class="post-thumbnail">
+
+                        {% else %}
+
+                            <img
+                                src="{% static 'images/profile_image/avatar.png' %}"
+                                alt=""
+                                class="post-thumbnail">
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <span class="status-pill">
+
+                            {{ post.get_status_display }}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <a
+                            href="{% url 'blog:edit_post_view' post.slug %}"
+                            class="table-link edit">
+
+                            ویرایش
+
+                        </a>
+
+                    </td>
+
+
+                    <td>
+
+                        <a
+                            href="{% url 'blog:delete_post_view' post.slug %}"
+                            class="table-link delete">
+
+                            حذف
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+
+            {% empty %}
+
+                <tr>
+
+                    <td colspan="6">
+
+                        <div class="empty-state">
+
+                            <i class="bi bi-journal-x fs-3"></i>
+
+                            <div>
+                                پستی وجود ندارد.
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="pagination-box mt-4">
+
+        {% include 'partials/pagination.html'
+           with page=posts page_param='post_page' %}
+
+    </div>
+
+</section>
+
+
+<!-- COMMENTS -->
+
+<section class="glass-panel">
+
+    <div class="section-head">
+
+        <h2>
+            {{ text6.s_description }}
+        </h2>
+
+        <span class="section-line"></span>
+
+    </div>
+
+
+    <div class="comments-grid">
+
+        {% for comment in comments %}
+
+            <div class="comment-card">
+
+                <div class="comment-top">
+
+                    <a
+                        class="comment-name"
+                        href="{% url 'blog:user_detail' comment.user %}">
+
+                        {{ comment.name }}
+
+                    </a>
+
+
+                    <span class="comment-meta">
+
+                        روی:
+                        {{ comment.post }}
+
+                    </span>
+
+                </div>
+
+
+                <div class="comment-body">
+
+                    {{ comment.body|truncatechars:80 }}
+
+                </div>
+
+            </div>
+
+
+        {% empty %}
+
+            <div class="empty-state">
+
+                <i class="bi bi-chat-square-text fs-3"></i>
+
+                <div>
+                    کامنتی وجود ندارد.
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <div class="pagination-box mt-4">
+
+        {% include 'partials/pagination.html'
+           with page=comments page_param='comment_page' %}
+
+    </div>
+
+</section>
+
+
+</div>
+
+</div>
+
+</div>
+
 {% endblock %}
