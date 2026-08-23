@@ -1,731 +1,3 @@
-{#{% extends 'parent/base.html' %}#}
-{#{% block title %}{{ post.title }} detail{% endblock %}#}
-{##}
-{#{% block content %}#}
-{#    <div class="detail-container">#}
-{#        <h1 class="detail-title">{{ post.title }}</h1>#}
-{#        <div class="detail-meta">#}
-{#            <span class="detail-author">👤 نویسنده: <a href="{% url 'blog:user_info' post.author_id %}">{{ post.author }}</a></span>#}
-{#            <span class="detail-author">👤 نویسنده: {{ post.author }}</span>#}
-{#            <span class="detail-date"> 🕒 تاریخ انتشار: {{ new_date | date:'d-m-Y' }}</span>#}
-{#        </div>#}
-{#        <div class="detail-description">#}
-{#            {{ post.description | linebreaks }}#}
-{#        </div>#}
-{##}
-{#        <div class="detail-title">#}
-{#            {% with comments.count as cm_count %}#}
-{#                {{ cm_count }} comment{{ cm_count|pluralize }}#}
-{#            {% endwith %}#}
-{#        </div>#}
-{##}
-{#        <div>#}
-{#            {% for cm in comments %}#}
-{#                {{ cm.body|linebreaks }}#}
-{#                <br>#}
-{#                {{ cm.name }}#}
-{#            {% empty %}#}
-{#                any comment is not exist!#}
-{#            {% endfor %}#}
-{#        </div>#}
-{#        <form method="post" action="{% url 'blog:post_comment' post.slug %}">#}
-{#            {% csrf_token %}#}
-{#            {% for field in form %}#}
-{#                {{ field.label_tag }}#}
-{#                {{ field }}#}
-{#                {{ field.errors }}#}
-{#                <br>#}
-{#                <br>#}
-{#            {% endfor %}#}
-{#            <input type="submit" value="افزودن کامنت">#}
-{#        </form>#}
-{##}
-{#        <a href="{% url 'blog:post_list' %}" class="back-btn">بازگشت به لیست</a>#}
-{##}
-{#        <div class="comment-box">#}
-{#            <div class="comments-section">#}
-{#                {% for comment in comments %}#}
-{#                    <span class="comment-author">#}
-{#            {{ comment.name }}:#}
-{#            </span>#}
-{#                    <div class="comment-box">#}
-{#            {{ comment.body |linebreaks }}#}
-{#            </div>#}
-{#                {% empty %}#}
-{#                    <div class="empty-form">empty!</div>#}
-{#                {% endfor %}#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="comments-section">#}
-{#            <hr>#}
-{#            <form method="post" action="{% url 'blog:post_comment' post.slug %}">#}
-{#                {% csrf_token %}#}
-{#                <div class="form-group">#}
-{#                    {% for field in form %}#}
-{#                        <span class="comment-author">#}
-{#                    {{ field.label }}:#}
-{#                    </span>#}
-{#                        <span class="comment-body">#}
-{#                    {{ field }}#}
-{#                    </span>#}
-{#                        {% if field.errors %}#}
-{#                            {{ field.errors }}#}
-{#                        {% endif %}#}
-{#                    {% endfor %}#}
-{#                </div>#}
-{#                <button type="submit" class="submit-btn">"add comment"</button>#}
-{##}
-{#            </form>#}
-{#        </div>#}
-{##}
-{#        <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="back-btn">بازگشت به لیست</a>#}
-{#    </div>#}
-{#{% endblock %}#}
-{##}
-{#{% block head %}#}
-{#    <style>#}
-{#        /* ===== Comments Section ===== */#}
-{#        .comments-section {#}
-{#            margin-top: 50px;#}
-{#            padding: 25px;#}
-{#            background-color: #a3a3ff;#}
-{#            border-radius: 12px;#}
-{#        }#}
-{##}
-{#        .comments-title {#}
-{#            color: #f5f5f5;#}
-{#            margin-bottom: 20px;#}
-{#            font-size: 20px;#}
-{#            border-bottom: 1px solid #333;#}
-{#            padding-bottom: 10px;#}
-{#        }#}
-{##}
-{#        .comment-box {#}
-{#            background-color: #d4daff;#}
-{#            padding: 15px 50px;#}
-{#            border-radius: 10px;#}
-{#            margin-bottom: 15px;#}
-{#        }#}
-{##}
-{#        .comment-body {#}
-{#            color: #a2cdff;#}
-{#            line-height: 1.8;#}
-{#            margin-bottom: 8px;#}
-{#        }#}
-{##}
-{#        .comment-author {#}
-{#            display: inline-block;#}
-{#            margin-top: 8px;#}
-{#            padding: 15px 10px;#}
-{##}
-{#            font-size: 12px;#}
-{#            color: #cfcfcf;#}
-{##}
-{#            background-color: rgba(105, 104, 104, 0.79);#}
-{#            border: 1px solid #6a6aff;#}
-{#            border-radius: 15px;#}
-{##}
-{#            letter-spacing: 0.3px;#}
-{#        }#}
-{##}
-{##}
-{#        .no-comment {#}
-{#            color: #ffffff;#}
-{#            font-style: italic;#}
-{#        }#}
-{##}
-{#        /* ===== Comment Form ===== */#}
-{#        .comment-form {#}
-{#            margin-top: 40px;#}
-{#            padding: 25px;#}
-{#            background-color: #adb7ff;#}
-{#            border-radius: 12px;#}
-{#        }#}
-{##}
-{#        .comment-form h3 {#}
-{#            color: #f5f5f5;#}
-{#            margin-bottom: 20px;#}
-{#        }#}
-{##}
-{#        .form-group {#}
-{#            margin-bottom: 18px;#}
-{#        }#}
-{##}
-{#        .form-group label {#}
-{#            display: block;#}
-{#            margin-bottom: 6px;#}
-{#            color: #ffffff;#}
-{#            font-size: 14px;#}
-{#        }#}
-{##}
-{#        .form-group input,#}
-{#        .form-group textarea {#}
-{#            width: 97%;#}
-{#            padding: 10px 12px;#}
-{#            background-color: #d5d5ff;#}
-{#            border: 1px solid #6a6aff;#}
-{#            border-radius: 8px;#}
-{#            color: #fff;#}
-{#            font-size: 14px;#}
-{#        }#}
-{##}
-{#        .form-group input:focus,#}
-{#        .form-group textarea:focus {#}
-{#            outline: none;#}
-{#            border-color: #6a8dff;#}
-{#        }#}
-{##}
-{#        /* ===== Errors ===== */#}
-{#        .field-error {#}
-{#            color: #ff6b6b;#}
-{#            font-size: 13px;#}
-{#            margin-top: 5px;#}
-{#        }#}
-{##}
-{#        /* ===== Buttons ===== */#}
-{#        .submit-btn {#}
-{#            background-color: #6a8dff;#}
-{#            border: none;#}
-{#            padding: 10px 25px;#}
-{#            color: #fff;#}
-{#            font-size: 14px;#}
-{#            border-radius: 8px;#}
-{#            cursor: pointer;#}
-{#            transition: 0.3s;#}
-{#        }#}
-{##}
-{#        .submit-btn:hover {#}
-{#            background-color: #5576e8;#}
-{#        }#}
-{##}
-{#        .back-btn {#}
-{#            display: inline-block;#}
-{#            margin-top: 30px;#}
-{#            color: #bbb;#}
-{#            text-decoration: none;#}
-{#            font-size: 14px;#}
-{#        }#}
-{##}
-{#        .back-btn:hover {#}
-{#            color: #fff;#}
-{#            text-decoration: underline;#}
-{#        }#}
-{##}
-{#        .detail-container {#}
-{#            background: #ffffff;#}
-{#            padding: 40px;#}
-{#            border-radius: 22px;#}
-{#            max-width: 850px;#}
-{#            margin: 40px auto;#}
-{#            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);#}
-{#        }#}
-{##}
-{#        .detail-title {#}
-{#            font-size: 32px;#}
-{#            font-weight: bold;#}
-{#            color: #333;#}
-{#            margin-bottom: 20px;#}
-{#            border-bottom: 3px solid #4a90e2;#}
-{#            padding-bottom: 10px;#}
-{#        }#}
-{##}
-{#        .detail-meta {#}
-{#            display: flex;#}
-{#            gap: 25px;#}
-{#            margin-bottom: 25px;#}
-{#            font-size: 16px;#}
-{#            color: #555;#}
-{#        }#}
-{##}
-{#        .detail-description {#}
-{#            font-size: 18px;#}
-{#            line-height: 1.9;#}
-{#            color: #444;#}
-{#            background: #fafafa;#}
-{#            padding: 25px;#}
-{#            border-radius: 15px;#}
-{#            margin-bottom: 35px;#}
-{#            border-left: 6px solid #4a90e2;#}
-{#        }#}
-{##}
-{#        .detail-author {#}
-{#            font-size: 12px;#}
-{#            line-height: 1.9;#}
-{#            color: #444;#}
-{#            background: #fafafa;#}
-{#            padding: 25px;#}
-{#            border-radius: 15px;#}
-{#            margin-bottom: 35px;#}
-{#        }#}
-{##}
-{#        .detail-date {#}
-{#            font-size: 12px;#}
-{#            line-height: 1.9;#}
-{#            color: #444;#}
-{#            background: #fafafa;#}
-{#            padding: 25px;#}
-{#            border-radius: 15px;#}
-{#            margin-bottom: 35px;#}
-{#            margin-left: 440px;#}
-{#        }#}
-{##}
-{#        .back-btn {#}
-{#            display: inline-block;#}
-{#            background: #4a90e2;#}
-{#            color: white;#}
-{#            padding: 12px 22px;#}
-{#            text-decoration: none;#}
-{#            border-radius: 12px;#}
-{#            transition: 0.25s;#}
-{#            font-size: 16px;#}
-{#        }#}
-{##}
-{#        .back-btn:hover {#}
-{#            background: #3277c5;#}
-{#        }#}
-{#    </style>#}
-{#{% endblock %}#}
-
-{#----------------------------------------------------------------------------#}
-
-{#{% extends 'parent/base.html' %}#}
-{#{% block title %}{{ post.title }} detail{% endblock %}#}
-{##}
-{#{% block content %}#}
-{#    <div class="detail-page">#}
-{#        <div class="detail-container">#}
-{#            <div class="post-card">#}
-{#                <h1 class="detail-title">{{ post.title }}</h1>#}
-{##}
-{#                <div class="detail-meta" data-post-id="{{ post.id }}" data-user="{{ post.author.username }}">#}
-{#                    <span class="post-like-class">{{ post.likes.count }}Like{{ post.likes.count | pluralize }}</span>#}
-{#                    <button class="post-like-button">#}
-{#                        {% if request.user in post.likes.all %}#}
-{#                            UnLike#}
-{#                        {% else %}#}
-{#                            Like#}
-{#                        {% endif %}#}
-{#                    </button>#}
-{#                    <button class="follow-btn">#}
-{#                        {% if request.user.account in post.author.account.follower_users.all %}#}
-{#                            UnFollow#}
-{#                        {% else %}#}
-{#                            Follow#}
-{#                        {% endif %}#}
-{#                    </button>#}
-{##}
-{#                    <span class="detail-pill">#}
-{#                    👤 نویسنده:#}
-{#                    <a href="{% url 'blog:user_info' post.author_id %}">{{ post.author }}</a>#}
-{#                </span>#}
-{#                    <span class="detail-pill">#}
-{#                    🕒 تاریخ انتشار: {{ new_date|date:'d-m-Y' }}#}
-{#                </span>#}
-{#                </div>#}
-{##}
-{#                <div class="post-images-scroll">#}
-{#                    {% for image in post.images.all %}#}
-{#                        <div class="post-image-item">#}
-{#                            <img src="{{ image.image_file.url }}" alt="{{ post.title }}" class="post-image">#}
-{#                        </div>#}
-{#                    {% endfor %}#}
-{#                </div>#}
-{##}
-{#                <div class="detail-description">#}
-{#                    {{ post.description|linebreaks }}#}
-{#                </div>#}
-{#            </div>#}
-{##}
-{#            <div class="section-card">#}
-{#                <div class="section-header">#}
-{#                    <h2>Comments</h2>#}
-{#                    <span class="comment-count">#}
-{#                    {% with comments.count as cm_count %}#}
-{#                        {{ cm_count }} comment{{ cm_count|pluralize }}#}
-{#                    {% endwith %}#}
-{#                </span>#}
-{#                </div>#}
-{##}
-{#                <div class="comments-list">#}
-{#                    {% for comment in comments %}#}
-{#                        <div class="comment-item">#}
-{#                            <div class="comment-author">{{ comment.name }}</div>#}
-{#                            <div class="comment-body">{{ comment.body|linebreaks }}</div>#}
-{#                        </div>#}
-{#                    {% empty %}#}
-{#                        <div class="empty-state">No comments yet.</div>#}
-{#                    {% endfor %}#}
-{#                </div>#}
-{#            </div>#}
-{##}
-{#            <div class="section-card">#}
-{#                <div class="section-header">#}
-{#                    <h2>Add Comment</h2>#}
-{#                </div>#}
-{##}
-{#                <form method="post" action="{% url 'blog:post_comment' post.slug %}" class="comment-form">#}
-{#                    {% csrf_token %}#}
-{#                    {% for field in form %}#}
-{#                        <div class="form-group">#}
-{#                            <label>{{ field.label }}</label>#}
-{#                            {{ field }}#}
-{#                            <div class="field-error">{{ field.errors }}</div>#}
-{#                        </div>#}
-{#                    {% endfor %}#}
-{##}
-{#                    <button type="submit" class="submit-btn">Add Comment</button>#}
-{#                </form>#}
-{#            </div>#}
-{##}
-{#            <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="back-btn">بازگشت به لیست</a>#}
-{#        </div>#}
-{#    </div>#}
-{#{% endblock %}#}
-{##}
-{#{% block head %}#}
-{#    <style>#}
-{#        body {#}
-{#            background: linear-gradient(180deg, #f5f8ff 0%, #dbeafe 100%);#}
-{#            color: #0f172a;#}
-{#        }#}
-{##}
-{#        .detail-page {#}
-{#            padding: 32px 16px 48px;#}
-{#        }#}
-{##}
-{#        .detail-container {#}
-{#            max-width: 900px;#}
-{#            margin: 0 auto;#}
-{#            display: flex;#}
-{#            flex-direction: column;#}
-{#            gap: 20px;#}
-{#        }#}
-{##}
-{#        .post-card,#}
-{#        .section-card {#}
-{#            background: rgba(255, 255, 255, 0.88);#}
-{#            border: 1px solid rgba(148, 163, 184, 0.16);#}
-{#            border-radius: 22px;#}
-{#            padding: 24px;#}
-{#            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);#}
-{#            backdrop-filter: blur(10px);#}
-{#        }#}
-{##}
-{#        .detail-title {#}
-{#            font-size: 30px;#}
-{#            font-weight: 900;#}
-{#            margin: 0 0 16px;#}
-{#            color: #0f172a;#}
-{#            line-height: 1.4;#}
-{#        }#}
-{##}
-{#        .detail-meta {#}
-{#            display: flex;#}
-{#            flex-wrap: wrap;#}
-{#            gap: 12px;#}
-{#            margin-bottom: 18px;#}
-{#        }#}
-{##}
-{#        .post-images-scroll {#}
-{#            display: flex;#}
-{#            gap: 10px;#}
-{#            overflow-x: auto;#}
-{#            padding-bottom: 10px;#}
-{#            scroll-snap-type: x mandatory;#}
-{#            -webkit-overflow-scrolling: touch;#}
-{#        }#}
-{##}
-{#        .post-images-scroll::-webkit-scrollbar {#}
-{#            height: 8px;#}
-{#        }#}
-{##}
-{#        .post-images-scroll::-webkit-scrollbar-thumb {#}
-{#            background: #888;#}
-{#            border-radius: 10px;#}
-{#        }#}
-{##}
-{#        .post-image-item {#}
-{#            flex: 0 0 auto;#}
-{#            width: 260px;#}
-{#            height: 200px;#}
-{#            scroll-snap-align: start;#}
-{#            overflow: hidden;#}
-{#            border-radius: 14px;#}
-{#        }#}
-{##}
-{#        .post-image {#}
-{#            width: 100%;#}
-{#            height: 100%;#}
-{#            object-fit: cover;#}
-{#            display: block;#}
-{#            transition: transform 0.3s ease;#}
-{#        }#}
-{##}
-{#        .post-image-item:hover .post-image {#}
-{#            transform: scale(1.05);#}
-{#        }#}
-{##}
-{#        .detail-pill {#}
-{#            display: inline-flex;#}
-{#            align-items: center;#}
-{#            gap: 8px;#}
-{#            padding: 10px 14px;#}
-{#            border-radius: 999px;#}
-{#            background: #eff6ff;#}
-{#            color: #1e293b;#}
-{#            font-size: 14px;#}
-{#            font-weight: 700;#}
-{#        }#}
-{##}
-{#        .detail-pill a {#}
-{#            color: #1d4ed8;#}
-{#            text-decoration: none;#}
-{#        }#}
-{##}
-{#        .detail-pill a:hover {#}
-{#            text-decoration: underline;#}
-{#        }#}
-{##}
-{#        .detail-description {#}
-{#            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);#}
-{#            border: 1px solid #e2e8f0;#}
-{#            border-right: 4px solid #1d9bf0;#}
-{#            border-radius: 18px;#}
-{#            padding: 20px;#}
-{#            font-size: 16px;#}
-{#            line-height: 2;#}
-{#            color: #334155;#}
-{#            word-break: break-word;#}
-{#        }#}
-{##}
-{#        .section-header {#}
-{#            display: flex;#}
-{#            justify-content: space-between;#}
-{#            align-items: center;#}
-{#            gap: 12px;#}
-{#            margin-bottom: 16px;#}
-{#            flex-wrap: wrap;#}
-{#        }#}
-{##}
-{#        .section-header h2 {#}
-{#            margin: 0;#}
-{#            font-size: 20px;#}
-{#            font-weight: 800;#}
-{#            color: #0f172a;#}
-{#        }#}
-{##}
-{#        .comment-count {#}
-{#            color: #64748b;#}
-{#            font-size: 14px;#}
-{#            font-weight: 700;#}
-{#        }#}
-{##}
-{#        .comments-list {#}
-{#            display: flex;#}
-{#            flex-direction: column;#}
-{#            gap: 14px;#}
-{#        }#}
-{##}
-{#        .comment-item {#}
-{#            background: #ffffff;#}
-{#            border: 1px solid #e2e8f0;#}
-{#            border-radius: 16px;#}
-{#            padding: 16px;#}
-{#        }#}
-{##}
-{#        .comment-author {#}
-{#            display: inline-flex;#}
-{#            padding: 8px 12px;#}
-{#            border-radius: 999px;#}
-{#            background: #0f172a;#}
-{#            color: #fff;#}
-{#            font-size: 13px;#}
-{#            font-weight: 800;#}
-{#            margin-bottom: 12px;#}
-{#        }#}
-{##}
-{#        .comment-body {#}
-{#            color: #334155;#}
-{#            line-height: 1.9;#}
-{#            font-size: 15px;#}
-{#        }#}
-{##}
-{#        .empty-state {#}
-{#            text-align: center;#}
-{#            padding: 20px;#}
-{#            color: #64748b;#}
-{#            border: 1px dashed #cbd5e1;#}
-{#            border-radius: 16px;#}
-{#            background: #f8fafc;#}
-{#        }#}
-{##}
-{#        .comment-form .form-group {#}
-{#            margin-bottom: 16px;#}
-{#        }#}
-{##}
-{#        .comment-form label {#}
-{#            display: block;#}
-{#            margin-bottom: 8px;#}
-{#            font-size: 14px;#}
-{#            font-weight: 700;#}
-{#            color: #334155;#}
-{#        }#}
-{##}
-{#        .comment-form input,#}
-{#        .comment-form textarea,#}
-{#        .comment-form select {#}
-{#            width: 100%;#}
-{#            box-sizing: border-box;#}
-{#            padding: 12px 14px;#}
-{#            border-radius: 14px;#}
-{#            border: 1px solid #cbd5e1;#}
-{#            background: #ffffff;#}
-{#            color: #0f172a;#}
-{#            outline: none;#}
-{#            transition: 0.2s ease;#}
-{#        }#}
-{##}
-{#        .comment-form input:focus,#}
-{#        .comment-form textarea:focus,#}
-{#        .comment-form select:focus {#}
-{#            border-color: #1d9bf0;#}
-{#            box-shadow: 0 0 0 4px rgba(29, 155, 240, 0.12);#}
-{#        }#}
-{##}
-{#        .field-error {#}
-{#            margin-top: 6px;#}
-{#            color: #ef4444;#}
-{#            font-size: 12px;#}
-{#        }#}
-{##}
-{#        .submit-btn,#}
-{#        .back-btn {#}
-{#            display: inline-flex;#}
-{#            align-items: center;#}
-{#            justify-content: center;#}
-{#            border: none;#}
-{#            text-decoration: none;#}
-{#            border-radius: 999px;#}
-{#            font-weight: 800;#}
-{#            transition: 0.2s ease;#}
-{#        }#}
-{##}
-{#        .follow-btn {#}
-{#            display: inline-flex;#}
-{#            align-items: center;#}
-{#            justify-content: center;#}
-{#            border: none;#}
-{#            text-decoration: none;#}
-{#            border-radius: 999px;#}
-{#            font-weight: 800;#}
-{#            transition: 0.2s ease;#}
-{#            padding: 22px 18px;#}
-{#            background: linear-gradient(135deg, #1d9bf0, #1a8cd8);#}
-{#            color: #fff;#}
-{#            cursor: pointer;#}
-{#        }#}
-{##}
-{#        .submit-btn {#}
-{#            padding: 12px 18px;#}
-{#            background: linear-gradient(135deg, #1d9bf0, #1a8cd8);#}
-{#            color: #fff;#}
-{#            cursor: pointer;#}
-{#        }#}
-{##}
-{#        .submit-btn:hover {#}
-{#            transform: translateY(-1px);#}
-{#            filter: brightness(1.05);#}
-{#        }#}
-{##}
-{#        .back-btn {#}
-{#            align-self: flex-start;#}
-{#            margin-top: 4px;#}
-{#            padding: 12px 18px;#}
-{#            background: #e2e8f0;#}
-{#            color: #0f172a;#}
-{#        }#}
-{##}
-{#        .back-btn:hover {#}
-{#            background: #cbd5e1;#}
-{#        }#}
-{##}
-{#        @media (max-width: 768px) {#}
-{#            .detail-page {#}
-{#                padding: 20px 12px 36px;#}
-{#            }#}
-{##}
-{#            .post-card,#}
-{#            .section-card {#}
-{#                padding: 18px;#}
-{#                border-radius: 18px;#}
-{#            }#}
-{##}
-{#            .detail-title {#}
-{#                font-size: 24px;#}
-{#            }#}
-{##}
-{#            .detail-description {#}
-{#                padding: 16px;#}
-{#                font-size: 15px;#}
-{#            }#}
-{#        }#}
-{#    </style>#}
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"#}
-{#            integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="#}
-{#            crossorigin="anonymous" referrerpolicy="no-referrer"></script>#}
-{#    <script>#}
-{#        $(document).ready(function () {#}
-{#            $('.post-like-button').click(function () {#}
-{#                var post_id = $(this).closest('.detail-meta').data('post-id');#}
-{#                var button = $(this);#}
-{##}
-{#                $.ajax({#}
-{#                    type: 'POST',#}
-{#                    url: '{% url 'blog:post_like' %}',#}
-{#                    data: {#}
-{#                        'p_id': post_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'#}
-{#                    },#}
-{##}
-{#                    success: function (data) {#}
-{#                        if (data.liked) {#}
-{#                            button.text('UnLike');#}
-{#                        } else {#}
-{#                            button.text('Like');#}
-{#                        }#}
-{#                        $('.post-like-class').text(data.post_likes_count + 'Like' + (data.post_likes_count === 1 ? '' : 's'));#}
-{#                    },#}
-{##}
-{##}
-{#                });#}
-{#            });#}
-{##}
-{##}
-{#            $('.follow-btn').click(function () {#}
-{#                var user = $(this).closest('.detail-meta').data('user');#}
-{#                var follow_button = $(this);#}
-{##}
-{#                $.ajax({#}
-{#                    type: 'POST',#}
-{#                    url: '{% url 'blog:user_follow' %}',#}
-{#                    data: {#}
-{#                        'user':user, 'csrfmiddlewaretoken':'{{ csrf_token }}'#}
-{#                    },#}
-{##}
-{#                    success: function (data){#}
-{#                        if (data.followed) {#}
-{#                            follow_button.text('UnFollow');#}
-{#                        } else {#}
-{#                            follow_button.text('Follow');#}
-{#                        }#}
-{#                    },#}
-{#                });#}
-{#            });#}
-{#        });#}
-{#    </script>#}
-{#{% endblock %}#}
-
-{#------------------------------------------------------------------------------------------------------#}
-
 {% extends 'parent/base.html' %}
 {% load static %}
 {% load blog_tags %}
@@ -733,960 +5,2218 @@
 {% block title %}{{ post.title }} - جزئیات{% endblock %}
 
 {% block head %}
-    <style>
-        * {
-            color: black;
+<style>
+    /* =========================================================
+       BASE
+    ========================================================= */
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        overflow-x: hidden;
+        background:
+            radial-gradient(circle at 10% 10%, rgba(59, 130, 246, .20), transparent 28%),
+            radial-gradient(circle at 90% 20%, rgba(99, 102, 241, .18), transparent 30%),
+            radial-gradient(circle at 50% 100%, rgba(14, 165, 233, .14), transparent 35%),
+            #dceeff;
+        color: #0f172a;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    a {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    button {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    /* =========================================================
+       BACKGROUND
+    ========================================================= */
+
+    .post-background {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        overflow: hidden;
+        pointer-events: none;
+        background:
+            linear-gradient(
+                135deg,
+                rgba(255,255,255,.20),
+                rgba(96,165,250,.08)
+            );
+    }
+
+    .bg-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(1px);
+        opacity: .45;
+        will-change: transform;
+    }
+
+    .bg-orb-1 {
+        width: 280px;
+        height: 280px;
+        top: 5%;
+        left: -100px;
+        background: rgba(59,130,246,.25);
+    }
+
+    .bg-orb-2 {
+        width: 220px;
+        height: 220px;
+        top: 35%;
+        right: -90px;
+        background: rgba(99,102,241,.22);
+    }
+
+    .bg-orb-3 {
+        width: 300px;
+        height: 300px;
+        bottom: -130px;
+        left: 30%;
+        background: rgba(14,165,233,.18);
+    }
+
+    /* =========================================================
+       MAIN WRAPPER
+    ========================================================= */
+
+    .post-page {
+        width: 100%;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 38px 18px 60px;
+    }
+
+    .post-main-column {
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    /* =========================================================
+       GLASS CARD
+    ========================================================= */
+
+    .post-card {
+        width: 100%;
+        background: rgba(255,255,255,.48);
+        border: 1px solid rgba(255,255,255,.72);
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow:
+            0 20px 55px rgba(15,23,42,.12),
+            0 4px 15px rgba(59,130,246,.05);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+    }
+
+    /* =========================================================
+       TITLE
+    ========================================================= */
+
+    .post-header {
+        padding: 38px 42px 30px;
+        background:
+            linear-gradient(
+                135deg,
+                rgba(255,255,255,.45),
+                rgba(255,255,255,.18)
+            );
+        border-bottom: 1px solid rgba(255,255,255,.5);
+    }
+
+    .post-title {
+        margin: 0;
+        color: #0f172a;
+        font-size: clamp(25px, 4vw, 43px);
+        font-weight: 950;
+        line-height: 1.35;
+        direction: rtl;
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    /* =========================================================
+       META
+    ========================================================= */
+
+    .post-meta {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 20px 30px;
+        background: rgba(255,255,255,.25);
+        border-bottom: 1px solid rgba(255,255,255,.45);
+    }
+
+    .meta-actions {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .like-box {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 8px 6px 4px;
+        border-radius: 15px;
+        background: rgba(255,255,255,.72);
+        border: 1px solid rgba(255,255,255,.7);
+    }
+
+    .like-count {
+        padding: 0 7px;
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .icon-button {
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 0;
+        border-radius: 13px;
+        background: transparent;
+        color: #334155;
+        cursor: pointer;
+        transition:
+            transform .2s ease,
+            background .2s ease;
+    }
+
+    .icon-button:hover {
+        background: rgba(59,130,246,.09);
+        transform: translateY(-1px);
+    }
+
+    .icon-button:active {
+        transform: scale(.94);
+    }
+
+    .follow-btn {
+        border: 0;
+        border-radius: 14px;
+        padding: 10px 18px;
+        color: white;
+        background: linear-gradient(135deg, #2563eb, #4f46e5);
+        box-shadow: 0 8px 20px rgba(37,99,235,.18);
+        font-weight: 800;
+        cursor: pointer;
+        transition: transform .2s ease;
+    }
+
+    .follow-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .share-button {
+        width: 42px;
+        height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 1px solid rgba(255,255,255,.7);
+        border-radius: 14px;
+        background: rgba(255,255,255,.42);
+        cursor: pointer;
+        transition: .2s ease;
+    }
+
+    .share-button:hover {
+        background: rgba(255,255,255,.7);
+        transform: translateY(-2px);
+    }
+
+    .author-meta {
+        margin-right: auto;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .author-meta a {
+        color: #334155;
+        text-decoration: none;
+        font-weight: 800;
+    }
+
+    /* =========================================================
+       IMPORTANT IMAGE SECTION
+    ========================================================= */
+
+    .post-gallery {
+        padding: 28px;
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255,255,255,.22),
+                rgba(255,255,255,.08)
+            );
+        border-bottom: 1px solid rgba(255,255,255,.5);
+    }
+
+    .gallery-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 16px;
+    }
+
+    .gallery-title {
+        margin: 0;
+        color: #0f172a;
+        font-size: 17px;
+        font-weight: 900;
+    }
+
+    .gallery-count {
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: rgba(37,99,235,.08);
+        color: #2563eb;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .gallery-main {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        max-height: 620px;
+        overflow: hidden;
+        border-radius: 23px;
+        background: #dbeafe;
+        box-shadow:
+            0 18px 40px rgba(15,23,42,.13),
+            inset 0 0 0 1px rgba(255,255,255,.5);
+    }
+
+    .gallery-main img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        cursor: zoom-in;
+        transition: transform .45s cubic-bezier(.2,.7,.2,1);
+    }
+
+    .gallery-main:hover img {
+        transform: scale(1.025);
+    }
+
+    .gallery-overlay {
+        position: absolute;
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        pointer-events: none;
+    }
+
+    .gallery-overlay-left,
+    .gallery-download {
+        pointer-events: auto;
+    }
+
+    .gallery-label {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 11px;
+        border-radius: 999px;
+        color: white;
+        background: rgba(15,23,42,.62);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .gallery-download {
+        width: 42px;
+        height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #0f172a;
+        background: rgba(255,255,255,.88);
+        border-radius: 13px;
+        text-decoration: none;
+        box-shadow: 0 7px 18px rgba(0,0,0,.14);
+        transition: transform .2s ease;
+    }
+
+    .gallery-download:hover {
+        transform: translateY(-2px);
+    }
+
+    /* =========================================================
+       THUMBNAILS
+    ========================================================= */
+
+    .gallery-thumbs {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 14px 2px 4px;
+        scrollbar-width: thin;
+        scroll-snap-type: x proximity;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .gallery-thumbs::-webkit-scrollbar {
+        height: 5px;
+    }
+
+    .gallery-thumbs::-webkit-scrollbar-thumb {
+        background: rgba(71,85,105,.22);
+        border-radius: 999px;
+    }
+
+    .gallery-thumb {
+        flex: 0 0 88px;
+        width: 88px;
+        height: 68px;
+        padding: 0;
+        overflow: hidden;
+        border: 2px solid transparent;
+        border-radius: 13px;
+        background: #dbeafe;
+        cursor: pointer;
+        opacity: .72;
+        scroll-snap-align: start;
+        transition:
+            opacity .2s ease,
+            border-color .2s ease,
+            transform .2s ease;
+    }
+
+    .gallery-thumb:hover {
+        opacity: 1;
+        transform: translateY(-2px);
+    }
+
+    .gallery-thumb.active {
+        opacity: 1;
+        border-color: #2563eb;
+        box-shadow: 0 5px 15px rgba(37,99,235,.16);
+    }
+
+    .gallery-thumb img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* =========================================================
+       DESCRIPTION
+    ========================================================= */
+
+    .post-description {
+        padding: 34px 40px;
+    }
+
+    .description-text {
+        color: #475569;
+        font-size: 16px;
+        line-height: 2.15;
+        direction: rtl;
+        unicode-bidi: plaintext;
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    /* =========================================================
+       INFO / TECHNOLOGIES
+    ========================================================= */
+
+    .post-info-card {
+        margin-top: 20px;
+        padding: 28px;
+        background: rgba(255,255,255,.48);
+        border: 1px solid rgba(255,255,255,.72);
+        border-radius: 25px;
+        box-shadow: 0 16px 45px rgba(15,23,42,.08);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    .info-section {
+        direction: rtl;
+        text-align: right;
+    }
+
+    .info-item {
+        margin-bottom: 14px;
+        padding: 13px 15px;
+        border-radius: 15px;
+        background: rgba(255,255,255,.43);
+        overflow-wrap: anywhere;
+    }
+
+    .info-item a {
+        color: #2563eb;
+        text-decoration: none;
+        word-break: break-word;
+    }
+
+    .info-label {
+        display: block;
+        margin-bottom: 5px;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .info-value {
+        color: #1e293b;
+        font-weight: 650;
+    }
+
+    .blur-text {
+        filter: blur(6px);
+        user-select: none;
+        cursor: pointer;
+        transition: filter .2s ease;
+    }
+
+    .skills-title {
+        margin: 22px 0 12px;
+        color: #0f172a;
+        text-align: right;
+        font-weight: 900;
+    }
+
+    .skills-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        direction: rtl;
+    }
+
+    .skill {
+        padding: 7px 13px;
+        border-radius: 999px;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #15803d;
+        font-size: 13px;
+        font-weight: 750;
+    }
+
+    /* =========================================================
+       COMMENTS
+    ========================================================= */
+
+    .comments-card {
+        margin-top: 20px;
+        padding: 30px;
+        background: rgba(255,255,255,.48);
+        border: 1px solid rgba(255,255,255,.72);
+        border-radius: 25px;
+        box-shadow: 0 16px 45px rgba(15,23,42,.08);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    .comments-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 22px;
+    }
+
+    .comments-header h2 {
+        margin: 0;
+        color: #0f172a;
+        font-size: 21px;
+        font-weight: 900;
+    }
+
+    .comments-count {
+        padding: 7px 11px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.7);
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .comments-list {
+        display: grid;
+        gap: 12px;
+        margin-bottom: 28px;
+    }
+
+    .comment-item {
+        padding: 18px;
+        border-radius: 18px;
+        background: rgba(255,255,255,.55);
+        border: 1px solid rgba(255,255,255,.55);
+    }
+
+    .comment-user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        direction: rtl;
+    }
+
+    .comment-avatar {
+        width: 40px;
+        height: 40px;
+        flex: 0 0 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 13px;
+        color: #2563eb;
+        background: rgba(37,99,235,.10);
+        font-weight: 900;
+    }
+
+    .comment-name {
+        color: #1e293b;
+        font-weight: 850;
+    }
+
+    .comment-body {
+        color: #64748b;
+        line-height: 2;
+        direction: rtl;
+        unicode-bidi: plaintext;
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    .comment-empty {
+        padding: 35px 15px;
+        border-radius: 18px;
+        color: #64748b;
+        background: rgba(255,255,255,.38);
+        text-align: center;
+    }
+
+    .comment-form-title {
+        margin: 0 0 15px;
+        color: #0f172a;
+        font-size: 17px;
+        font-weight: 900;
+        direction: rtl;
+        text-align: right;
+    }
+
+    .comment-form {
+        display: grid;
+        gap: 13px;
+    }
+
+    .form-group {
+        direction: rtl;
+        text-align: right;
+    }
+
+    .form-label-custom {
+        display: block;
+        margin-bottom: 7px;
+        color: #475569;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .form_field_glass {
+        width: 100%;
+        min-height: 48px;
+        background: rgba(255,255,255,.52) !important;
+        border: 1px solid rgba(148,163,184,.18) !important;
+        direction: rtl;
+        unicode-bidi: plaintext;
+        text-align: right;
+        border-radius: 15px !important;
+    }
+
+    .form_field_glass:focus {
+        border-color: rgba(37,99,235,.35) !important;
+        box-shadow: 0 0 0 4px rgba(37,99,235,.08) !important;
+    }
+
+    .comment-submit {
+        min-height: 50px;
+        border: 0;
+        border-radius: 15px;
+        color: white;
+        background: linear-gradient(135deg, #2563eb, #4f46e5);
+        font-weight: 850;
+        cursor: pointer;
+    }
+
+    /* =========================================================
+       BACK BUTTON
+    ========================================================= */
+
+    .back-button-wrap {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 45px;
+        padding: 0 20px;
+        border-radius: 14px;
+        color: #334155;
+        background: rgba(255,255,255,.52);
+        border: 1px solid rgba(255,255,255,.75);
+        text-decoration: none;
+        font-weight: 800;
+    }
+
+    /* =========================================================
+       SIMILAR POSTS
+    ========================================================= */
+
+    .similar-section {
+        margin-top: 20px;
+    }
+
+    .similar-title-main {
+        margin: 0 0 12px;
+        color: #0f172a;
+        font-size: 20px;
+        font-weight: 900;
+        direction: rtl;
+        text-align: right;
+    }
+
+    .similar-posts {
+        display: flex;
+        gap: 14px;
+        width: 100%;
+        overflow-x: auto;
+        padding: 5px 2px 15px;
+        scroll-snap-type: x proximity;
+        scrollbar-width: thin;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .similar-posts::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .similar-posts::-webkit-scrollbar-thumb {
+        background: rgba(71,85,105,.22);
+        border-radius: 999px;
+    }
+
+    .similar-card {
+        flex: 0 0 260px;
+        min-height: 190px;
+        display: flex;
+        flex-direction: column;
+        padding: 17px;
+        border: 1px solid rgba(255,255,255,.68);
+        border-radius: 20px;
+        background: rgba(255,255,255,.45);
+        box-shadow: 0 12px 28px rgba(15,23,42,.07);
+        text-decoration: none;
+        color: #0f172a;
+        scroll-snap-align: start;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .similar-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 17px 35px rgba(15,23,42,.11);
+    }
+
+    .similar-category {
+        align-self: flex-start;
+        padding: 5px 9px;
+        margin-bottom: 10px;
+        border-radius: 999px;
+        color: #2563eb;
+        background: rgba(37,99,235,.09);
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    .similar-card-title {
+        margin: 0 0 8px;
+        color: #0f172a;
+        font-size: 17px;
+        font-weight: 900;
+        line-height: 1.6;
+        direction: rtl;
+        text-align: right;
+    }
+
+    .similar-desc {
+        flex: 1;
+        margin: 0;
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.8;
+        direction: rtl;
+        text-align: right;
+    }
+
+    .similar-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 12px;
+        color: #64748b;
+        font-size: 11px;
+    }
+
+    /* =========================================================
+       TOAST
+    ========================================================= */
+
+    .post-toast {
+        position: fixed;
+        left: 50%;
+        bottom: 25px;
+        z-index: 99999;
+        max-width: calc(100vw - 30px);
+        padding: 11px 17px;
+        border-radius: 13px;
+        color: white;
+        background: rgba(15,23,42,.92);
+        box-shadow: 0 10px 30px rgba(0,0,0,.18);
+        transform: translate(-50%, 20px);
+        opacity: 0;
+        pointer-events: none;
+        transition: .25s ease;
+        text-align: center;
+        font-size: 13px;
+    }
+
+    .post-toast.show {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (max-width: 768px) {
+
+        html {
+            scroll-behavior: auto;
         }
 
         body {
-            margin: 0;
-            min-height: 100vh;
-            background: rgba(92, 178, 255, 0.91);
-            overflow-x: hidden;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(59,130,246,.14), transparent 30%),
+                #e8f4ff;
         }
 
-        .glass-bg {
-            position: fixed;
-            inset: 0;
-            overflow: hidden;
-            z-index: -1;
+        .post-page {
+            padding: 10px 7px 35px;
         }
 
-        /* ذرات شیشه */
-        .particle {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.16);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border-radius: 30% 70% 60% 40%;
-            box-shadow: 0 10px 40px rgba(100, 150, 255, 0.15),
-            inset 0 0 20px rgba(255, 255, 255, .8);
-            animation: float 18s infinite ease-in-out;
+        .post-card {
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(15,23,42,.08);
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            background: rgba(255,255,255,.72);
         }
 
-        /* جای هر ذره */
-        .particle:nth-child(1) {
-            width: 120px;
-            height: 120px;
-            top: 10%;
-            left: 15%;
-            animation-duration: 22s;
+        .post-header {
+            padding: 22px 16px 18px;
         }
 
-        .particle:nth-child(2) {
-            width: 60px;
-            height: 60px;
-            top: 30%;
-            left: 70%;
-            animation-duration: 15s;
+        .post-title {
+            font-size: 23px;
+            line-height: 1.6;
         }
 
-        .particle:nth-child(3) {
-            width: 150px;
-            height: 150px;
-            top: 65%;
-            left: 20%;
-            animation-duration: 25s;
+        .post-meta {
+            padding: 13px;
+            gap: 9px;
         }
 
-        .particle:nth-child(4) {
-            width: 90px;
-            height: 90px;
-            top: 75%;
-            left: 75%;
-            animation-duration: 20s;
+        .meta-actions {
+            width: 100%;
         }
 
-        .particle:nth-child(5) {
-            width: 45px;
-            height: 45px;
-            top: 15%;
-            left: 85%;
+        .author-meta {
+            width: 100%;
+            margin-right: 0;
+            justify-content: flex-start;
+            font-size: 12px;
         }
 
-        .particle:nth-child(6) {
-            width: 100px;
-            height: 100px;
-            top: 50%;
-            left: 50%;
+        .like-box {
+            flex: 1;
         }
 
-        .particle:nth-child(7) {
-            width: 70px;
-            height: 70px;
-            top: 80%;
-            left: 45%;
+        .follow-btn {
+            flex: 1;
+            min-height: 40px;
         }
 
-        .particle:nth-child(8) {
-            width: 130px;
-            height: 130px;
-            top: 40%;
-            left: 5%;
+        .share-button {
+            flex: 0 0 40px;
         }
 
-        .particle:nth-child(9) {
-            width: 55px;
+        /* عکس مهم‌تر و بزرگ‌تر در موبایل */
+        .post-gallery {
+            padding: 12px;
+        }
+
+        .gallery-header {
+            padding: 2px 2px 0;
+        }
+
+        .gallery-main {
+            aspect-ratio: 4 / 3;
+            max-height: none;
+            border-radius: 17px;
+        }
+
+        .gallery-main img {
+            transition: none;
+        }
+
+        .gallery-main:hover img {
+            transform: none;
+        }
+
+        .gallery-overlay {
+            left: 9px;
+            right: 9px;
+            bottom: 9px;
+        }
+
+        .gallery-label {
+            font-size: 10px;
+        }
+
+        .gallery-download {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+        }
+
+        .gallery-thumb {
+            flex-basis: 72px;
+            width: 72px;
             height: 55px;
-            top: 60%;
-            left: 90%;
+            border-radius: 10px;
         }
 
-        .particle:nth-child(10) {
-            width: 110px;
-            height: 110px;
-            top: 5%;
-            left: 45%;
+        .post-description {
+            padding: 22px 16px;
         }
 
-        @keyframes float {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            50% {
-                transform: translate(40px, -60px) rotate(180deg);
-            }
-            100% {
-                transform: translate(0, 0) rotate(360deg);
-            }
+        .description-text {
+            font-size: 14px;
+            line-height: 2.05;
         }
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: rgba(145, 201, 255, 0.88);
-            overflow-x: hidden;
+        .post-info-card,
+        .comments-card {
+            padding: 18px 13px;
+            border-radius: 18px;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            background: rgba(255,255,255,.72);
         }
 
-        .glass-bg {
-            background: rgba(153, 153, 255, 0.23);
-            position: fixed;
-            inset: 0;
-            overflow: hidden;
-            z-index: -1;
+        .info-item {
+            padding: 11px 12px;
         }
 
-        /* ذرات شیشه */
-        .particle {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            background: rgb(106, 106, 255);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border-radius: 30% 70% 60% 40%;
-            box-shadow: 0 10px 40px rgba(100, 150, 255, 0.15),
-            inset 0 0 20px rgba(255, 255, 255, .8);
-            animation: float 18s infinite ease-in-out;
+        .skills-list {
+            gap: 7px;
         }
 
-        /* جای هر ذره */
-        .particle:nth-child(1) {
-            width: 120px;
-            height: 120px;
-            top: 10%;
-            left: 15%;
-            animation-duration: 22s;
+        .skill {
+            padding: 6px 10px;
+            font-size: 11px;
         }
 
-        .particle:nth-child(2) {
-            width: 60px;
-            height: 60px;
-            top: 30%;
-            left: 70%;
-            animation-duration: 15s;
+        .comments-header h2 {
+            font-size: 18px;
         }
 
-        .particle:nth-child(3) {
-            width: 150px;
-            height: 150px;
-            top: 65%;
-            left: 20%;
-            animation-duration: 25s;
+        .comment-item {
+            padding: 14px;
         }
 
-        .particle:nth-child(4) {
-            width: 90px;
-            height: 90px;
-            top: 75%;
-            left: 75%;
-            animation-duration: 20s;
-        }
-
-        .particle:nth-child(5) {
-            width: 45px;
-            height: 45px;
-            top: 15%;
-            left: 85%;
-        }
-
-        .particle:nth-child(6) {
-            width: 100px;
-            height: 100px;
-            top: 50%;
-            left: 50%;
-        }
-
-        .particle:nth-child(7) {
-            width: 70px;
-            height: 70px;
-            top: 80%;
-            left: 45%;
-        }
-
-        .particle:nth-child(8) {
-            width: 130px;
-            height: 130px;
-            top: 40%;
-            left: 5%;
-        }
-
-        .particle:nth-child(9) {
-            width: 55px;
-            height: 55px;
-            top: 60%;
-            left: 90%;
-        }
-
-        .particle:nth-child(10) {
-            width: 110px;
-            height: 110px;
-            top: 5%;
-            left: 45%;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            50% {
-                transform: translate(40px, -60px) rotate(180deg);
-            }
-            100% {
-                transform: translate(0, 0) rotate(360deg);
-            }
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.27);
-            backdrop-filter: blur(21px);
-        }
-
-        .detail-card {
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.10);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-        }
-
-        .detail-title {
-            font-weight: 900;
-            line-height: 1.2;
-            color: #0f172a;
-        }
-
-        .meta-bar {
-            background: rgba(255, 255, 255, 0.18);
-        }
-
-        .post-image {
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .post-image-item:hover .post-image {
-            transform: scale(1.08);
-        }
-
-        .scrollbar-thin::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-            background: rgba(148, 163, 184, 0.18);
-            border-radius: 20px;
-        }
-
-        #save_button {
-            border: none;
-            outline: none;
-            background: transparent;
-            padding: 0;
-        }
-
-        #save_button:focus {
-            outline: none;
-            box-shadow: none;
-        }
-
-        .brand-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            display: inline-block;
-            background: linear-gradient(135deg, #60a5fa, #3b82f6);
-            box-shadow: 0 0 12px rgba(96, 165, 250, 0.8);
+        .comment-body {
+            font-size: 13px;
         }
 
         .similar-posts {
-            display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding: 12px 4px 18px;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
+            padding-bottom: 10px;
         }
 
-        /* اسکرول بار */
-        .similar-posts::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .similar-posts::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.06);
-            border-radius: 20px;
-        }
-
-        .similar-posts::-webkit-scrollbar-track {
-            background: rgba(29, 29, 29, 0.2);
-        }
-
-        /* کارت */
         .similar-card {
-            flex: 0 0 270px;
-            background: linear-gradient(135deg, rgba(64, 118, 255, 0.01), rgba(59, 130, 246, 0.73));
-            box-shadow: 0 0 12px rgba(31, 125, 239, 0.88);
-            backdrop-filter: blur(18px);
-            border: 1px solid rgba(255, 255, 255, .08);
-            border-radius: 20px;
-            padding: 18px;
-            text-decoration: none;
-            color: white;
-            scroll-snap-align: start;
-            transition: .25s;
+            flex-basis: 225px;
+            min-height: 175px;
         }
 
-        /* هاور */
-        .similar-card:hover {
-            transform: translateY(-5px);
-            border-color: #8b5cf6;
-            box-shadow: 0 10px 30px rgba(139, 92, 246, .25);
+        /* موبایل: افکت‌های غیرضروری خاموش */
+        .bg-orb {
+            filter: none;
+            opacity: .25;
+        }
+    }
+
+    /* =========================================================
+       SMALL PHONES
+    ========================================================= */
+
+    @media (max-width: 390px) {
+
+        .post-page {
+            padding-left: 5px;
+            padding-right: 5px;
         }
 
-        /* دسته‌بندی */
-        .similar-category {
-            display: inline-block;
-            padding: 4px 10px;
-            background: rgba(139, 92, 246, 0.58);
-            border-radius: 999px;
+        .post-title {
+            font-size: 21px;
+        }
+
+        .post-meta {
+            padding: 11px;
+        }
+
+        .like-count {
+            font-size: 11px;
+        }
+
+        .icon-button {
+            width: 36px;
+            height: 36px;
+        }
+
+        .follow-btn {
+            padding-left: 10px;
+            padding-right: 10px;
             font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: white;
         }
 
-        /* عنوان */
-        .similar-title {
-            direction: rtl;
-            unicode-bidi: isolate;
-            text-align: right;
-            font-size: 18px;
-            margin-bottom: 10px;
+        .gallery-main {
+            aspect-ratio: 1 / .82;
         }
 
-        /* توضیح */
-        .similar-desc {
-            direction: rtl;
-            unicode-bidi: plaintext;
-            text-align: right;
-            color: #ffffff;
-            line-height: 1.7;
-            font-size: 14px;
-            min-height: 70px;
+        .gallery-thumb {
+            flex-basis: 64px;
+            width: 64px;
+            height: 50px;
         }
 
-        /* پایین کارت */
-        .similar-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
+        .description-text {
             font-size: 13px;
-            color: #9d9d9d;
         }
 
-        /* موبایل */
-        @media (max-width: 768px) {
-            .similar-card {
-                flex: 0 0 220px;
-            }
-
-            .similar-title {
-                font-size: 16px;
-            }
+        .similar-card {
+            flex-basis: 210px;
         }
+    }
 
-        .blur-text {
-            filter: blur(6px);
-            cursor: pointer;
-            transition: filter .2s ease;
-            user-select: none;
+    /* =========================================================
+       REDUCE MOTION
+    ========================================================= */
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: .01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: .01ms !important;
+            scroll-behavior: auto !important;
         }
-
-        .blur-text.show {
-            filter: blur(0);
-        }
-
-        .needed-skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 18px;
-            margin-left: 21px;
-        }
-
-        .needed-skills span {
-            background: #f0fdf4;
-            color: #15803d;
-            border-radius: 999px;
-            padding: 7px 14px;
-            font-weight: 600;
-        }
-
-        .glass-section {
-            background: rgba(255, 255, 255, 0.13);
-        }
-
-        .form_field_glass {
-
-            background: rgba(255, 255, 255, 0.42);
-            direction: rtl;
-            unicode-bidi: plaintext;
-            text-align: right;
-        }
-        
-        .post-like-button svg {
-            transition: .25s ease;
-        }
-
-        .post-like-button:hover svg {
-            transform: scale(1.15);
-        }
-
-        .post-like-button.liked svg {
-            animation: like-pop .35s ease;
-        }
-
-        @keyframes like-pop {
-            0% {
-                transform: scale(.7);
-            }
-            60% {
-                transform: scale(1.25);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-    </style>
+    }
+</style>
 {% endblock %}
 
+
 {% block content %}
-    <div class="glass-bg">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-12 col-lg-10 col-xl-9">
 
-                <!-- Main Card -->
-                <div class="glass detail-card">
+<div class="post-background">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+</div>
 
-                    <!-- Header / Title -->
-                    <div class="p-4 p-md-5 border-bottom border-light-subtle">
-                        <h1 class="detail-title fs-2 fs-md-1"
-                            style="direction: rtl;text-align: right;">
-                            {{ post.title }}
-                        </h1>
-                    </div>
 
-                    <!-- Meta Information -->
-                    <div class="meta-bar px-4 px-md-5 py-4 d-flex flex-wrap align-items-center gap-3 gap-md-4"
-                         data-post-id="{{ post.id }}" data-user="{{ post.author.id }}">
+<div class="post-page">
 
-                        <div class="d-flex align-items-center gap-2 bg-light px-3 py-2 rounded-4">
-                        <span class="post-like-class fw-bold text-secondary">
+    <div class="post-main-column">
+
+        <!-- =====================================================
+             MAIN POST
+        ====================================================== -->
+
+        <article class="post-card">
+
+            <!-- TITLE -->
+            <header class="post-header">
+                <h1 class="post-title">
+                    {{ post.title }}
+                </h1>
+            </header>
+
+
+            <!-- META -->
+            <div
+                class="post-meta"
+                data-post-id="{{ post.id }}"
+                data-user="{{ post.author.id }}"
+            >
+
+                <div class="meta-actions">
+
+                    <!-- LIKE -->
+                    <div class="like-box">
+
+                        <span class="like-count post-like-class">
                             {{ post.likes.count }} لایک
                         </span>
 
-                            {% if request.user.is_authenticated %}
-                                <button type="button"
-                                        class="post-like-button btn btn-outline border-0 btn-sm rounded-4 px-3">
-                                    {% if request.user in post.likes.all %}
-                                                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                             width="24"
-                                             height="24"
-                                             viewBox="0 0 24 24"
-                                             fill="#ff3b5c">
-                                            <path d="M12 21s-6.7-4.35-9.33-8.02C.58 10.1 1.3 5.98 4.77 4.3c2.06-.99 4.47-.43 5.98 1.38L12 7l1.25-1.32c1.51-1.81 3.92-2.37 5.98-1.38 3.47 1.68 4.19 5.8 2.1 8.68C18.7 16.65 12 21 12 21z"/>
-                                        </svg>
-                                    {% else %}
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                             width="24"
-                                             height="24"
-                                             viewBox="0 0 24 24"
-                                             fill="none"
-                                             stroke="currentColor"
-                                             stroke-width="2"
-                                             stroke-linecap="round"
-                                             stroke-linejoin="round">
-                                            <path d="M12 21s-6.7-4.35-9.33-8.02C.58 10.1 1.3 5.98 4.77 4.3c2.06-.99 4.47-.43 5.98 1.38L12 7l1.25-1.32c1.51-1.81 3.92-2.37 5.98-1.38 3.47 1.68 4.19 5.8 2.1 8.68C18.7 16.65 12 21 12 21z"/>
-                                        </svg>
-                                    {% endif %}
-                                </button>
-                            {% else %}
-                                <button type="button" class="btn btn-outline border-0 btn-sm rounded-4 px-3"
-                                        onclick="showHint('حساب بساز یا وارد حساب خودت شو')">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                             width="24"
-                                             height="24"
-                                             viewBox="0 0 24 24"
-                                             fill="none"
-                                             stroke="currentColor"
-                                             stroke-width="2"
-                                             stroke-linecap="round"
-                                             stroke-linejoin="round">
-                                            <path d="M12 21s-6.7-4.35-9.33-8.02C.58 10.1 1.3 5.98 4.77 4.3c2.06-.99 4.47-.43 5.98 1.38L12 7l1.25-1.32c1.51-1.81 3.92-2.37 5.98-1.38 3.47 1.68 4.19 5.8 2.1 8.68C18.7 16.65 12 21 12 21z"/>
-                                        </svg>
-                                </button>
-                            {% endif %}
-
-                            {% if request.user.is_authenticated %}
-                                <button id="save_button" type="button" class="ms-1">
-                                    {% if request.user in post.saver_accounts.all %}
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                             viewBox="0 0 24 24"
-                                             fill="currentColor">
-                                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                        </svg>
-                                    {% else %}
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                             viewBox="0 0 24 24"
-                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                             stroke-linejoin="round">
-                                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                        </svg>
-                                    {% endif %}
-                                </button>
-                            {% else %}
-                                <button type="button" class="btn btn-outline border-0 btn-sm rounded-4 px-3"
-                                        onclick="showHint('حساب بساز یا وارد حساب خودت شو')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round">
-                                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                    </svg>
-                                </button>
-                            {% endif %}
-                        </div>
-
                         {% if request.user.is_authenticated %}
-                            <button type="button"
-                                    class="follow-btn btn btn-primary rounded-4 px-4 py-2 fw-semibold shadow-sm">
-                                {% if request.user in post.author.followers.all %}
-                                    UnFollow
+
+                            <button
+                                type="button"
+                                class="icon-button post-like-button"
+                                aria-label="لایک"
+                            >
+
+                                {% if request.user in post.likes.all %}
+
+                                    <svg
+                                        width="23"
+                                        height="23"
+                                        viewBox="0 0 24 24"
+                                        fill="#ff3b5c"
+                                    >
+                                        <path d="M12 21s-6.7-4.35-9.33-8.02C.58 10.1 1.3 5.98 4.77 4.3c2.06-.99 4.47-.43 5.98 1.38L12 7l1.25-1.32c1.51-1.81 3.92-2.37 5.98-1.38 3.47 1.68 4.19 5.8 2.1 8.68C18.7 16.65 12 21 12 21z"/>
+                                    </svg>
+
                                 {% else %}
-                                    Follow
+
+                                    <svg
+                                        width="23"
+                                        height="23"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <path d="M12 21s-6.7-4.35-9.33-8.02C.58 10.1 1.3 5.98 4.77 4.3c2.06-.99 4.47-.43 5.98 1.38L12 7l1.25-1.32c1.51-1.81 3.92-2.37 5.98-1.38 3.47 1.68 4.19 5.8 2.1 8.68C18.7 16.65 12 21 12 21z"/>
+                                    </svg>
+
                                 {% endif %}
+
                             </button>
+
                         {% else %}
-                            <button type="button"
-                                    class="follow-btn btn btn-primary rounded-4 px-4 py-2 fw-semibold shadow-sm"
-                                    onclick="showHint('حساب بساز یا وارد حساب خودت شو')">Follow
+
+                            <button
+                                type="button"
+                                class="icon-button"
+                                onclick="showHint('حساب بساز یا وارد حساب خودت شو')"
+                            >
+                                <svg
+                                    width="23"
+                                    height="23"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <path d="M12 21s-6.7-4.35-9.33-8.02C.58 10.1 1.3 5.98 4.77 4.3c2.06-.99 4.47-.43 5.98 1.38L12 7l1.25-1.32c1.51-1.81 3.92-2.37 5.98-1.38 3.47 1.68 4.19 5.8 2.1 8.68C18.7 16.65 12 21 12 21z"/>
+                                </svg>
                             </button>
+
                         {% endif %}
 
-                        <button onclick="sharePost()" class="glass"
-                                style="border-radius: 21px;border: rgba(255,255,255,0.34);padding: 10px; background: rgba(255,255,255,0.13)">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"
-                                 stroke-linejoin="round">
-                                <circle cx="18" cy="5" r="3"></circle>
-                                <circle cx="6" cy="12" r="3"></circle>
-                                <circle cx="18" cy="19" r="3"></circle>
+                    </div>
 
-                                <line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line>
-                                <line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line>
+
+                    <!-- SAVE -->
+
+                    {% if request.user.is_authenticated %}
+
+                        <button
+                            id="save_button"
+                            type="button"
+                            class="icon-button"
+                            aria-label="ذخیره"
+                        >
+
+                            {% if request.user in post.saver_accounts.all %}
+
+                                <svg
+                                    width="23"
+                                    height="23"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                                </svg>
+
+                            {% else %}
+
+                                <svg
+                                    width="23"
+                                    height="23"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                                </svg>
+
+                            {% endif %}
+
+                        </button>
+
+                    {% else %}
+
+                        <button
+                            type="button"
+                            class="icon-button"
+                            onclick="showHint('حساب بساز یا وارد حساب خودت شو')"
+                        >
+                            <svg
+                                width="23"
+                                height="23"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
                             </svg>
                         </button>
 
-                        <div class="flex-grow-1"></div>
-
-                        <div class="d-flex flex-wrap align-items-center gap-3 text-secondary">
-                            {#                        <a href="{% url 'blog:user_info' post.author_id %}"#}
-                            <a href="{% url 'blog:user_detail' post.author %}"
-                               class="text-decoration-none text-secondary">
-                                👤 <span class="fw-medium">{{ post.author }}</span>
-                            </a>
-                            <span class="text-muted">•</span>
-                            <span>🕒 {{ new_date|date:'d F Y' }}</span>
-                        </div>
-                    </div>
-
-                    <!-- Images Horizontal Scroll -->
-                    {% if post.images.all %}
-                        <div class="px-4 px-md-5 py-4 border-top border-bottom glass-section">
-                            <div class="d-flex gap-3 overflow-auto pb-3 scrollbar-thin">
-                                {% for image in post.images.all %}
-                                    <div class="post-image-item flex-shrink-0"
-                                         style="width: 320px; height: 256px; border-radius: 18px; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.10);">
-                                        <img src="{{ image.image_file.url }}"
-                                             alt="{{ post.title }}"
-                                             class="post-image w-100 h-100 object-fit-cover">
-                                    </div>
-                                    <a href="{% url 'blog:image_download' image.id %}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                            <polyline points="7 10 12 15 17 10"></polyline>
-                                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                                        </svg>
-                                    </a>
-                                {% endfor %}
-                            </div>
-                        </div>
                     {% endif %}
 
 
-                    <!-- Description -->
-                    <div class="p-4 p-md-5">
-                        <div class="text-secondary fs-6 lh-lg" style="
-            direction: rtl;
-            unicode-bidi: plaintext;
-            text-align: right;">
-                            {{ post.description|linebreaks }}
-                        </div>
-                    </div>
-                </div>
-                <br>
+                    <!-- FOLLOW -->
 
-                    <div class="glass detail-card">
-                        {% if post.author.tel_id or post.author.phone_number %}
-                        <div class="p-4 p-md-5">
-                            {% if post.project_detail.project_url %}
-                                <div class="caption-text">address: <a style="text-decoration: none"
-                                                                      href="{{ post.project_detail.project_url }}">{{ post.project_detail.project_url }}</a>
-                                </div>
-                                <br>
-                                <hr>
-                            {% endif %}
-                            {% if post.project_detail.github_url %}
-                                <div class="caption-text">github: <a style="text-decoration: none"
-                                                                     href="{{ post.project_detail.github_url }}">{{ post.project_detail.github_url }}</a>
-                                </div>
-                                <br>
-                                <hr>
-                            {% endif %}
+                    {% if request.user.is_authenticated %}
+
+                        <button
+                            type="button"
+                            class="follow-btn follow-btn-js"
+                        >
                             {% if request.user in post.author.followers.all %}
-                                {% if post.author.tel_id %}
-                                    <div class="caption-text">telegram id: {{ post.author.tel_id }}</div>
-                                {% endif %}
-                                {% if post.author.phone_number %}
-                                    <div class="caption-text">phone number: {{ post.author.phone_number }}</div>
-                                {% endif %}
+                                UnFollow
                             {% else %}
-                                {% if post.author.tel_id %}
-                                    <div class="caption-text" onclick="showHint('دنبال کردن کاربر راه ارتباط است')">
-                                        telegram id: <span
-                                            class="blur-text">{{ post.author.tel_id }}</span></div>
-                                {% endif %}
-                                {% if post.author.phone_number %}
-                                    <div class="caption-text"
-                                         onclick="showHint('دنبال کردن کاربر راه ارتباط است')">phone number:
-                                        <span class="blur-text">{{ post.author.phone_number }}</span></div>
-                                {% endif %}
+                                Follow
                             {% endif %}
-                        </div>
-                        {% endif %}
-                        <span style="display: flex; justify-content: center; font-weight: 700;">used technologies:</span>
-                        <div class="needed-skills">
-                            {% for technology in post.tags.all %}
-                                <span>{{ technology.name }}</span>
-                            {% endfor %}
-                        </div>
-                        <br>
-                    </div>
+                        </button>
 
-                <!-- Comments Section -->
-                <div class="glass rounded-4 shadow-sm p-4 p-md-5 mt-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="h4 fw-bold text-dark mb-0">نظرات</h2>
-                        <span class="bg-light text-secondary px-3 py-2 rounded-4 small fw-medium">
-                        {{ comments.count }} نظر
-                    </span>
-                    </div>
+                    {% else %}
 
-                    <div id="comments-list" class="comments-list d-grid gap-3 mb-4" data-post-slug="{{ post.slug }}">
-                        {% for comment in comments %}
-                            <div class=" rounded-4 p-4 shadow-sm" style="background: rgba(255,255,255,0.55)">
-                                <div class="d-flex align-items-center gap-3 mb-3">
-                                    <div class="d-flex align-items-center justify-content-center text-white fw-bold"
-                                         style="width: 38px; height: 38px; border-radius: 14px; background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(59,130,246,0.2));">
-                                        {{ comment.name|slice:":1"|upper }}
-                                    </div>
-                                    <div class="fw-semibold text-dark" style="direction: rtl;
-            unicode-bidi: plaintext;
-            text-align: right;">
-                                        {{ comment.name }}
-                                    </div>
-                                </div>
-                                <div class="text-secondary lh-lg" style="direction: rtl;
-            unicode-bidi: plaintext;
-            text-align: right;">
-                                    {{ comment.body|linebreaks }}
-                                </div>
-                            </div>
-                        {% empty %}
-                            <div class="text-center py-5 text-secondary rounded-4"
-                                 style="background:rgba(255, 255, 255, 0.4);">
-                                هنوز نظری ثبت نشده است.
-                            </div>
-                        {% endfor %}
-                    </div>
+                        <button
+                            type="button"
+                            class="follow-btn"
+                            onclick="showHint('حساب بساز یا وارد حساب خودت شو')"
+                        >
+                            Follow
+                        </button>
 
-                    <!-- Add Comment Form -->
-                    <div>
-                        <h3 class="h5 fw-bold mb-4 text-dark">نظر خود را بنویسید</h3>
+                    {% endif %}
 
-                        <form method="post" action="{% url 'blog:post_comment' %}" class="d-grid gap-3" id="c_form">
-                            {% csrf_token %}
-                            {% for field in form %}
-                                <div>
-                                    <label class="form-label fw-semibold text-secondary mb-2">
-                                        {{ field.label }}
-                                    </label>
-                                    {{ field|add_class:"form-control form_field_glass form-control-lg rounded-4" }}
-                                    <div class="text-danger small mt-1">{{ field.errors }}</div>
-                                </div>
-                            {% endfor %}
-                            <input type="hidden" name="next" value="{{ request.GET.next }}">
 
-                            <button type="submit" class="btn btn-primary btn-lg rounded-4 px-4 py-3 fw-bold"
-                                    id="comment_btn" style="background: rgba(10,83,190,0.23)">
-                                ارسال نظر
-                            </button>
-                        </form>
-                    </div>
+                    <!-- SHARE -->
+
+                    <button
+                        onclick="sharePost()"
+                        class="share-button"
+                        type="button"
+                        aria-label="اشتراک گذاری"
+                    >
+                        <svg
+                            width="21"
+                            height="21"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                        >
+                            <circle cx="18" cy="5" r="3"/>
+                            <circle cx="6" cy="12" r="3"/>
+                            <circle cx="18" cy="19" r="3"/>
+                            <line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/>
+                            <line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/>
+                        </svg>
+                    </button>
+
                 </div>
 
-                <!-- Back Button -->
-                <div class="mt-4 d-flex justify-content-center">
-                    <a href="{{ request.META.HTTP_REFERER|default:'/' }}"
-                       class="btn btn-light border rounded-4 px-4 py-3 fw-semibold"
-                       style="background: rgba(255,255,255,0.17)">
-                        ← بازگشت
+
+                <!-- AUTHOR -->
+
+                <div class="author-meta">
+
+                    <a href="{% url 'blog:user_detail' post.author %}">
+                        👤 {{ post.author }}
                     </a>
+
+                    <span>•</span>
+
+                    <span>
+                        🕒 {{ new_date|date:'d F Y' }}
+                    </span>
+
                 </div>
 
             </div>
 
+
+            <!-- =================================================
+                 IMAGE GALLERY
+            ================================================== -->
+
+            {% if post.images.all %}
+
+                <section class="post-gallery">
+
+                    <div class="gallery-header">
+
+                        <h2 class="gallery-title">
+                            تصاویر پروژه
+                        </h2>
+
+                        <span class="gallery-count">
+                            {{ post.images.count }} تصویر
+                        </span>
+
+                    </div>
+
+
+                    {% for image in post.images.all %}
+
+                        {% if forloop.first %}
+
+                            <div class="gallery-main">
+
+                                <img
+                                    id="mainPostImage"
+                                    src="{{ image.image_file.url }}"
+                                    alt="{{ post.title }}"
+                                    loading="eager"
+                                    decoding="async"
+                                >
+
+                                <div class="gallery-overlay">
+
+                                    <div class="gallery-overlay-left">
+                                        <span class="gallery-label">
+                                            تصویر 1 از {{ post.images.count }}
+                                        </span>
+                                    </div>
+
+                                    <a
+                                        id="mainDownload"
+                                        href="{% url 'blog:image_download' image.id %}"
+                                        class="gallery-download"
+                                        aria-label="دانلود تصویر"
+                                    >
+
+                                        <svg
+                                            width="20"
+                                            height="20"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                        >
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                            <polyline points="7 10 12 15 17 10"/>
+                                            <line x1="12" y1="15" x2="12" y2="3"/>
+                                        </svg>
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+
+                    <!-- THUMBNAILS -->
+
+                    <div class="gallery-thumbs">
+
+                        {% for image in post.images.all %}
+
+                            <button
+                                type="button"
+                                class="gallery-thumb {% if forloop.first %}active{% endif %}"
+                                data-image="{{ image.image_file.url }}"
+                                data-download="{% url 'blog:image_download' image.id %}"
+                                data-index="{{ forloop.counter }}"
+                                aria-label="تصویر {{ forloop.counter }}"
+                            >
+
+                                <img
+                                    src="{{ image.image_file.url }}"
+                                    alt="{{ post.title }}"
+                                    loading="lazy"
+                                    decoding="async"
+                                >
+
+                            </button>
+
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+            {% endif %}
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="post-description">
+
+                <div class="description-text">
+                    {{ post.description|linebreaks }}
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- =====================================================
+             AUTHOR / PROJECT INFO
+        ====================================================== -->
+
+        <section class="post-info-card">
+
+            {% if post.author.tel_id or post.author.phone_number or post.project_detail.project_url or post.project_detail.github_url %}
+
+                <div class="info-section">
+
+                    {% if post.project_detail.project_url %}
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                آدرس پروژه
+                            </span>
+
+                            <a
+                                href="{{ post.project_detail.project_url }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {{ post.project_detail.project_url }}
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if post.project_detail.github_url %}
+
+                        <div class="info-item">
+
+                            <span class="info-label">
+                                GitHub
+                            </span>
+
+                            <a
+                                href="{{ post.project_detail.github_url }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {{ post.project_detail.github_url }}
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if request.user in post.author.followers.all %}
+
+                        {% if post.author.tel_id %}
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    Telegram ID
+                                </span>
+
+                                <span class="info-value">
+                                    {{ post.author.tel_id }}
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if post.author.phone_number %}
+
+                            <div class="info-item">
+
+                                <span class="info-label">
+                                    شماره تماس
+                                </span>
+
+                                <span class="info-value">
+                                    {{ post.author.phone_number }}
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        {% if post.author.tel_id %}
+
+                            <div
+                                class="info-item"
+                                onclick="showHint('دنبال کردن کاربر راه ارتباط است')"
+                            >
+
+                                <span class="info-label">
+                                    Telegram ID
+                                </span>
+
+                                <span class="blur-text">
+                                    {{ post.author.tel_id }}
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if post.author.phone_number %}
+
+                            <div
+                                class="info-item"
+                                onclick="showHint('دنبال کردن کاربر راه ارتباط است')"
+                            >
+
+                                <span class="info-label">
+                                    شماره تماس
+                                </span>
+
+                                <span class="blur-text">
+                                    {{ post.author.phone_number }}
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- TECHNOLOGIES -->
+
+            <h3 class="skills-title">
+                تکنولوژی‌های استفاده‌شده
+            </h3>
+
+            <div class="skills-list">
+
+                {% for technology in post.tags.all %}
+
+                    <span class="skill">
+                        {{ technology.name }}
+                    </span>
+
+                {% empty %}
+
+                    <span class="skill">
+                        بدون تکنولوژی ثبت‌شده
+                    </span>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             COMMENTS
+        ====================================================== -->
+
+        <section class="comments-card">
+
+            <div class="comments-header">
+
+                <h2>
+                    نظرات
+                </h2>
+
+                <span class="comments-count">
+                    {{ comments.count }} نظر
+                </span>
+
+            </div>
+
+
+            <div
+                id="comments-list"
+                class="comments-list"
+                data-post-slug="{{ post.slug }}"
+            >
+
+                {% for comment in comments %}
+
+                    <div class="comment-item">
+
+                        <div class="comment-user">
+
+                            <div class="comment-avatar">
+                                {{ comment.name|slice:":1"|upper }}
+                            </div>
+
+                            <div class="comment-name">
+                                {{ comment.name }}
+                            </div>
+
+                        </div>
+
+                        <div class="comment-body">
+                            {{ comment.body|linebreaks }}
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="comment-empty">
+                        هنوز نظری ثبت نشده است.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- COMMENT FORM -->
+
+            <h3 class="comment-form-title">
+                نظر خود را بنویسید
+            </h3>
+
+            <form
+                method="post"
+                action="{% url 'blog:post_comment' %}"
+                class="comment-form"
+                id="c_form"
+            >
+
+                {% csrf_token %}
+
+                {% for field in form %}
+
+                    <div class="form-group">
+
+                        <label class="form-label-custom">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field|add_class:"form-control form_field_glass form-control-lg rounded-4" }}
+
+                        <div class="text-danger small mt-1">
+                            {{ field.errors }}
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+
+                <input
+                    type="hidden"
+                    name="next"
+                    value="{{ request.GET.next }}"
+                >
+
+
+                <button
+                    type="submit"
+                    class="comment-submit"
+                    id="comment_btn"
+                >
+                    ارسال نظر
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- BACK -->
+
+        <div class="back-button-wrap">
+
+            <a
+                href="{{ request.META.HTTP_REFERER|default:'/' }}"
+                class="back-button"
+            >
+                ← بازگشت
+            </a>
+
+        </div>
+
+
+        <!-- =====================================================
+             SIMILAR POSTS
+        ====================================================== -->
+
+        <section class="similar-section">
+
+            <h2 class="similar-title-main">
+                پست‌های مشابه
+            </h2>
+
             <div class="similar-posts">
+
                 {% for post in similar_posts %}
-                    <a href="{{ post.get_absolute_url }}" class="similar-card">
-                        <div class="similar-category">{{ post.get_category_display }}</div>
-                        <h5 class="similar-title">
+
+                    <a
+                        href="{{ post.get_absolute_url }}"
+                        class="similar-card"
+                    >
+
+                        <span class="similar-category">
+                            {{ post.get_category_display }}
+                        </span>
+
+                        <h3 class="similar-card-title">
                             {{ post.title }}
-                        </h5>
+                        </h3>
+
                         <p class="similar-desc">
                             {{ post.description|truncatechars:55 }}
                         </p>
+
                         <div class="similar-footer">
-                            <span style="color:#ffffff;">❤️ {{ post.total_likes }}</span>
-                            <span style="color: white">📅 {{ post.publish|date:"Y/m/d" }}</span>
+
+                            <span>
+                                ❤️ {{ post.total_likes }}
+                            </span>
+
+                            <span>
+                                📅 {{ post.publish|date:"Y/m/d" }}
+                            </span>
+
                         </div>
+
                     </a>
+
                 {% empty %}
-                    <p style="color:#aaa;">پست مشابهی پیدا نشد.</p>
+
+                    <p style="color:#64748b;">
+                        پست مشابهی پیدا نشد.
+                    </p>
+
                 {% endfor %}
+
             </div>
-        </div>
+
+        </section>
+
     </div>
+
+</div>
+
 {% endblock %}
 
+
 {% block scripts %}
-    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>#}
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script>
 
-        function showHint(msg) {
-            const toast = document.createElement("div");
-            toast.textContent = msg;
-            toast.style.cssText = `
-        position:fixed;
-        bottom:30px;
-        left:50%;
-        transform:translateX(-50%);
-        background:#222;
-        color:white;
-        padding:10px 18px;
-        border-radius:12px;
-        z-index:99999;
-        opacity:0;
-        transition:.3s;
-    `;
-            document.body.appendChild(toast);
-            requestAnimationFrame(() => toast.style.opacity = 1);
-            setTimeout(() => {
-                toast.style.opacity = 0;
-                setTimeout(() => toast.remove(), 300);
-            }, 1800);
+<script src="{% static 'js/jquery.min.js' %}"></script>
+
+<script>
+
+    /* =========================================================
+       TOAST
+    ========================================================= */
+
+    function showHint(msg) {
+
+        const oldToast = document.querySelector('.post-toast');
+
+        if (oldToast) {
+            oldToast.remove();
         }
 
-        async function sharePost() {
-            try {
-                console.log("before");
-                await navigator.share({
-                    title: "Test",
-                    text: "Hello",
-                    url: "https://google.com"
-                });
-                console.log("success");
-            } catch (err) {
-                console.error("error", err);
-            }
-        }
+        const toast = document.createElement('div');
 
-        $(document).ready(function () {
+        toast.className = 'post-toast';
+        toast.textContent = msg;
 
+        document.body.appendChild(toast);
 
-            $('.post-like-button').click(function () {
-                const post_id = $(this).closest('.detail-meta, .meta-bar').data('post-id');
-                const button = $(this);
-
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "blog:post_like" %}',
-                    data: {
-                        'p_id': post_id,
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    success: function (data) {
-                        if (data.liked) {
-                            button.html(`<svg xmlns="http://www.w3.org/2000/svg"
-     width="24"
-     height="24"
-     viewBox="0 0 24 24"
-     fill="#ff3b5c">
-    <path d="M12 21s-6.7-4.35-9.33-8.02C.58 10.1 1.3 5.98 4.77 4.3c2.06-.99 4.47-.43 5.98 1.38L12 7l1.25-1.32c1.51-1.81 3.92-2.37 5.98-1.38 3.47 1.68 4.19 5.8 2.1 8.68C18.7 16.65 12 21 12 21z"/>
-</svg>`);
-                            button.addClass(".liked");
-
-                        } else {
-                            button.html(`<svg xmlns="http://www.w3.org/2000/svg"
-     width="24"
-     height="24"
-     viewBox="0 0 24 24"
-     fill="none"
-     stroke="currentColor"
-     stroke-width="2"
-     stroke-linecap="round"
-     stroke-linejoin="round">
-    <path d="M12 21s-6.7-4.35-9.33-8.02C.58 10.1 1.3 5.98 4.77 4.3c2.06-.99 4.47-.43 5.98 1.38L12 7l1.25-1.32c1.51-1.81 3.92-2.37 5.98-1.38 3.47 1.68 4.19 5.8 2.1 8.68C18.7 16.65 12 21 12 21z"/>
-</svg>`);
-                                button.removeClass(".liked");
-                        }
-                        $('.post-like-class').text(data.post_likes_count + ' لایک');
-                    }
-                });
-            });
-
-            $('.follow-btn').click(function () {
-                const username = $(this).closest('.meta-bar').data('user');
-                const btn = $(this);
-
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "blog:user_follow" %}',
-                    data: {
-                        'user_id': username,
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    success: function (data) {
-                        btn.text(data.followed ? 'UnFollow' : 'Follow');
-                    }
-                });
-            });
-
-            $("#save_button").click(function () {
-                const btn = $(this);
-
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "blog:save_post" %}',
-                    data: {
-                        'post_id': {{ post.id }},
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    success: function (data) {
-                        if (data.saved) {
-                            btn.html(`
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                            </svg>
-                        `);
-                        } else {
-                            btn.html(`
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                            </svg>
-                        `);
-                        }
-                    },
-                    error: function (error) {
-                        console.log("# error in AJAX request" + error);
-                    }
-                });
-            });
-
-
-            $('#comment_btn').click(function () {
-                const post_slug = $('.comments-list').data('post-slug');
-                $('#c_form').submit(function (e) {
-                    e.preventDefault();
-                });
-
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "blog:post_comment" %}',
-                    data: {
-                        'name': $('#id_name').val(),
-                        'body': $('#id_body').val(),
-                        'post_slug': post_slug,
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    success: function (response) {
-                        $('#comments-list').prepend(response.comment_html)
-                        $('#id_name').val('');
-                        $('#id_body').val('');
-                        if (response.next_url) {
-                            window.location.href = response.next_url;
-                        }
-                    }
-                });
-            });
+        requestAnimationFrame(() => {
+            toast.classList.add('show');
         });
-    </script>
+
+        setTimeout(() => {
+
+            toast.classList.remove('show');
+
+            setTimeout(() => {
+                toast.remove();
+            }, 250);
+
+        }, 1800);
+    }
+
+
+    /* =========================================================
+       SHARE
+    ========================================================= */
+
+    async function sharePost() {
+
+        const shareData = {
+            title: "{{ post.title|escapejs }}",
+            text: "{{ post.title|escapejs }}",
+            url: window.location.href
+        };
+
+        try {
+
+            if (navigator.share) {
+
+                await navigator.share(shareData);
+
+            } else {
+
+                await navigator.clipboard.writeText(window.location.href);
+
+                showHint('لینک پست کپی شد');
+
+            }
+
+        } catch (error) {
+
+            if (error.name !== 'AbortError') {
+                showHint('اشتراک‌گذاری انجام نشد');
+            }
+
+        }
+    }
+
+
+    /* =========================================================
+       IMAGE GALLERY
+    ========================================================= */
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const mainImage = document.getElementById('mainPostImage');
+        const mainDownload = document.getElementById('mainDownload');
+        const galleryLabel = document.querySelector('.gallery-label');
+        const thumbnails = document.querySelectorAll('.gallery-thumb');
+
+        if (mainImage && thumbnails.length) {
+
+            thumbnails.forEach(function (thumb) {
+
+                thumb.addEventListener('click', function () {
+
+                    const imageUrl = this.dataset.image;
+                    const downloadUrl = this.dataset.download;
+                    const index = this.dataset.index;
+
+                    if (!imageUrl) {
+                        return;
+                    }
+
+                    mainImage.src = imageUrl;
+
+                    if (mainDownload && downloadUrl) {
+                        mainDownload.href = downloadUrl;
+                    }
+
+                    if (galleryLabel) {
+                        galleryLabel.textContent =
+                            'تصویر ' + index + ' از ' + thumbnails.length;
+                    }
+
+                    thumbnails.forEach(function (item) {
+                        item.classList.remove('active');
+                    });
+
+                    this.classList.add('active');
+
+                    this.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest',
+                        inline: 'center'
+                    });
+
+                });
+
+            });
+
+
+            /* باز کردن عکس اصلی */
+
+            mainImage.addEventListener('click', function () {
+
+                if (this.src) {
+                    window.open(this.src, '_blank', 'noopener');
+                }
+
+            });
+
+        }
+
+
+        /* =====================================================
+           LIKE
+        ====================================================== */
+
+        $('.post-like-button').on('click', function () {
+
+            const button = $(this);
+            const meta = button.closest('.post-meta');
+            const postId = meta.data('post-id');
+
+            if (!postId) {
+                return;
+            }
+
+            if (button.data('loading')) {
+                return;
+            }
+
+            button.data('loading', true);
+
+            $.ajax({
+
+                type: 'POST',
+
+                url: '{% url "blog:post_like" %}',
+
+                data: {
+                    'p_id': postId,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+
+                success: function (data) {
+
+                    if (data.liked) {
+
+                        button.html(`
+                            <svg
+                                width="23"
+                                height="23"
+                                viewBox="0 0 24 24"
+                                fill="#ff3b5c"
+                            >
+                                <path d="M12 21s-6.7-4.35-9.33-8.02C.58 10.1 1.3 5.98 4.77 4.3c2.06-.99 4.47-.43 5.98 1.38L12 7l1.25-1.32c1.51-1.81 3.92-2.37 5.98-1.38 3.47 1.68 4.19 5.8 2.1 8.68C18.7 16.65 12 21 12 21z"/>
+                            </svg>
+                        `);
+
+                        button.addClass('liked');
+
+                    } else {
+
+                        button.html(`
+                            <svg
+                                width="23"
+                                height="23"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path d="M12 21s-6.7-4.35-9.33-8.02C.58 10.1 1.3 5.98 4.77 4.3c2.06-.99 4.47-.43 5.98 1.38L12 7l1.25-1.32c1.51-1.81 3.92-2.37 5.98-1.38 3.47 1.68 4.19 5.8 2.1 8.68C18.7 16.65 12 21 12 21z"/>
+                            </svg>
+                        `);
+
+                        button.removeClass('liked');
+
+                    }
+
+                    $('.post-like-class').text(
+                        data.post_likes_count + ' لایک'
+                    );
+
+                },
+
+                error: function () {
+
+                    showHint('خطا در ثبت لایک');
+
+                },
+
+                complete: function () {
+
+                    button.data('loading', false);
+
+                }
+
+            });
+
+        });
+
+
+        /* =====================================================
+           FOLLOW
+        ====================================================== */
+
+        $('.follow-btn-js').on('click', function () {
+
+            const btn = $(this);
+            const meta = btn.closest('.post-meta');
+            const username = meta.data('user');
+
+            if (!username || btn.data('loading')) {
+                return;
+            }
+
+            btn.data('loading', true);
+
+            $.ajax({
+
+                type: 'POST',
+
+                url: '{% url "blog:user_follow" %}',
+
+                data: {
+                    'user_id': username,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+
+                success: function (data) {
+
+                    btn.text(
+                        data.followed ? 'UnFollow' : 'Follow'
+                    );
+
+                },
+
+                error: function () {
+
+                    showHint('خطا در تغییر وضعیت دنبال کردن');
+
+                },
+
+                complete: function () {
+
+                    btn.data('loading', false);
+
+                }
+
+            });
+
+        });
+
+
+        /* =====================================================
+           SAVE
+        ====================================================== */
+
+        $('#save_button').on('click', function () {
+
+            const btn = $(this);
+
+            if (btn.data('loading')) {
+                return;
+            }
+
+            btn.data('loading', true);
+
+            $.ajax({
+
+                type: 'POST',
+
+                url: '{% url "blog:save_post" %}',
+
+                data: {
+                    'post_id': {{ post.id }},
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+
+                success: function (data) {
+
+                    if (data.saved) {
+
+                        btn.html(`
+                            <svg
+                                width="23"
+                                height="23"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                            >
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        `);
+
+                    } else {
+
+                        btn.html(`
+                            <svg
+                                width="23"
+                                height="23"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        `);
+
+                    }
+
+                },
+
+                error: function () {
+
+                    showHint('خطا در ذخیره پست');
+
+                },
+
+                complete: function () {
+
+                    btn.data('loading', false);
+
+                }
+
+            });
+
+        });
+
+
+        /* =====================================================
+           COMMENTS
+        ====================================================== */
+
+        $('#c_form').on('submit', function (e) {
+
+            e.preventDefault();
+
+            const form = $(this);
+            const button = $('#comment_btn');
+            const postSlug = $('#comments-list').data('post-slug');
+
+            if (button.data('loading')) {
+                return;
+            }
+
+            button.data('loading', true);
+            button.prop('disabled', true);
+            button.text('در حال ارسال...');
+
+            $.ajax({
+
+                type: 'POST',
+
+                url: '{% url "blog:post_comment" %}',
+
+                data: {
+                    'name': $('#id_name').val(),
+                    'body': $('#id_body').val(),
+                    'post_slug': postSlug,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+
+                success: function (response) {
+
+                    $('#comments-list').prepend(
+                        response.comment_html
+                    );
+
+                    $('#id_name').val('');
+                    $('#id_body').val('');
+
+                    if (response.next_url) {
+                        window.location.href = response.next_url;
+                    }
+
+                },
+
+                error: function () {
+
+                    showHint('ارسال نظر انجام نشد');
+
+                },
+
+                complete: function () {
+
+                    button.data('loading', false);
+                    button.prop('disabled', false);
+                    button.text('ارسال نظر');
+
+                }
+
+            });
+
+        });
+
+    });
+
+</script>
+
 {% endblock %}
