@@ -4,6 +4,8 @@ from django import template
 
 from ..models import Post, CommentModel, Text, Theme
 from ..views import header_color
+from markdown import markdown
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -54,8 +56,6 @@ def texts():
     text6, created8 = Text.objects.get_or_create(text_name='header_about_us')
     text7, created9 = Text.objects.get_or_create(text_name='header_contact_us')
 
-
-
     return {
         's_icon': s_icon,
         'title': title,
@@ -72,12 +72,12 @@ def texts():
 @register.simple_tag()
 def head_color(user=None):
     DEFAULT_THEME = {
-        "color1": "#7c3aed",
-        "color2": "#a78bfa",
-        "color3": "#0b1120",
-        "color4": "#a78bfa",
-        "color5": "#93c5fd",
-        "color6": "#0f172a"
+        "color1": "#C3B1E1",
+        "color2": "#5D3FD3",
+        "color3": "#CCCCFF",
+        "color4": "#7F00FF",
+        "color5": "#CCCCFF",
+        "color6": "#301934"
     }
 
     try:
@@ -86,3 +86,7 @@ def head_color(user=None):
     except:
         header_colors = DEFAULT_THEME
         return header_colors
+
+@register.filter('show_code')
+def mark_down_code(text):
+    return mark_safe(markdown(text))
