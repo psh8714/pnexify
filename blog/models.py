@@ -135,6 +135,24 @@ class Post(models.Model):
         ('IHQ', 'سوال درام')
     )
 
+    P_LANG_CHOICES = {
+        ('python', 'python'),
+        ('rust', 'Rust'),
+        ('cpp', 'C++'),
+        ('csharp', 'C#'),
+        ('c', 'C'),
+        ('js', 'JavaScript'),
+        ('java', 'Java'),
+        ('html', 'Html'),
+        ('css', 'css'),
+        ('ts', 'Typescript'),
+        ('go', 'GoLanguage'),
+        ('kt', 'Kotlin'),
+        ('php', 'php'),
+        ('regex', 'Regex'),
+        ('git', 'Git'),
+    }
+
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post')
     title = models.CharField(max_length=100)
     description = models.TextField()
@@ -150,6 +168,8 @@ class Post(models.Model):
     total_views = models.PositiveIntegerField(default=0)
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
     reading_time = models.PositiveIntegerField(default=0)
+    code_choice = models.CharField(choices=P_LANG_CHOICES, blank=True)
+    code = models.TextField(blank=True, null=True)
 
     objects = models.Manager()
     published = PublishedManager()
