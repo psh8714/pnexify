@@ -52,7 +52,8 @@ class NewPost(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['title', 'description', 'category', 'tags', 'reading_time']
+        fields = ['title', 'description', 'category', 'tags', 'reading_time','code','code_choice']
+        labels={'code_choice':'language'}
 
         widgets = {
             "category": forms.Select(
@@ -62,6 +63,9 @@ class NewPost(forms.ModelForm):
             ),
             "tags": forms.SelectMultiple(),
             "title": forms.TextInput(attrs={'style':'direction: rtl;unicode-bidi: plaintext;text-align: right;'}),
+            "code": forms.Textarea(attrs={'placeholder': "اگر کد داری بزار",
+                                          'style': 'direction: ltr;unicode-bidi: normal;text-align: left;'}),
+            "code_choice": forms.Select(attrs={'id': 'lang_choice'})
         }
 
 
