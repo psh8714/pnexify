@@ -1,527 +1,1094 @@
-{#<header class="site-header">#}
-{#    <div class="container">#}
-{#        <a href="{% url 'blog:post_list' %}" class="logo">#}
-{#            MyDjango#}
-{#        </a>#}
-{##}
-{#        <nav class="main-nav">#}
-{#            <ul>#}
-{#                {% if request.user.is_authenticated %}#}
-{#                    <li class="user-item">#}
-{#                        <a href="{% url 'blog:profile_view' %}" class="user-link">#}
-{#                            {{ request.user.first_name|default:request.user.username }}#}
-{#                        </a>#}
-{#                    </li>#}
-{#                {% else %}#}
-{#                    <li><a href="{% url 'blog:login' %}">ورود</a></li>#}
-{#                    <li><a href="{% url 'blog:user_register' %}">ثبت‌نام</a></li>#}
-{#                {% endif %}#}
-{##}
-{#                <li><a href="{% url 'blog:index' %}">خانه</a></li>#}
-{#                <li><a href="{% url 'blog:post_list' %}">پست‌ها</a></li>#}
-{#                <li><a href="{% url 'blog:twit_view' %}">توییت</a></li>#}
-{#                <li><a href="{% url 'blog:about_us' %}">درباره ما</a></li>#}
-{#                <li><a href="{% url 'blog:profile_view' %}">فعالیت من</a></li>#}
-{#                <li><a href="{% url 'blog:to_do_list' %}">کارها</a></li>#}
-{#                <li><a href="{% url 'blog:new_post_view' %}">افزودن پست</a></li>#}
-{#                <li><a href="{% url 'blog:ticket' %}">تماس</a></li>#}
-{##}
-{#                <li class="search-item">#}
-{#                    <form method="get" action="{% url 'blog:search_view' %}" class="search-form" name="search_posts">#}
-{#                        <input type="text" name="query" placeholder="جستجو..." required>#}
-{#                        <button type="submit">🔍</button>#}
-{#                    </form>#}
-{#                </li>#}
-{#            </ul>#}
-{#        </nav>#}
-{#    </div>#}
-{#</header>#}
-{##}
-{#<style>#}
-{#    .site-header {#}
-{#        position: sticky;#}
-{#        top: 0;#}
-{#        z-index: 1000;#}
-{#        background: linear-gradient(135deg, #0f172a 0%, #111827 100%);#}
-{#        border-bottom: 1px solid rgba(255, 255, 255, 0.08);#}
-{#        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);#}
-{#        backdrop-filter: blur(12px);#}
-{#    }#}
-{##}
-{#    .site-header .container {#}
-{#        max-width: 1280px;#}
-{#        margin: 0 auto;#}
-{#        padding: 14px 20px;#}
-{#        display: flex;#}
-{#        align-items: center;#}
-{#        justify-content: space-between;#}
-{#        gap: 24px;#}
-{#    }#}
-{##}
-{#    .logo {#}
-{#        font-size: 24px;#}
-{#        font-weight: 800;#}
-{#        color: #ffffff;#}
-{#        text-decoration: none;#}
-{#        letter-spacing: 0.5px;#}
-{#        display: inline-flex;#}
-{#        align-items: center;#}
-{#        gap: 8px;#}
-{#    }#}
-{##}
-{#    .logo::before {#}
-{#        content: "";#}
-{#        width: 11px;#}
-{#        height: 11px;#}
-{#        border-radius: 50%;#}
-{#        background: linear-gradient(135deg, #60a5fa, #3b82f6);#}
-{#        box-shadow: 0 0 14px rgba(96, 165, 250, 0.8);#}
-{#    }#}
-{##}
-{#    .main-nav ul {#}
-{#        list-style: none;#}
-{#        display: flex;#}
-{#        align-items: center;#}
-{#        gap: 10px;#}
-{#        margin: 0;#}
-{#        padding: 0;#}
-{#        flex-wrap: wrap;#}
-{#        justify-content: flex-end;#}
-{#    }#}
-{##}
-{#    .main-nav li {#}
-{#        display: flex;#}
-{#        align-items: center;#}
-{#    }#}
-{##}
-{#    .main-nav a {#}
-{#        color: #cbd5e1;#}
-{#        text-decoration: none;#}
-{#        font-size: 14px;#}
-{#        font-weight: 500;#}
-{#        padding: 10px 14px;#}
-{#        border-radius: 999px;#}
-{#        transition: all 0.25s ease;#}
-{#        white-space: nowrap;#}
-{#    }#}
-{##}
-{#    .main-nav a:hover {#}
-{#        color: #ffffff;#}
-{#        background: rgba(59, 130, 246, 0.16);#}
-{#        transform: translateY(-1px);#}
-{#    }#}
-{##}
-{#    .user-link {#}
-{#        background: rgba(34, 197, 94, 0.12);#}
-{#        color: #bbf7d0 !important;#}
-{#        border: 1px solid rgba(34, 197, 94, 0.18);#}
-{#    }#}
-{##}
-{#    .user-link:hover {#}
-{#        background: rgba(34, 197, 94, 0.2) !important;#}
-{#        color: #ffffff !important;#}
-{#    }#}
-{##}
-{#    .search-item {#}
-{#        margin-right: 6px;#}
-{#    }#}
-{##}
-{#    .search-form {#}
-{#        display: flex;#}
-{#        align-items: center;#}
-{#        background: rgba(15, 23, 42, 0.8);#}
-{#        border: 1px solid rgba(148, 163, 184, 0.22);#}
-{#        border-radius: 999px;#}
-{#        overflow: hidden;#}
-{#        min-width: 280px;#}
-{#    }#}
-{##}
-{#    .search-form input {#}
-{#        background: transparent;#}
-{#        border: none;#}
-{#        outline: none;#}
-{#        color: #e2e8f0;#}
-{#        padding: 10px 14px;#}
-{#        width: 100%;#}
-{#        font-size: 14px;#}
-{#    }#}
-{##}
-{#    .search-form input::placeholder {#}
-{#        color: #94a3b8;#}
-{#    }#}
-{##}
-{#    .search-form button {#}
-{#        background: linear-gradient(135deg, #2563eb, #1d4ed8);#}
-{#        border: none;#}
-{#        color: #fff;#}
-{#        padding: 10px 16px;#}
-{#        cursor: pointer;#}
-{#        font-size: 14px;#}
-{#        transition: 0.25s ease;#}
-{#    }#}
-{##}
-{#    .search-form button:hover {#}
-{#        filter: brightness(1.1);#}
-{#    }#}
-{##}
-{#    @media (max-width: 992px) {#}
-{#        .site-header .container {#}
-{#            flex-direction: column;#}
-{#            align-items: flex-start;#}
-{#        }#}
-{##}
-{#        .main-nav ul {#}
-{#            justify-content: flex-start;#}
-{#        }#}
-{##}
-{#        .search-form {#}
-{#            min-width: 240px;#}
-{#        }#}
-{#    }#}
-{##}
-{#    @media (max-width: 640px) {#}
-{#        .main-nav ul {#}
-{#            gap: 8px;#}
-{#        }#}
-{##}
-{#        .main-nav a {#}
-{#            font-size: 13px;#}
-{#            padding: 8px 12px;#}
-{#        }#}
-{##}
-{#        .search-form {#}
-{#            width: 100%;#}
-{#            min-width: 100%;#}
-{#        }#}
-{##}
-{#        .search-item {#}
-{#            width: 100%;#}
-{#        }#}
-{#    }#}
-{#</style>#}
 {% load static %}
 {% load blog_tags %}
 {% texts as header_data %}
 
 <!doctype html>
+<html lang="fa" dir="rtl">
 
-<html lang="fa" dir="rtl">  
-<head>  
-    <meta charset="utf-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1">  
-    <title>{% block title %}MyDjango{% endblock %}</title>  <!-- Bootstrap CSS RTL -->  
-{#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">#}  
-<link href="{% static 'css/bootstrap.rtl.min.css' %}">  
+<head>
 
-<style>  
-    body {  
-        background-color: #f8fafc;  
-    }  
+    <meta charset="utf-8">
 
-    {% if request.user.is_authenticated %}  
-        {% head_color request.user as color_ %}  
-    {% else %}  
-        {% head_color as color_ %}  
-    {% endif %}  
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    .navbar {  
-        background: linear-gradient(135deg, {{ color_.color1 }} 80%, {{ color_.color2 }} 20%);  
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);  
-        z-index: 9999 !important;  
-    }  
-
-    .brand-dot {  
-        width: 12px;  
-        height: 12px;  
-        border-radius: 40%;  
-        display: inline-block;  
-        background: linear-gradient(135deg, {{ color_.color1 }}, {{ color_.color3 }});  
-        box-shadow: 0 0 12px{{ color_.color2 }};  
-    }  
-
-    .navbar-brand {  
-        font-family: "Caveat", cursive;  
-        font-size: 2.15rem;  
-        font-weight: 1000;  
-        color: {{ color_.color6 }} !important;  
-        letter-spacing: 4.4px;  
-    }  
-
-    .navbar-toggler {  
-        border: none;  
-        background: transparent;  
-        cursor: pointer;  
-        color: white; /* رنگ آیکون */  
-        padding: 8px;  
-        border-radius: 12px;  
-        transition: .25s;  
-    }  
-
-    .navbar-toggler:hover {  
-        background: rgba(255, 255, 255, .12);  
-        transform: scale(1.05);  
-    }  
-
-    .navbar-toggler:focus {  
-        box-shadow: none;  
-    }  
-
-    .nav-link {  
-        color: white !important;  
-        border-radius: 999px;  
-        padding: 8px 14px !important;  
-        transition: all 0.25s ease;  
-        font-weight: 500;  
-        white-space: nowrap;  
-    }  
-
-    .nav-link:hover {  
-        background: {{ color_.color6 }};  
-        color: #fff !important;  
-    }  
-
-    .user-badge {  
-        background: rgba(34, 197, 94, 0.14);  
-        color: #bbf7d0 !important;  
-        border: 1px solid rgba(34, 197, 94, 0.22);  
-    }  
-
-    .user-badge:hover {  
-        background: rgba(34, 197, 94, 0.2);  
-        color: #fff !important;  
-    }  
-
-    /* Search Box */  
-    .search-box {  
-        display: flex;  
-        align-items: center;  
-        background: {{ color_.color2 }};  
-        border-radius: 25px;  
-        padding: 4px 5px;  
-        width: 250px;  
-        height: 40px;  
-        transition: all 0.3s ease;  
-        overflow: hidden;  
-        margin-left: 10px;  
-        margin-right: 10px;  
-    }  
-
-    .search-box:focus-within {  
-        box-shadow: 0 0 15px{{ color_.color1 }};  
-        background: {{ color_.color4 }};  
-        width: 280px;  
-    }  
-
-    .search-box input {  
-        flex: 1;  
-        border: none;  
-        outline: none;  
-        font-size: 0.95em;  
-        padding: 3px 12px;  
-        background: transparent;  
-        color: #620000;  
-        box-shadow: none !important;  
-    }  
-
-    .search-box input::placeholder {  
-        color: {{ color_.color1 }};  
-    }  
-
-    .search-box input:focus {  
-        color: #ffffff;  
-        background: {{ color_.color4 }};  
-    }  
-
-    .search-box button {  
-        background: linear-gradient(135deg, {{ color_.color1 }});  
-        border: none;  
-        color: white;  
-        width: 35px;  
-        height: 35px;  
-        border-radius: 100%;  
-        cursor: pointer;  
-        font-size: 1em;  
-        transition: all 0.3s;  
-        display: flex;  
-        align-items: center;  
-        justify-content: center;  
-        flex-shrink: 0;  
-    }  
-
-    .search-box button:hover {  
-        transform: scale(1.08);  
-        background: linear-gradient(135deg, {{ color_.color3 }});  
-    }  
-
-    @media (max-width: 991px) {  
-        .navbar-collapse {  
-            margin-top: 1rem;  
-            padding-top: 1rem;  
-            border-top: 1px solid rgba(255, 255, 255, 0.08);  
-        }  
-
-        .navbar-nav {  
-            gap: 8px;  
-        }  
+    <title>{% block title %}MyDjango{% endblock %}</title>
 
 
-        .nav-link {  
-            width: 100%;  
-        }  
-
-        .search-box {  
-            width: 200px;  
-            min-width: 50px;  
-            margin: 0 0 10px 2px;  
-        }  
-
-        .search-box:focus-within {  
-            width: 250px;  
-        }  
-    }  
-
-    @media (max-width: 450px) {  
-        .navbar-collapse {  
-            margin-top: 1rem;  
-            padding-top: 1rem;  
-            border-top: 1px solid rgba(255, 255, 255, 0.08);  
-        }  
-
-        .navbar-nav {  
-            gap: 8px;  
-        }  
+    <!-- Bootstrap CSS RTL -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.rtl.min.css' %}">
 
 
-        .nav-link {  
-            width: 100%;  
-        }  
+    <style>
 
-        .search-box {  
-            width: 130px;  
-            min-width: 50px;  
-            margin: 0 0 10px 2px;  
-        }  
+        /* =========================================================
+           BODY
+           ========================================================= */
 
-        .search-box:focus-within {  
-            width: 160px;  
-        }  
-    }  
-</style>
+        body {
+            background-color: #f8fafc;
+        }
 
-</head>  
-<body>  <header>  
-    <nav class="navbar navbar-expand-xxl navbar-dark sticky-top">  
-        <div class="container">  
-            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'blog:index' %}">  
-                <span class="brand-dot"></span>  
-                {{ header_data.title.s_description }}  
-            </a>  <!-- Search -->  
-        <form method="get" action="{% url 'blog:search_view' %}" class="d-flex ms-lg-3 mt-3 mt-lg-0" role="search">  
-            <div class="search-box">  
-                <input class="form-control" type="search" name="query" placeholder="جستجو..." required>  
-                <button type="submit">{{ header_data.s_icon.s_description }}</button>  
-            </div>  
-        </form>  
 
-        <!-- Hamburger -->  
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"  
-                aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">  
-            <span>  
-<svg xmlns="http://www.w3.org/2000/svg"  
-     width="30"  
-     height="30"  
-     viewBox="0 0 24 24"  
-     fill="none"  
-     stroke="white"  
-     stroke-width="2.5"  
-     stroke-linecap="round">  
-    <path d="M4 7h16"></path>  
-    <path d="M8 12h12"></path>  
-    <path d="M4 17h16"></path>  
-</svg>  
-            </span>  
-        </button>  
+        /* =========================================================
+           USER HEADER COLORS
+           ========================================================= */
 
-        <div class="collapse navbar-collapse" id="mainNavbar">  
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">  
+        {% if request.user.is_authenticated %}
+            {% head_color request.user as color_ %}
+        {% else %}
+            {% head_color as color_ %}
+        {% endif %}
 
-                {% if request.user.is_authenticated %}  
-                    <li class="nav-item me-lg-1">  
-                        <a class="nav-link user-badge" href="{% url 'blog:profile_view' %}">  
-                            {{ request.user.first_name|default:request.user.username }}  
-                        </a>  
-                    </li>  
-                {% else %}  
-                    <li class="nav-item me-lg-1">  
-                        <a class="nav-link" href="{% url 'blog:login' %}">ورود</a>  
-                    </li>  
-                    <li class="nav-item me-lg-1">  
-                        <a class="nav-link" href="{% url 'blog:user_register' %}">ثبت‌نام</a>  
-                    </li>  
-                {% endif %}  
 
-                <li class="nav-item me-lg-1">  
-                    <a class="nav-link" href="{% url 'blog:index' %}">{{ header_data.text1.s_description }}</a>  
-                </li>  
+        /* =========================================================
+           GLASS / FROSTED HEADER
+           ========================================================= */
 
-                <li class="nav-item me-lg-1">  
-                    <a class="nav-link" href="{% url 'blog:post_list' %}">{{ header_data.text3.s_description }}</a>  
-                </li>  
+        .navbar {
 
-                <li class="nav-item me-lg-1">  
-                    <a class="nav-link" href="{% url 'blog:twit_view' %}">{{ header_data.text4.s_description }}</a>  
-                </li>  
+            /*
+             * ثابت ماندن هدر هنگام اسکرول
+             */
+            position: sticky;
+            top: 0;
 
-                <li class="nav-item me-lg-1">  
-                    <a class="nav-link" href="{% url 'blog:about_us' %}">{{ header_data.text6.s_description }}</a>  
-                </li>  
+            /*
+             * هدر همیشه روی محتوای صفحه باشد
+             */
+            z-index: 9999 !important;
 
-                <li class="nav-item me-lg-1">  
-                    <a class="nav-link"  
-                       href="{% url 'blog:profile_view' %}">{{ header_data.text2.s_description }}</a>  
-                </li>  
 
-                <li class="nav-item me-lg-1">  
-                    <a class="nav-link" href="{% url 'blog:user_list' %}">کاربرها</a>  
-                </li>  
+            /*
+             * رنگ انتخاب‌شده توسط کاربر حفظ شده،
+             * فقط با Alpha شفاف شده است.
+             */
+            background:
+                linear-gradient(
+                    135deg,
+                    {{ color_.color1 }}cc 0%,
+                    {{ color_.color2 }}99 100%
+                ) !important;
 
-                <li class="nav-item me-lg-1">  
-                    <a class="nav-link"  
-                       href="{% url 'blog:new_post_view' %}">{{ header_data.text5.s_description }}</a>  
-                </li>  
 
-                <li class="nav-item me-lg-2">  
-                    <a class="nav-link"  
-                       onclick="goSection()">{{ header_data.text7.s_description }}  
-                    </a>  
-                </li>  
-                <li class="nav-item me-lg-2">  
-                    <a class="nav-link"  
-                       href="{% url 'blog:header_color' %}">رنگ هدر به سبکی پیشرو  
-                    </a>  
-                </li>  
-                {% if request.user.is_staff %}  
-                    <li class="nav-item me-lg-1">  
-                        <a class="nav-link" href="{% url 'blog:local_tickets_admin' %}">پیام کاربر ها</a>  
-                    </li>  
-                    <li class="nav-item me-lg-1">  
-                        <a class="nav-link" href="{% url 'blog:site_check' %}">سیفی</a>  
-                    </li>  
-                {% endif %}  
-            </ul>  
-        </div>  
-    </div>  
-</nav>
+            /*
+             * افکت Frosted Glass
+             *
+             * هر چیزی که پشت هدر قرار بگیرد
+             * از پشت هدر بلور می‌شود.
+             */
+            backdrop-filter:
+                blur(18px)
+                saturate(150%);
 
-</header>  <!-- Bootstrap JS Bundle -->  {#<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>#}
+            -webkit-backdrop-filter:
+                blur(18px)
+                saturate(150%);
 
-<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>  <script>  
-    function goSection() {  
-        if (confirm('اگر ارتباط با پشتیبانی از طریق ایمیل نیاز دارید ok \n و اگر ارتباط داخلی سایت را میخواهید cancel')) {  
-            window.location.href = '{% url 'blog:ticket' %}';  
-        } else {  
-            window.location.href = '{% url 'blog:local_ticket' %}';  
-        }  
-    }  
-</script>  </body>  
-</html>  هدر سایت رو به این سبک جدیدی که اومده که حالت بلور داره بطوریکه بقیه محتویات سایت دیده می‌شه تغییر بده طوری که تغییر رنگ هدر که دست کاربره حفظ بشه
+
+            /*
+             * خط ظریف دور شیشه
+             */
+            border-bottom:
+                1px solid rgba(255, 255, 255, 0.18);
+
+
+            /*
+             * سایه نرم
+             */
+            box-shadow:
+                0 8px 30px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.10);
+
+
+            transition:
+                background 0.3s ease,
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+        }
+
+
+        /*
+         * لایه نور خیلی ظریف روی هدر
+         */
+        .navbar::before {
+
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            pointer-events: none;
+
+            background:
+                linear-gradient(
+                    120deg,
+                    rgba(255, 255, 255, 0.08),
+                    transparent 40%,
+                    rgba(255, 255, 255, 0.03)
+                );
+        }
+
+
+        /*
+         * محتویات داخل هدر بالاتر از لایه نور قرار بگیرند
+         */
+        .navbar > .container {
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        /* =========================================================
+           BRAND
+           ========================================================= */
+
+        .brand-dot {
+
+            width: 12px;
+
+            height: 12px;
+
+            border-radius: 40%;
+
+            display: inline-block;
+
+
+            background:
+                linear-gradient(
+                    135deg,
+                    {{ color_.color1 }},
+                    {{ color_.color3 }}
+                );
+
+
+            box-shadow:
+                0 0 12px {{ color_.color2 }};
+
+
+            transition:
+                all 0.3s ease;
+        }
+
+
+        .navbar-brand {
+
+            font-family: "Caveat", cursive;
+
+            font-size: 2.15rem;
+
+            font-weight: 1000;
+
+            color:
+                {{ color_.color6 }}
+                !important;
+
+            letter-spacing: 4.4px;
+
+            transition:
+                all 0.25s ease;
+        }
+
+
+        .navbar-brand:hover {
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        .navbar-brand:hover .brand-dot {
+
+            transform:
+                scale(1.15);
+        }
+
+
+        /* =========================================================
+           NAVIGATION LINKS
+           ========================================================= */
+
+        .nav-link {
+
+            color:
+                rgba(255, 255, 255, 0.94)
+                !important;
+
+            border-radius:
+                999px;
+
+            padding:
+                8px 14px
+                !important;
+
+            transition:
+                all 0.25s ease;
+
+            font-weight:
+                500;
+
+            white-space:
+                nowrap;
+        }
+
+
+        .nav-link:hover {
+
+            background:
+                rgba(255, 255, 255, 0.14);
+
+            color:
+                #fff
+                !important;
+
+            transform:
+                translateY(-1px);
+
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.12),
+                0 4px 14px rgba(0,0,0,0.08);
+        }
+
+
+        /* =========================================================
+           USER BADGE
+           ========================================================= */
+
+        .user-badge {
+
+            background:
+                rgba(34, 197, 94, 0.14);
+
+            color:
+                #bbf7d0
+                !important;
+
+            border:
+                1px solid rgba(34, 197, 94, 0.22);
+
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+
+
+        .user-badge:hover {
+
+            background:
+                rgba(34, 197, 94, 0.22);
+
+            color:
+                #fff
+                !important;
+        }
+
+
+        /* =========================================================
+           SEARCH BOX
+           ========================================================= */
+
+        .search-box {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+
+            /*
+             * رنگ کاربر + شفافیت
+             */
+            background:
+                {{ color_.color2 }}88;
+
+
+            border:
+                1px solid rgba(255, 255, 255, 0.16);
+
+
+            border-radius:
+                25px;
+
+
+            padding:
+                4px 5px;
+
+
+            width:
+                250px;
+
+            height:
+                40px;
+
+
+            transition:
+                all 0.3s ease;
+
+
+            overflow:
+                hidden;
+
+
+            margin-left:
+                10px;
+
+            margin-right:
+                10px;
+
+
+            /*
+             * شیشه داخلی سرچ
+             */
+            backdrop-filter:
+                blur(12px);
+
+            -webkit-backdrop-filter:
+                blur(12px);
+
+
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.08),
+                0 4px 15px rgba(0,0,0,0.08);
+        }
+
+
+        .search-box:hover {
+
+            background:
+                {{ color_.color2 }}aa;
+
+            border-color:
+                rgba(255,255,255,0.25);
+        }
+
+
+        .search-box:focus-within {
+
+            box-shadow:
+                0 0 0 3px
+                {{ color_.color1 }}35,
+
+                0 0 20px
+                {{ color_.color1 }}55;
+
+
+            background:
+                {{ color_.color4 }}bb;
+
+
+            width:
+                280px;
+        }
+
+
+        /* =========================================================
+           SEARCH INPUT
+           ========================================================= */
+
+        .search-box input {
+
+            flex:
+                1;
+
+            border:
+                none;
+
+            outline:
+                none;
+
+            font-size:
+                0.95em;
+
+            padding:
+                3px 12px;
+
+            background:
+                transparent;
+
+            color:
+                #ffffff;
+
+            box-shadow:
+                none !important;
+        }
+
+
+        .search-box input::placeholder {
+
+            color:
+                rgba(255,255,255,0.65);
+        }
+
+
+        .search-box input:focus {
+
+            color:
+                #ffffff;
+
+            background:
+                transparent;
+        }
+
+
+        /* =========================================================
+           SEARCH BUTTON
+           ========================================================= */
+
+        .search-box button {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    {{ color_.color1 }},
+                    {{ color_.color3 }}
+                );
+
+
+            border:
+                none;
+
+
+            color:
+                white;
+
+
+            width:
+                35px;
+
+            height:
+                35px;
+
+
+            border-radius:
+                100%;
+
+
+            cursor:
+                pointer;
+
+
+            font-size:
+                1em;
+
+
+            transition:
+                all 0.3s;
+
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+
+            flex-shrink:
+                0;
+
+
+            box-shadow:
+                0 3px 10px rgba(0,0,0,0.15);
+        }
+
+
+        .search-box button:hover {
+
+            transform:
+                scale(1.08);
+
+
+            background:
+                linear-gradient(
+                    135deg,
+                    {{ color_.color3 }},
+                    {{ color_.color1 }}
+                );
+
+
+            box-shadow:
+                0 5px 16px
+                {{ color_.color1 }}66;
+        }
+
+
+        /* =========================================================
+           HAMBURGER
+           ========================================================= */
+
+        .navbar-toggler {
+
+            border:
+                1px solid rgba(255,255,255,0.15);
+
+
+            background:
+                rgba(255,255,255,0.08);
+
+
+            cursor:
+                pointer;
+
+
+            color:
+                white;
+
+
+            padding:
+                8px;
+
+
+            border-radius:
+                12px;
+
+
+            transition:
+                .25s;
+
+
+            backdrop-filter:
+                blur(10px);
+
+            -webkit-backdrop-filter:
+                blur(10px);
+        }
+
+
+        .navbar-toggler:hover {
+
+            background:
+                rgba(255,255,255,.14);
+
+
+            transform:
+                scale(1.05);
+
+
+            border-color:
+                rgba(255,255,255,0.25);
+        }
+
+
+        .navbar-toggler:focus {
+
+            box-shadow:
+                none;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+        @media (max-width: 991px) {
+
+            .navbar-collapse {
+
+                margin-top:
+                    1rem;
+
+                padding-top:
+                    1rem;
+
+                border-top:
+                    1px solid
+                    rgba(255, 255, 255, 0.08);
+            }
+
+
+            .navbar-nav {
+
+                gap:
+                    8px;
+            }
+
+
+            .nav-link {
+
+                width:
+                    100%;
+            }
+
+
+            .search-box {
+
+                width:
+                    200px;
+
+                min-width:
+                    50px;
+
+                margin:
+                    0 0 10px 2px;
+            }
+
+
+            .search-box:focus-within {
+
+                width:
+                    250px;
+            }
+        }
+
+
+        /* =========================================================
+           SMALL MOBILE
+           ========================================================= */
+
+        @media (max-width: 450px) {
+
+            .navbar-collapse {
+
+                margin-top:
+                    1rem;
+
+                padding-top:
+                    1rem;
+
+                border-top:
+                    1px solid
+                    rgba(255, 255, 255, 0.08);
+            }
+
+
+            .navbar-nav {
+
+                gap:
+                    8px;
+            }
+
+
+            .nav-link {
+
+                width:
+                    100%;
+            }
+
+
+            .search-box {
+
+                width:
+                    130px;
+
+                min-width:
+                    50px;
+
+                margin:
+                    0 0 10px 2px;
+            }
+
+
+            .search-box:focus-within {
+
+                width:
+                    160px;
+            }
+        }
+
+
+        /* =========================================================
+           FALLBACK FOR OLD BROWSERS
+           ========================================================= */
+
+        @supports not (backdrop-filter: blur(18px)) {
+
+            .navbar {
+
+                background:
+                    linear-gradient(
+                        135deg,
+                        {{ color_.color1 }},
+                        {{ color_.color2 }}
+                    ) !important;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <nav class="navbar navbar-expand-xxl navbar-dark sticky-top">
+
+        <div class="container">
+
+
+            <!-- =====================================================
+                 BRAND
+                 ===================================================== -->
+
+            <a
+                class="navbar-brand d-flex align-items-center gap-2"
+                href="{% url 'blog:index' %}"
+            >
+
+                <span class="brand-dot"></span>
+
+                {{ header_data.title.s_description }}
+
+            </a>
+
+
+
+            <!-- =====================================================
+                 SEARCH
+                 ===================================================== -->
+
+            <form
+                method="get"
+                action="{% url 'blog:search_view' %}"
+                class="d-flex ms-lg-3 mt-3 mt-lg-0"
+                role="search"
+            >
+
+                <div class="search-box">
+
+                    <input
+                        class="form-control"
+                        type="search"
+                        name="query"
+                        placeholder="جستجو..."
+                        required
+                    >
+
+                    <button type="submit">
+                        {{ header_data.s_icon.s_description }}
+                    </button>
+
+                </div>
+
+            </form>
+
+
+
+            <!-- =====================================================
+                 HAMBURGER
+                 ===================================================== -->
+
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+
+                <span>
+
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="30"
+                        height="30"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="white"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                    >
+
+                        <path d="M4 7h16"></path>
+
+                        <path d="M8 12h12"></path>
+
+                        <path d="M4 17h16"></path>
+
+                    </svg>
+
+                </span>
+
+            </button>
+
+
+
+            <!-- =====================================================
+                 NAVIGATION
+                 ===================================================== -->
+
+            <div
+                class="collapse navbar-collapse"
+                id="mainNavbar"
+            >
+
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+
+
+                    {% if request.user.is_authenticated %}
+
+                        <!-- USER -->
+
+                        <li class="nav-item me-lg-1">
+
+                            <a
+                                class="nav-link user-badge"
+                                href="{% url 'blog:profile_view' %}"
+                            >
+
+                                {{ request.user.first_name|default:request.user.username }}
+
+                            </a>
+
+                        </li>
+
+                    {% else %}
+
+                        <!-- LOGIN -->
+
+                        <li class="nav-item me-lg-1">
+
+                            <a
+                                class="nav-link"
+                                href="{% url 'blog:login' %}"
+                            >
+                                ورود
+                            </a>
+
+                        </li>
+
+
+                        <!-- REGISTER -->
+
+                        <li class="nav-item me-lg-1">
+
+                            <a
+                                class="nav-link"
+                                href="{% url 'blog:user_register' %}"
+                            >
+                                ثبت‌نام
+                            </a>
+
+                        </li>
+
+                    {% endif %}
+
+
+
+                    <!-- HOME -->
+
+                    <li class="nav-item me-lg-1">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'blog:index' %}"
+                        >
+                            {{ header_data.text1.s_description }}
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- POSTS -->
+
+                    <li class="nav-item me-lg-1">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'blog:post_list' %}"
+                        >
+                            {{ header_data.text3.s_description }}
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- TWEETS -->
+
+                    <li class="nav-item me-lg-1">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'blog:twit_view' %}"
+                        >
+                            {{ header_data.text4.s_description }}
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- ABOUT -->
+
+                    <li class="nav-item me-lg-1">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'blog:about_us' %}"
+                        >
+                            {{ header_data.text6.s_description }}
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- MY ACTIVITY -->
+
+                    <li class="nav-item me-lg-1">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'blog:profile_view' %}"
+                        >
+                            {{ header_data.text2.s_description }}
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- USERS -->
+
+                    <li class="nav-item me-lg-1">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'blog:user_list' %}"
+                        >
+                            کاربرها
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- NEW POST -->
+
+                    <li class="nav-item me-lg-1">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'blog:new_post_view' %}"
+                        >
+                            {{ header_data.text5.s_description }}
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- CONTACT -->
+
+                    <li class="nav-item me-lg-2">
+
+                        <a
+                            class="nav-link"
+                            onclick="goSection()"
+                        >
+                            {{ header_data.text7.s_description }}
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- HEADER COLOR -->
+
+                    <li class="nav-item me-lg-2">
+
+                        <a
+                            class="nav-link"
+                            href="{% url 'blog:header_color' %}"
+                        >
+                            رنگ هدر به سبکی پیشرو
+                        </a>
+
+                    </li>
+
+
+
+                    {% if request.user.is_staff %}
+
+                        <!-- STAFF MESSAGES -->
+
+                        <li class="nav-item me-lg-1">
+
+                            <a
+                                class="nav-link"
+                                href="{% url 'blog:local_tickets_admin' %}"
+                            >
+                                پیام کاربر ها
+                            </a>
+
+                        </li>
+
+
+                        <!-- SITE CHECK -->
+
+                        <li class="nav-item me-lg-1">
+
+                            <a
+                                class="nav-link"
+                                href="{% url 'blog:site_check' %}"
+                            >
+                                سیفی
+                            </a>
+
+                        </li>
+
+                    {% endif %}
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+
+<!-- =========================================================
+     BOOTSTRAP JS
+     ========================================================= -->
+
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+
+
+<!-- =========================================================
+     CONTACT FUNCTION
+     ========================================================= -->
+
+<script>
+
+    function goSection() {
+
+        if (
+            confirm(
+                'اگر ارتباط با پشتیبانی از طریق ایمیل نیاز دارید ok \n' +
+                'و اگر ارتباط داخلی سایت را میخواهید cancel'
+            )
+        ) {
+
+            window.location.href =
+                '{% url "blog:ticket" %}';
+
+        } else {
+
+            window.location.href =
+                '{% url "blog:local_ticket" %}';
+
+        }
+
+    }
+
+</script>
+
+
+</body>
+
+</html>
