@@ -6,32 +6,18 @@
 <html lang="fa" dir="rtl">
 
 <head>
-
     <meta charset="utf-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{% block title %}MyDjango{% endblock %}</title>
 
-
-    <!-- Bootstrap CSS RTL -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.rtl.min.css' %}">
-
 
     <style>
 
-        /* =========================================================
-           BODY
-           ========================================================= */
-
-        body {
-            background-color: #f8fafc;
-        }
-
-
-        /* =========================================================
-           USER HEADER COLORS
-           ========================================================= */
+        /* =====================================================
+           COLORS
+           ===================================================== */
 
         {% if request.user.is_authenticated %}
             {% head_color request.user as color_ %}
@@ -40,28 +26,55 @@
         {% endif %}
 
 
-        /* =========================================================
-           GLASS / FROSTED HEADER
-           ========================================================= */
+        /* =====================================================
+           BODY
+           ===================================================== */
 
-        .navbar {
+        body {
+            background-color: #f8fafc;
+            margin: 0;
+        }
 
-            /*
-             * ثابت ماندن هدر هنگام اسکرول
-             */
-            position: sticky;
+
+        /* =====================================================
+           FIXED HEADER WRAPPER
+           
+           خود این بخش ثابت می‌ماند.
+           ===================================================== */
+
+        .site-header {
+            position: fixed;
+
             top: 0;
+            left: 0;
+            right: 0;
+
+            width: 100%;
+
+            z-index: 99999;
+
+            pointer-events: none;
+        }
+
+
+        /* =====================================================
+           NAVBAR
+           ===================================================== */
+
+        .site-header .navbar {
+
+            position: relative;
+
+            width: 100%;
+
+            pointer-events: auto;
+
 
             /*
-             * هدر همیشه روی محتوای صفحه باشد
+             * رنگ انتخاب‌شده توسط کاربر
+             * حفظ شده ولی شفاف است.
              */
-            z-index: 9999 !important;
 
-
-            /*
-             * رنگ انتخاب‌شده توسط کاربر حفظ شده،
-             * فقط با Alpha شفاف شده است.
-             */
             background:
                 linear-gradient(
                     135deg,
@@ -71,46 +84,51 @@
 
 
             /*
-             * افکت Frosted Glass
-             *
-             * هر چیزی که پشت هدر قرار بگیرد
-             * از پشت هدر بلور می‌شود.
+             * شیشه‌ای
              */
+
             backdrop-filter:
-                blur(18px)
-                saturate(150%);
+                blur(20px)
+                saturate(160%);
 
             -webkit-backdrop-filter:
-                blur(18px)
-                saturate(150%);
+                blur(20px)
+                saturate(160%);
 
 
             /*
-             * خط ظریف دور شیشه
+             * لبه شیشه
              */
+
             border-bottom:
-                1px solid rgba(255, 255, 255, 0.18);
+                1px solid rgba(255,255,255,0.18);
 
 
             /*
-             * سایه نرم
+             * سایه
              */
-            box-shadow:
-                0 8px 30px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.10);
 
+            box-shadow:
+                0 8px 32px rgba(0,0,0,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.10);
+
+
+            /*
+             * مهم:
+             * ارتفاع خود navbar طبیعی باقی می‌ماند.
+             */
 
             transition:
                 background 0.3s ease,
-                box-shadow 0.3s ease,
-                border-color 0.3s ease;
+                box-shadow 0.3s ease;
         }
 
 
-        /*
-         * لایه نور خیلی ظریف روی هدر
-         */
-        .navbar::before {
+        /* =====================================================
+           GLASS LIGHT
+           ===================================================== */
+
+        .site-header .navbar::before {
 
             content: "";
 
@@ -123,17 +141,14 @@
             background:
                 linear-gradient(
                     120deg,
-                    rgba(255, 255, 255, 0.08),
+                    rgba(255,255,255,0.09),
                     transparent 40%,
-                    rgba(255, 255, 255, 0.03)
+                    rgba(255,255,255,0.03)
                 );
         }
 
 
-        /*
-         * محتویات داخل هدر بالاتر از لایه نور قرار بگیرند
-         */
-        .navbar > .container {
+        .site-header .navbar > .container {
 
             position: relative;
 
@@ -141,20 +156,18 @@
         }
 
 
-        /* =========================================================
+        /* =====================================================
            BRAND
-           ========================================================= */
+           ===================================================== */
 
         .brand-dot {
 
             width: 12px;
-
             height: 12px;
 
             border-radius: 40%;
 
             display: inline-block;
-
 
             background:
                 linear-gradient(
@@ -163,10 +176,8 @@
                     {{ color_.color3 }}
                 );
 
-
             box-shadow:
                 0 0 12px {{ color_.color2 }};
-
 
             transition:
                 all 0.3s ease;
@@ -206,22 +217,21 @@
         }
 
 
-        /* =========================================================
-           NAVIGATION LINKS
-           ========================================================= */
+        /* =====================================================
+           NAV LINKS
+           ===================================================== */
 
         .nav-link {
 
             color:
-                rgba(255, 255, 255, 0.94)
+                rgba(255,255,255,0.94)
                 !important;
 
             border-radius:
                 999px;
 
             padding:
-                8px 14px
-                !important;
+                8px 14px !important;
 
             transition:
                 all 0.25s ease;
@@ -237,56 +247,50 @@
         .nav-link:hover {
 
             background:
-                rgba(255, 255, 255, 0.14);
+                rgba(255,255,255,0.14);
 
             color:
-                #fff
-                !important;
+                #fff !important;
 
             transform:
                 translateY(-1px);
 
             box-shadow:
-                inset 0 1px 0 rgba(255,255,255,0.12),
+                inset 0 1px 0 rgba(255,255,255,0.10),
                 0 4px 14px rgba(0,0,0,0.08);
         }
 
 
-        /* =========================================================
+        /* =====================================================
            USER BADGE
-           ========================================================= */
+           ===================================================== */
 
         .user-badge {
 
             background:
-                rgba(34, 197, 94, 0.14);
+                rgba(34,197,94,0.14);
 
             color:
-                #bbf7d0
-                !important;
+                #bbf7d0 !important;
 
             border:
-                1px solid rgba(34, 197, 94, 0.22);
-
-            box-shadow:
-                inset 0 1px 0 rgba(255,255,255,0.08);
+                1px solid rgba(34,197,94,0.22);
         }
 
 
         .user-badge:hover {
 
             background:
-                rgba(34, 197, 94, 0.22);
+                rgba(34,197,94,0.22);
 
             color:
-                #fff
-                !important;
+                #fff !important;
         }
 
 
-        /* =========================================================
-           SEARCH BOX
-           ========================================================= */
+        /* =====================================================
+           SEARCH
+           ===================================================== */
 
         .search-box {
 
@@ -296,25 +300,17 @@
             align-items:
                 center;
 
-
-            /*
-             * رنگ کاربر + شفافیت
-             */
             background:
                 {{ color_.color2 }}88;
 
-
             border:
-                1px solid rgba(255, 255, 255, 0.16);
-
+                1px solid rgba(255,255,255,0.16);
 
             border-radius:
                 25px;
 
-
             padding:
                 4px 5px;
-
 
             width:
                 250px;
@@ -322,14 +318,11 @@
             height:
                 40px;
 
-
             transition:
                 all 0.3s ease;
 
-
             overflow:
                 hidden;
-
 
             margin-left:
                 10px;
@@ -337,16 +330,11 @@
             margin-right:
                 10px;
 
-
-            /*
-             * شیشه داخلی سرچ
-             */
             backdrop-filter:
                 blur(12px);
 
             -webkit-backdrop-filter:
                 blur(12px);
-
 
             box-shadow:
                 inset 0 1px 0 rgba(255,255,255,0.08),
@@ -367,25 +355,16 @@
         .search-box:focus-within {
 
             box-shadow:
-                0 0 0 3px
-                {{ color_.color1 }}35,
-
-                0 0 20px
-                {{ color_.color1 }}55;
-
+                0 0 0 3px {{ color_.color1 }}35,
+                0 0 20px {{ color_.color1 }}55;
 
             background:
                 {{ color_.color4 }}bb;
-
 
             width:
                 280px;
         }
 
-
-        /* =========================================================
-           SEARCH INPUT
-           ========================================================= */
 
         .search-box input {
 
@@ -432,9 +411,9 @@
         }
 
 
-        /* =========================================================
+        /* =====================================================
            SEARCH BUTTON
-           ========================================================= */
+           ===================================================== */
 
         .search-box button {
 
@@ -445,14 +424,11 @@
                     {{ color_.color3 }}
                 );
 
-
             border:
                 none;
 
-
             color:
                 white;
-
 
             width:
                 35px;
@@ -460,22 +436,17 @@
             height:
                 35px;
 
-
             border-radius:
                 100%;
-
 
             cursor:
                 pointer;
 
-
             font-size:
                 1em;
 
-
             transition:
                 all 0.3s;
-
 
             display:
                 flex;
@@ -486,10 +457,8 @@
             justify-content:
                 center;
 
-
             flex-shrink:
                 0;
-
 
             box-shadow:
                 0 3px 10px rgba(0,0,0,0.15);
@@ -501,7 +470,6 @@
             transform:
                 scale(1.08);
 
-
             background:
                 linear-gradient(
                     135deg,
@@ -509,46 +477,38 @@
                     {{ color_.color1 }}
                 );
 
-
             box-shadow:
                 0 5px 16px
                 {{ color_.color1 }}66;
         }
 
 
-        /* =========================================================
+        /* =====================================================
            HAMBURGER
-           ========================================================= */
+           ===================================================== */
 
         .navbar-toggler {
 
             border:
                 1px solid rgba(255,255,255,0.15);
 
-
             background:
                 rgba(255,255,255,0.08);
-
 
             cursor:
                 pointer;
 
-
             color:
                 white;
-
 
             padding:
                 8px;
 
-
             border-radius:
                 12px;
 
-
             transition:
                 .25s;
-
 
             backdrop-filter:
                 blur(10px);
@@ -563,10 +523,8 @@
             background:
                 rgba(255,255,255,.14);
 
-
             transform:
                 scale(1.05);
-
 
             border-color:
                 rgba(255,255,255,0.25);
@@ -580,9 +538,29 @@
         }
 
 
-        /* =========================================================
-           RESPONSIVE
-           ========================================================= */
+        /* =====================================================
+           DESKTOP
+           ===================================================== */
+
+        @media (min-width: 992px) {
+
+            /*
+             * چون header fixed شده،
+             * به محتوای سایت فضای هدر را می‌دهیم.
+             *
+             * اگر در base.html خودت main/content داری،
+             * این مقدار را روی همان بخش هم می‌توانی اعمال کنی.
+             */
+
+            body {
+                padding-top: 76px;
+            }
+        }
+
+
+        /* =====================================================
+           TABLET
+           ===================================================== */
 
         @media (max-width: 991px) {
 
@@ -596,7 +574,7 @@
 
                 border-top:
                     1px solid
-                    rgba(255, 255, 255, 0.08);
+                    rgba(255,255,255,0.08);
             }
 
 
@@ -632,12 +610,21 @@
                 width:
                     250px;
             }
+
+
+            /*
+             * ارتفاع تقریبی هدر در حالت موبایل/تبلت
+             */
+            body {
+                padding-top:
+                    70px;
+            }
         }
 
 
-        /* =========================================================
-           SMALL MOBILE
-           ========================================================= */
+        /* =====================================================
+           MOBILE
+           ===================================================== */
 
         @media (max-width: 450px) {
 
@@ -651,7 +638,7 @@
 
                 border-top:
                     1px solid
-                    rgba(255, 255, 255, 0.08);
+                    rgba(255,255,255,0.08);
             }
 
 
@@ -687,16 +674,22 @@
                 width:
                     160px;
             }
+
+
+            body {
+                padding-top:
+                    68px;
+            }
         }
 
 
-        /* =========================================================
-           FALLBACK FOR OLD BROWSERS
-           ========================================================= */
+        /* =====================================================
+           BACKDROP FALLBACK
+           ===================================================== */
 
-        @supports not (backdrop-filter: blur(18px)) {
+        @supports not (backdrop-filter: blur(20px)) {
 
-            .navbar {
+            .site-header .navbar {
 
                 background:
                     linear-gradient(
@@ -715,16 +708,18 @@
 <body>
 
 
-<header>
+<!-- =========================================================
+     FIXED GLASS HEADER
+     ========================================================= -->
 
-    <nav class="navbar navbar-expand-xxl navbar-dark sticky-top">
+<header class="site-header">
+
+    <nav class="navbar navbar-expand-xxl navbar-dark">
 
         <div class="container">
 
 
-            <!-- =====================================================
-                 BRAND
-                 ===================================================== -->
+            <!-- BRAND -->
 
             <a
                 class="navbar-brand d-flex align-items-center gap-2"
@@ -738,10 +733,7 @@
             </a>
 
 
-
-            <!-- =====================================================
-                 SEARCH
-                 ===================================================== -->
+            <!-- SEARCH -->
 
             <form
                 method="get"
@@ -769,10 +761,7 @@
             </form>
 
 
-
-            <!-- =====================================================
-                 HAMBURGER
-                 ===================================================== -->
+            <!-- HAMBURGER -->
 
             <button
                 class="navbar-toggler"
@@ -798,9 +787,7 @@
                     >
 
                         <path d="M4 7h16"></path>
-
                         <path d="M8 12h12"></path>
-
                         <path d="M4 17h16"></path>
 
                     </svg>
@@ -810,10 +797,7 @@
             </button>
 
 
-
-            <!-- =====================================================
-                 NAVIGATION
-                 ===================================================== -->
+            <!-- NAVIGATION -->
 
             <div
                 class="collapse navbar-collapse"
@@ -825,24 +809,18 @@
 
                     {% if request.user.is_authenticated %}
 
-                        <!-- USER -->
-
                         <li class="nav-item me-lg-1">
 
                             <a
                                 class="nav-link user-badge"
                                 href="{% url 'blog:profile_view' %}"
                             >
-
                                 {{ request.user.first_name|default:request.user.username }}
-
                             </a>
 
                         </li>
 
                     {% else %}
-
-                        <!-- LOGIN -->
 
                         <li class="nav-item me-lg-1">
 
@@ -856,8 +834,6 @@
                         </li>
 
 
-                        <!-- REGISTER -->
-
                         <li class="nav-item me-lg-1">
 
                             <a
@@ -870,7 +846,6 @@
                         </li>
 
                     {% endif %}
-
 
 
                     <!-- HOME -->
@@ -887,7 +862,6 @@
                     </li>
 
 
-
                     <!-- POSTS -->
 
                     <li class="nav-item me-lg-1">
@@ -900,7 +874,6 @@
                         </a>
 
                     </li>
-
 
 
                     <!-- TWEETS -->
@@ -917,7 +890,6 @@
                     </li>
 
 
-
                     <!-- ABOUT -->
 
                     <li class="nav-item me-lg-1">
@@ -930,7 +902,6 @@
                         </a>
 
                     </li>
-
 
 
                     <!-- MY ACTIVITY -->
@@ -947,7 +918,6 @@
                     </li>
 
 
-
                     <!-- USERS -->
 
                     <li class="nav-item me-lg-1">
@@ -960,7 +930,6 @@
                         </a>
 
                     </li>
-
 
 
                     <!-- NEW POST -->
@@ -977,7 +946,6 @@
                     </li>
 
 
-
                     <!-- CONTACT -->
 
                     <li class="nav-item me-lg-2">
@@ -990,7 +958,6 @@
                         </a>
 
                     </li>
-
 
 
                     <!-- HEADER COLOR -->
@@ -1007,10 +974,7 @@
                     </li>
 
 
-
                     {% if request.user.is_staff %}
-
-                        <!-- STAFF MESSAGES -->
 
                         <li class="nav-item me-lg-1">
 
@@ -1023,8 +987,6 @@
 
                         </li>
 
-
-                        <!-- SITE CHECK -->
 
                         <li class="nav-item me-lg-1">
 
@@ -1050,18 +1012,10 @@
 </header>
 
 
-
-<!-- =========================================================
-     BOOTSTRAP JS
-     ========================================================= -->
+<!-- BOOTSTRAP JS -->
 
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 
-
-
-<!-- =========================================================
-     CONTACT FUNCTION
-     ========================================================= -->
 
 <script>
 
@@ -1081,7 +1035,6 @@
 
             window.location.href =
                 '{% url "blog:local_ticket" %}';
-
         }
 
     }
