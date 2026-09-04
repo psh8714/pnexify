@@ -25,6 +25,31 @@
             {% head_color as color_ %}
         {% endif %}
 
+        :root {
+            --hc-1: {{ color_.color1 }};
+            --hc-2: {{ color_.color2 }};
+            --hc-3: {{ color_.color3 }};
+            --hc-4: {{ color_.color4 }};
+            --hc-6: {{ color_.color6 }};
+
+            /*
+             * ارتفاع واقعی هدر.
+             * این مقدار با JS پایین صفحه به‌صورت زنده محاسبه می‌شود
+             * تا اگر محتوای هدر (نام کاربری، عنوان، دو خط شدن ناوبری و ...)
+             * در هر صفحه‌ای فرق کند، محتوای صفحه هرگز زیر هدر قایم نشود.
+             * مقدار پیش‌فرض فقط برای اولین رندر (قبل از اجرای JS) است.
+             */
+            --header-h: 76px;
+        }
+
+        @media (max-width: 991px) {
+            :root { --header-h: 70px; }
+        }
+
+        @media (max-width: 450px) {
+            :root { --header-h: 68px; }
+        }
+
 
         /* =====================================================
            BODY
@@ -33,12 +58,14 @@
         body {
             background-color: #f8fafc;
             margin: 0;
+            padding-top: var(--header-h);
+            transition: padding-top 0.15s ease;
         }
 
 
         /* =====================================================
            FIXED HEADER WRAPPER
-           
+
            خود این بخش ثابت می‌ماند.
            ===================================================== */
 
@@ -50,6 +77,7 @@
             right: 0;
 
             width: 100%;
+            max-width: 100vw;
 
             z-index: 99999;
 
@@ -69,7 +97,6 @@
 
             pointer-events: auto;
 
-
             /*
              * رنگ انتخاب‌شده توسط کاربر
              * حفظ شده ولی شفاف است.
@@ -78,8 +105,8 @@
             background:
                 linear-gradient(
                     135deg,
-                    {{ color_.color1 }}cc 0%,
-                    {{ color_.color2 }}99 100%
+                    var(--hc-1)cc 0%,
+                    var(--hc-2)99 100%
                 ) !important;
 
 
@@ -111,12 +138,6 @@
             box-shadow:
                 0 8px 32px rgba(0,0,0,0.15),
                 inset 0 1px 0 rgba(255,255,255,0.10);
-
-
-            /*
-             * مهم:
-             * ارتفاع خود navbar طبیعی باقی می‌ماند.
-             */
 
             transition:
                 background 0.3s ease,
@@ -153,6 +174,9 @@
             position: relative;
 
             z-index: 2;
+
+            /* جلوگیری از overflow افقی وقتی آیتم‌ها زیاد می‌شوند */
+            flex-wrap: wrap;
         }
 
 
@@ -165,19 +189,20 @@
             width: 12px;
             height: 12px;
 
-            border-radius: 40%;
+            border-radius: 50%;
 
             display: inline-block;
+            flex-shrink: 0;
 
             background:
                 linear-gradient(
                     135deg,
-                    {{ color_.color1 }},
-                    {{ color_.color3 }}
+                    var(--hc-1),
+                    var(--hc-3)
                 );
 
             box-shadow:
-                0 0 12px {{ color_.color2 }};
+                0 0 12px var(--hc-2);
 
             transition:
                 all 0.3s ease;
@@ -188,15 +213,20 @@
 
             font-family: "Caveat", cursive;
 
-            font-size: 2.15rem;
+            font-size: clamp(1.5rem, 4vw, 2.15rem);
 
             font-weight: 1000;
 
             color:
-                {{ color_.color6 }}
+                var(--hc-6)
                 !important;
 
             letter-spacing: 4.4px;
+
+            max-width: 60vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
 
             transition:
                 all 0.25s ease;
@@ -241,6 +271,8 @@
 
             white-space:
                 nowrap;
+
+            cursor: pointer;
         }
 
 
@@ -260,6 +292,11 @@
                 0 4px 14px rgba(0,0,0,0.08);
         }
 
+        .nav-link:focus-visible {
+            outline: 2px solid rgba(255,255,255,0.85);
+            outline-offset: 2px;
+        }
+
 
         /* =====================================================
            USER BADGE
@@ -275,6 +312,10 @@
 
             border:
                 1px solid rgba(34,197,94,0.22);
+
+            max-width: 40vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
 
@@ -301,7 +342,7 @@
                 center;
 
             background:
-                {{ color_.color2 }}88;
+                var(--hc-2)88;
 
             border:
                 1px solid rgba(255,255,255,0.16);
@@ -313,7 +354,7 @@
                 4px 5px;
 
             width:
-                250px;
+                min(250px, 40vw);
 
             height:
                 40px;
@@ -345,7 +386,7 @@
         .search-box:hover {
 
             background:
-                {{ color_.color2 }}aa;
+                var(--hc-2)aa;
 
             border-color:
                 rgba(255,255,255,0.25);
@@ -355,14 +396,14 @@
         .search-box:focus-within {
 
             box-shadow:
-                0 0 0 3px {{ color_.color1 }}35,
-                0 0 20px {{ color_.color1 }}55;
+                0 0 0 3px var(--hc-1)35,
+                0 0 20px var(--hc-1)55;
 
             background:
-                {{ color_.color4 }}bb;
+                var(--hc-4)bb;
 
             width:
-                280px;
+                min(280px, 70vw);
         }
 
 
@@ -370,6 +411,7 @@
 
             flex:
                 1;
+            min-width: 0;
 
             border:
                 none;
@@ -420,8 +462,8 @@
             background:
                 linear-gradient(
                     135deg,
-                    {{ color_.color1 }},
-                    {{ color_.color3 }}
+                    var(--hc-1),
+                    var(--hc-3)
                 );
 
             border:
@@ -473,13 +515,13 @@
             background:
                 linear-gradient(
                     135deg,
-                    {{ color_.color3 }},
-                    {{ color_.color1 }}
+                    var(--hc-3),
+                    var(--hc-1)
                 );
 
             box-shadow:
                 0 5px 16px
-                {{ color_.color1 }}66;
+                var(--hc-1)66;
         }
 
 
@@ -515,6 +557,8 @@
 
             -webkit-backdrop-filter:
                 blur(10px);
+
+            flex-shrink: 0;
         }
 
 
@@ -534,33 +578,25 @@
         .navbar-toggler:focus {
 
             box-shadow:
-                none;
+                0 0 0 3px rgba(255,255,255,0.35);
         }
 
 
         /* =====================================================
-           DESKTOP
+           DESKTOP / TABLET / MOBILE
+           توجه: breakpoint هماهنگ با navbar-expand-lg (992px)
+           تا حالت باز/بسته‌ی منو با استایل‌های زیر یکی باشد
+           و دیگر بین ۹۹۲ تا ۱۴۰۰px ناهماهنگی پیش نیاید.
            ===================================================== */
 
         @media (min-width: 992px) {
 
-            /*
-             * چون header fixed شده،
-             * به محتوای سایت فضای هدر را می‌دهیم.
-             *
-             * اگر در base.html خودت main/content داری،
-             * این مقدار را روی همان بخش هم می‌توانی اعمال کنی.
-             */
-
-            body {
-                padding-top: 76px;
+            .navbar-nav {
+                flex-wrap: wrap;
+                row-gap: 4px;
             }
         }
 
-
-        /* =====================================================
-           TABLET
-           ===================================================== */
 
         @media (max-width: 991px) {
 
@@ -575,6 +611,9 @@
                 border-top:
                     1px solid
                     rgba(255,255,255,0.08);
+
+                max-height: calc(100vh - var(--header-h) - 1rem);
+                overflow-y: auto;
             }
 
 
@@ -595,7 +634,7 @@
             .search-box {
 
                 width:
-                    200px;
+                    min(200px, 55vw);
 
                 min-width:
                     50px;
@@ -608,77 +647,28 @@
             .search-box:focus-within {
 
                 width:
-                    250px;
-            }
-
-
-            /*
-             * ارتفاع تقریبی هدر در حالت موبایل/تبلت
-             */
-            body {
-                padding-top:
-                    70px;
+                    min(250px, 75vw);
             }
         }
 
 
-        /* =====================================================
-           MOBILE
-           ===================================================== */
-
         @media (max-width: 450px) {
-
-            .navbar-collapse {
-
-                margin-top:
-                    1rem;
-
-                padding-top:
-                    1rem;
-
-                border-top:
-                    1px solid
-                    rgba(255,255,255,0.08);
-            }
-
-
-            .navbar-nav {
-
-                gap:
-                    8px;
-            }
-
-
-            .nav-link {
-
-                width:
-                    100%;
-            }
-
 
             .search-box {
 
                 width:
-                    130px;
-
-                min-width:
-                    50px;
-
-                margin:
-                    0 0 10px 2px;
+                    min(150px, 60vw);
             }
 
 
             .search-box:focus-within {
 
                 width:
-                    160px;
+                    min(180px, 78vw);
             }
 
-
-            body {
-                padding-top:
-                    68px;
+            .navbar-brand {
+                letter-spacing: 2px;
             }
         }
 
@@ -694,9 +684,25 @@
                 background:
                     linear-gradient(
                         135deg,
-                        {{ color_.color1 }},
-                        {{ color_.color2 }}
+                        var(--hc-1),
+                        var(--hc-2)
                     ) !important;
+            }
+        }
+
+
+        /* احترام به کاربرانی که انیمیشن کمتر می‌خواهند */
+        @media (prefers-reduced-motion: reduce) {
+
+            .site-header .navbar,
+            .nav-link,
+            .navbar-brand,
+            .brand-dot,
+            .search-box,
+            .search-box button,
+            .navbar-toggler,
+            body {
+                transition: none !important;
             }
         }
 
@@ -712,9 +718,9 @@
      FIXED GLASS HEADER
      ========================================================= -->
 
-<header class="site-header">
+<header class="site-header" id="siteHeader">
 
-    <nav class="navbar navbar-expand-xxl navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
 
         <div class="container">
 
@@ -752,7 +758,7 @@
                         required
                     >
 
-                    <button type="submit">
+                    <button type="submit" aria-label="جستجو">
                         {{ header_data.s_icon.s_description }}
                     </button>
 
@@ -784,6 +790,7 @@
                         stroke="white"
                         stroke-width="2.5"
                         stroke-linecap="round"
+                        aria-hidden="true"
                     >
 
                         <path d="M4 7h16"></path>
@@ -952,7 +959,10 @@
 
                         <a
                             class="nav-link"
+                            role="button"
+                            tabindex="0"
                             onclick="goSection()"
+                            onkeydown="if(event.key==='Enter'){goSection();}"
                         >
                             {{ header_data.text7.s_description }}
                         </a>
@@ -1038,6 +1048,45 @@
         }
 
     }
+
+
+    /*
+     * محاسبه‌ی زنده‌ی ارتفاع واقعی هدر و ست کردن آن روی body.
+     * این کار باعث می‌شود در هیچ صفحه‌ای (نام کاربری بلند، عنوان بلند،
+     * دو خط شدن نوار جستجو، لود دیرهنگام فونت و ...) محتوا زیر هدر
+     * قایم نشود؛ بدون اینکه نیاز باشد این عدد در CSS دستی تنظیم شود.
+     */
+
+    (function () {
+
+        var header = document.getElementById('siteHeader');
+
+        if (!header) {
+            return;
+        }
+
+        function setHeaderHeight() {
+            var h = header.offsetHeight;
+            document.documentElement.style.setProperty('--header-h', h + 'px');
+        }
+
+        setHeaderHeight();
+
+        window.addEventListener('load', setHeaderHeight);
+        window.addEventListener('resize', setHeaderHeight);
+
+        if (window.ResizeObserver) {
+            new ResizeObserver(setHeaderHeight).observe(header);
+        }
+
+        var collapseEl = document.getElementById('mainNavbar');
+
+        if (collapseEl && window.bootstrap) {
+            collapseEl.addEventListener('shown.bs.collapse', setHeaderHeight);
+            collapseEl.addEventListener('hidden.bs.collapse', setHeaderHeight);
+        }
+
+    })();
 
 </script>
 
