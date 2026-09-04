@@ -33,6 +33,16 @@
             --hc-6: {{ color_.color6 }};
 
             /*
+             * رنگ متن هدر.
+             * مقدار واقعی را اسکریپت اینلاین زیر (قبل از رندر body)
+             * بر اساس روشنایی رنگ تم کاربر مشکی/سفید می‌کند.
+             * این مقدار پیش‌فرض فقط تا قبل از اجرای آن اسکریپت استفاده می‌شود.
+             */
+            --nav-text: #ffffff;
+            --nav-text-muted: rgba(255,255,255,0.65);
+            --nav-hover-bg: rgba(255,255,255,0.14);
+
+            /*
              * ارتفاع واقعی هدر.
              * این مقدار با JS پایین صفحه به‌صورت زنده محاسبه می‌شود
              * تا اگر محتوای هدر (نام کاربری، عنوان، دو خط شدن ناوبری و ...)
@@ -105,8 +115,8 @@
             background:
                 linear-gradient(
                     135deg,
-                    var(--hc-1)cc 0%,
-                    var(--hc-2)99 100%
+                    {{ color_.color1 }}cc 0%,
+                    {{ color_.color2 }}99 100%
                 ) !important;
 
 
@@ -184,31 +194,6 @@
            BRAND
            ===================================================== */
 
-        .brand-dot {
-
-            width: 12px;
-            height: 12px;
-
-            border-radius: 50%;
-
-            display: inline-block;
-            flex-shrink: 0;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    var(--hc-1),
-                    var(--hc-3)
-                );
-
-            box-shadow:
-                0 0 12px var(--hc-2);
-
-            transition:
-                all 0.3s ease;
-        }
-
-
         .navbar-brand {
 
             font-family: "Caveat", cursive;
@@ -218,7 +203,7 @@
             font-weight: 1000;
 
             color:
-                var(--hc-6)
+                var(--nav-text)
                 !important;
 
             letter-spacing: 4.4px;
@@ -229,7 +214,7 @@
             white-space: nowrap;
 
             transition:
-                all 0.25s ease;
+                all 0.25s ease, color 0s;
         }
 
 
@@ -240,13 +225,6 @@
         }
 
 
-        .navbar-brand:hover .brand-dot {
-
-            transform:
-                scale(1.15);
-        }
-
-
         /* =====================================================
            NAV LINKS
            ===================================================== */
@@ -254,8 +232,10 @@
         .nav-link {
 
             color:
-                rgba(255,255,255,0.94)
+                var(--nav-text)
                 !important;
+
+            opacity: 0.94;
 
             border-radius:
                 999px;
@@ -264,7 +244,9 @@
                 8px 14px !important;
 
             transition:
-                all 0.25s ease;
+                background 0.25s ease,
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
 
             font-weight:
                 500;
@@ -279,10 +261,9 @@
         .nav-link:hover {
 
             background:
-                rgba(255,255,255,0.14);
+                var(--nav-hover-bg);
 
-            color:
-                #fff !important;
+            opacity: 1;
 
             transform:
                 translateY(-1px);
@@ -293,7 +274,7 @@
         }
 
         .nav-link:focus-visible {
-            outline: 2px solid rgba(255,255,255,0.85);
+            outline: 2px solid var(--nav-text);
             outline-offset: 2px;
         }
 
@@ -342,7 +323,7 @@
                 center;
 
             background:
-                var(--hc-2)88;
+                {{ color_.color2 }}88;
 
             border:
                 1px solid rgba(255,255,255,0.16);
@@ -386,7 +367,7 @@
         .search-box:hover {
 
             background:
-                var(--hc-2)aa;
+                {{ color_.color2 }}aa;
 
             border-color:
                 rgba(255,255,255,0.25);
@@ -396,11 +377,11 @@
         .search-box:focus-within {
 
             box-shadow:
-                0 0 0 3px var(--hc-1)35,
-                0 0 20px var(--hc-1)55;
+                0 0 0 3px {{ color_.color1 }}35,
+                0 0 20px {{ color_.color1 }}55;
 
             background:
-                var(--hc-4)bb;
+                {{ color_.color4 }}bb;
 
             width:
                 min(280px, 70vw);
@@ -429,7 +410,7 @@
                 transparent;
 
             color:
-                #ffffff;
+                var(--nav-text);
 
             box-shadow:
                 none !important;
@@ -439,14 +420,14 @@
         .search-box input::placeholder {
 
             color:
-                rgba(255,255,255,0.65);
+                var(--nav-text-muted);
         }
 
 
         .search-box input:focus {
 
             color:
-                #ffffff;
+                var(--nav-text);
 
             background:
                 transparent;
@@ -521,7 +502,7 @@
 
             box-shadow:
                 0 5px 16px
-                var(--hc-1)66;
+                {{ color_.color1 }}66;
         }
 
 
@@ -541,7 +522,7 @@
                 pointer;
 
             color:
-                white;
+                var(--nav-text);
 
             padding:
                 8px;
@@ -550,7 +531,7 @@
                 12px;
 
             transition:
-                .25s;
+                background 0.25s, transform 0.25s, border-color 0.25s;
 
             backdrop-filter:
                 blur(10px);
@@ -697,7 +678,6 @@
             .site-header .navbar,
             .nav-link,
             .navbar-brand,
-            .brand-dot,
             .search-box,
             .search-box button,
             .navbar-toggler,
@@ -707,6 +687,45 @@
         }
 
     </style>
+
+    <script>
+        /*
+         * تشخیص روشن/تیره بودن تم انتخابی کاربر و ست کردن رنگ متن هدر.
+         * عمداً اینجا و به‌صورت sync قرار گرفته (نه در پایین صفحه)
+         * تا قبل از رندر شدن body اجرا شود و هیچ پرش رنگی دیده نشود.
+         */
+        (function () {
+
+            function luminance(hex) {
+                hex = (hex || '').replace('#', '').trim();
+                if (hex.length === 3) {
+                    hex = hex.split('').map(function (c) { return c + c; }).join('');
+                }
+                if (hex.length !== 6) {
+                    return 255;
+                }
+                var r = parseInt(hex.substr(0, 2), 16);
+                var g = parseInt(hex.substr(2, 2), 16);
+                var b = parseInt(hex.substr(4, 2), 16);
+                return (0.299 * r + 0.587 * g + 0.114 * b);
+            }
+
+            try {
+                var c1 = "{{ color_.color1|default:'#333333' }}";
+                var c2 = "{{ color_.color2|default:'#333333' }}";
+                var avg = (luminance(c1) + luminance(c2)) / 2;
+                var isLight = avg > 150;
+
+                var root = document.documentElement.style;
+                root.setProperty('--nav-text', isLight ? '#151515' : '#ffffff');
+                root.setProperty('--nav-text-muted', isLight ? 'rgba(21,21,21,0.65)' : 'rgba(255,255,255,0.65)');
+                root.setProperty('--nav-hover-bg', isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.14)');
+            } catch (e) {
+                /* در صورت خطا، مقادیر پیش‌فرض (سفید) باقی می‌ماند */
+            }
+
+        })();
+    </script>
 
 </head>
 
@@ -731,8 +750,6 @@
                 class="navbar-brand d-flex align-items-center gap-2"
                 href="{% url 'blog:index' %}"
             >
-
-                <span class="brand-dot"></span>
 
                 {{ header_data.title.s_description }}
 
@@ -787,7 +804,7 @@
                         height="30"
                         viewBox="0 0 24 24"
                         fill="none"
-                        stroke="white"
+                        stroke="currentColor"
                         stroke-width="2.5"
                         stroke-linecap="round"
                         aria-hidden="true"
