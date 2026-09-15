@@ -11,8 +11,6 @@
 
     <title>{% block title %}MyDjango{% endblock %}</title>
 
-    <link rel="stylesheet" href="{% static 'css/bootstrap.rtl.min.css' %}">
-
     <style>
 
         /* =====================================================
@@ -581,19 +579,42 @@
 
         @media (max-width: 991px) {
 
+            /*
+             * منو به‌صورت پنل شناور (overlay) زیر نوار اصلی باز می‌شود
+             * و از position: absolute استفاده می‌کند تا از جریان عادی
+             * لی‌اوت خارج شود و ارتفاع .navbar/.site-header را عوض نکند.
+             * همین باعث می‌شود body padding-top هیچ‌وقت هنگام باز/بسته
+             * شدن منو تغییر نکند و پرش/لرزش دیده نشود.
+             */
+
             .navbar-collapse {
 
-                margin-top:
-                    1rem;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
 
-                padding-top:
-                    1rem;
+                margin-top: 0;
+                padding: 1rem;
+
+                background:
+                    linear-gradient(
+                        135deg,
+                        {{ color_.color1 }}f2 0%,
+                        {{ color_.color2 }}ee 100%
+                    );
+
+                backdrop-filter: blur(20px) saturate(160%);
+                -webkit-backdrop-filter: blur(20px) saturate(160%);
 
                 border-top:
                     1px solid
                     rgba(255,255,255,0.08);
 
-                max-height: calc(100vh - var(--header-h) - 1rem);
+                box-shadow:
+                    0 12px 32px rgba(0,0,0,0.25);
+
+                max-height: calc(100vh - var(--header-h) - 12px);
                 overflow-y: auto;
             }
 
@@ -1039,10 +1060,7 @@
 </header>
 
 
-<!-- BOOTSTRAP JS -->
-
-<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-
+<!-- BOOTSTRAP CSS/JS از base اصلی پروژه لود می‌شود؛ اینجا دوباره اضافه نشده -->
 
 <script>
 
@@ -1094,13 +1112,6 @@
 
         if (window.ResizeObserver) {
             new ResizeObserver(setHeaderHeight).observe(header);
-        }
-
-        var collapseEl = document.getElementById('mainNavbar');
-
-        if (collapseEl && window.bootstrap) {
-            collapseEl.addEventListener('shown.bs.collapse', setHeaderHeight);
-            collapseEl.addEventListener('hidden.bs.collapse', setHeaderHeight);
         }
 
     })();
