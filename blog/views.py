@@ -33,6 +33,7 @@ import requests
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.db import transaction
+from sys import set_int_max_str_digits
 
 
 # Create your views here.
@@ -848,3 +849,34 @@ def site_checker(request):
     }
 
     return render(request, 'blog/site_check.html', context=context)
+
+
+def right_zeros(request):
+    if request.method == "POST":
+        form = FactForm(request.POST)
+        if form.is_valid():
+            fact = int(form.cleaned_data['number'])
+            multiplication = 1
+            for num in range(1, fact + 1):
+                multiplication *= num
+
+            number_of_zero = 0
+            for string in reversed(str(multiplication)):
+                if string == "0":
+                    number_of_zero += 1
+                else:
+                    break
+        else:
+            number_of_zero = None
+    else:
+        form = FactForm()
+        number_of_zero = None
+
+    context = {
+        'form': form,
+        'noz': number_of_zero
+    }
+    return render(request, 'partials/math_operations.html', context)
+
+
+
