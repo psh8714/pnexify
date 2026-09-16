@@ -249,3 +249,15 @@ class ToDoListForm(forms.ModelForm):
     class Meta:
         model = ToDoList2
         fields = ['description', 'deadline1']
+
+
+class FactForm(forms.Form):
+    number = forms.IntegerField(required=True, widget=forms.NumberInput(attrs={'placeholder':'عدد فاکتوریل دلخواه'}))
+
+    def clean_number(self):
+        if self.cleaned_data['number'] > 0:
+            return self.cleaned_data['number']
+        else:
+            raise ValidationError('مقدار درستی وارد نکردید')
+
+
