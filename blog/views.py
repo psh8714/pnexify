@@ -850,6 +850,8 @@ def site_checker(request):
 
     return render(request, 'blog/site_check.html', context=context)
 
+set_int_max_str_digits(1000000)
+
 
 def right_zeros(request):
     if request.method == "POST":
