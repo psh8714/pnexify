@@ -1,0 +1,187 @@
+{% extends 'parent/base.html' %}
+
+{% block title %}محاسبات ریاضی{% endblock %}
+
+{% block content %}
+
+<style>
+    .math-page {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 20px;
+        direction: rtl;
+    }
+
+    .math-card {
+        width: 100%;
+        max-width: 520px;
+        padding: 35px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+    }
+
+    .math-icon {
+        width: 65px;
+        height: 65px;
+        margin: 0 auto 20px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #111;
+        color: white;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .math-title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 800;
+        color: #111;
+        margin-bottom: 8px;
+    }
+
+    .math-description {
+        text-align: center;
+        color: #777;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .math-form p {
+        margin-bottom: 20px;
+    }
+
+    .math-form label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 700;
+        color: #222;
+    }
+
+    .math-form input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1px solid #ddd;
+        border-radius: 13px;
+        outline: none;
+        font-size: 15px;
+        transition: 0.2s;
+        box-sizing: border-box;
+    }
+
+    .math-form input:focus {
+        border-color: #111;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .math-button {
+        width: 100%;
+        border: none;
+        padding: 14px;
+        border-radius: 13px;
+        background: #111;
+        color: white;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .math-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .math-result {
+        margin-top: 25px;
+        padding: 18px;
+        border-radius: 15px;
+        background: #f5f5f5;
+        text-align: center;
+    }
+
+    .math-result-label {
+        display: block;
+        color: #777;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .math-result-number {
+        font-size: 30px;
+        font-weight: 800;
+        color: #111;
+    }
+
+    .math-error {
+        margin-top: 8px;
+        color: #d32f2f;
+        font-size: 13px;
+    }
+
+    @media (max-width: 576px) {
+        .math-page {
+            padding: 30px 15px;
+        }
+
+        .math-card {
+            padding: 25px 20px;
+        }
+
+        .math-title {
+            font-size: 24px;
+        }
+    }
+</style><div class="math-page"><div class="math-card">
+
+    <div class="math-icon">
+        ∑
+    </div>
+
+    <h1 class="math-title">
+        محاسبات ریاضی
+    </h1>
+
+    <p class="math-description">
+        تعداد صفرهای انتهایی فاکتوریل یک عدد را محاسبه کنید.
+    </p>
+
+
+    <form method="post" class="math-form">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="math-button">
+            محاسبه
+        </button>
+
+    </form>
+
+
+    {% if noz is not None %}
+        <div class="math-result">
+
+            <span class="math-result-label">
+                تعداد صفرهای انتهایی
+            </span>
+
+            <div class="math-result-number">
+                {{ noz }}
+            </div>
+
+        </div>
+    {% endif %}
+
+</div>
+
+</div>{% endblock %}
